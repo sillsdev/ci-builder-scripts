@@ -1,0 +1,61 @@
+#!/bin/bash
+# Create source package
+# set supported distros and architectures
+
+set -e
+
+PROGRAM_NAME="$(basename "$0")"
+
+. $(dirname "$0")/common.sh
+init "$@"
+
+stderr "Preparing"
+mkdir -p "$repo_base_dir"
+mkdir -p "$pbuilder_path"
+
+# Clean out old source packages
+rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*}
+
+# TODO: Might want to add suffix appending from build-packages script
+
+# Add entry to debian/changelog
+
+timestamp=$(date +"%Y%m%d.%H%M%S")
+latest_version_in_debian_changelog=$(dpkg-parsechangelog |grep ^Version:|cut -d' ' -f2)
+base_version=${code_version:-$latest_version_in_debian_changelog}
+nightlydelimeter="."
+nightlyversion="$base_version${nightlydelimeter}nightly$timestamp$package_version_extension"
+if [ "$VCS" = "hg" ]; then
+    hash_of_current_commit=$(hg id -i 2>/dev/null |cut -c -12)
+else
+    hash_of_current_commit=$(git rev-parse --short HEAD)
+fi
+
+distribution_of_last_change=$(dpkg-parsechangelog |grep ^Distribution:|cut -d' ' -f2)
+
+if [[ "$DISTS_TO_PROCESS" != *$distribution_of_last_change* ]]; then
+    distribution_of_last_change=$(echo "$DISTRIBUTIONS_TO_PACKAGE" | cut -d' ' -f1)
+fi
+changelog_message="Built from commit $hash_of_current_commit"
+if [ -n "$most_recent_tag" ]; then
+    changelog_message="See git log $most_recent_tag..$hash_of_current_commit"
+fi
+if [ -z "$PRESERVE_CHANGELOG" ]; then
+    stderr "Using package version: $nightlyversion"
+    dch --distribution $distribution_of_last_change --force-distribution --upstream --newversion "$nightlyversion" --force-bad-version "$changelog_message"
+else
+    stderr "Using package version: $latest_version_in_debian_changelog"
+fi
+
+stderr "Building source package:"
+cd $repo_base_dir/${source_package_name}
+if [ -n "$DEBSIGNKEY" ]; then
+	signing_opt="-k$DEBSIGNKEY"
+	echo "Setting signing opts to ^$signing_opt^"
+fi
+debuild -S -sa $signing_opt
+
+stderr "Source package files exist with the following sha256sums:"
+cd "$repo_base_dir"
+sha256sum ${source_package_name}_*.{dsc,build,changes,tar.gz}
+
