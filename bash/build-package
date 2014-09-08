@@ -37,8 +37,6 @@ stderr "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc="${source_package_name}_*.dsc"
-echo sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$HOME/FwSupportTools/packaging/pbuilder/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $HOME/FwSupportTools/packaging/pbuilder/build-multi.sh "$packagedsc"
-
 sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$HOME/FwSupportTools/packaging/pbuilder/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $HOME/FwSupportTools/packaging/pbuilder/build-multi.sh "$packagedsc"
 
 stderr "Signing package(s)"
@@ -61,10 +59,10 @@ stderr "Binary package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
     for arch in $ARCHES_TO_PACKAGE; do
         cd $pbuilder_path/$dist/$arch/result
-        sha256sum *.changes *.deb || true
+        sha256sum ${source_package_name}_*.changes ${source_package_name}_*.deb || true
         if [ -n "$preserve_products_arg" ]; then
             mkdir -p "$PRODUCTS_PRESERVATION_PATH"
-            cp -a *.changes *.deb "$PRODUCTS_PRESERVATION_PATH"/
+            cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb "$PRODUCTS_PRESERVATION_PATH"/
         fi
     done
 done
