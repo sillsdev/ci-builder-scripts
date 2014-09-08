@@ -27,12 +27,12 @@ def arches_tobuild = "amd64 i386";
 def build_script = '''
 #!/bin/bash
 cd "@@{subdir_name}"
-$HOME/JenkinsScripts/bash/make-source --dists "$DistributionsToPackage" \
+$HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 	--arches "$ArchesToPackage" \
 	--main-package-name "@@{packagename}" \
 	--supported-distros "@@{supported_distros}"
 
-$HOME/JenkinsScripts/bash/build-package --dists "$DistributionsToPackage" \
+$HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 	--arches "$ArchesToPackage" \
 	--main-package-name "@@{packagename}" \
 	--supported-distros "@@{supported_distros}" \
