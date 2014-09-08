@@ -30,13 +30,14 @@ cd "@@{subdir_name}"
 $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 	--arches "$ArchesToPackage" \
 	--main-package-name "@@{packagename}" \
-	--supported-distros "@@{supported_distros}"
+	--supported-distros "@@{supported_distros}" \
+	--debkeyid $DEBSIGNKEY
 
 $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 	--arches "$ArchesToPackage" \
 	--main-package-name "@@{packagename}" \
 	--supported-distros "@@{supported_distros}" \
-    --debkeyid $DEBSIGNKEY
+	--debkeyid $DEBSIGNKEY
 '''
 
 /*
