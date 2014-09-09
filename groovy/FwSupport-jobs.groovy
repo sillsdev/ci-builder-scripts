@@ -14,6 +14,11 @@ job {
 <p>The job is created by the DSL plugin from <i>FwSupport-jobs.groovy</i> script.<p>
 '''
 
+    parameters {
+        stringParam("GERRIT_REFSPEC", 'refs/heads/develop',
+            "The git branch");
+    }
+
     label 'packager';
 
     customWorkspace("\$HOME/FwSupportTools")
