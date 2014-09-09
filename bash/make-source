@@ -29,7 +29,7 @@ timestamp=$(date -u +"%Y%m%dT%H%M%S")
 latest_version_in_debian_changelog=$(dpkg-parsechangelog |grep ^Version:|cut -d' ' -f2)
 base_version=${code_version:-$latest_version_in_debian_changelog}
 nightlydelimeter=${nightlydelimeter:-"."}
-nightlyversion="${base_version}${nightlydelimeter}nightly${timestamp}-${hash_of_current_commit}${package_version_extension}"
+nightlyversion="${base_version}${nightlydelimeter}nightly${timestamp}.${hash_of_current_commit}${package_version_extension}"
 
 distribution_of_last_change=$(dpkg-parsechangelog |grep ^Distribution:|cut -d' ' -f2)
 
