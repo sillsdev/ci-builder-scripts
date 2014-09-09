@@ -18,8 +18,8 @@ stderr "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		rm "$pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes" || true
-		rm "$pbuilder_path/$dist/$arch/result/${source_package_name}_*.deb" || true
+		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes || true
+		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.deb || true
 	done
 done
 
