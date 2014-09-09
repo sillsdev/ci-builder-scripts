@@ -20,6 +20,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes || true
 		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.deb || true
+		rm $WORKSPACE/results/* || true
 	done
 done
 
@@ -73,6 +74,8 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
             mkdir -p "$PRODUCTS_PRESERVATION_PATH"
             cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb "$PRODUCTS_PRESERVATION_PATH"/
         fi
+		mkdir -p "$WORKSPACE/results"
+        cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb $WORKSPACE/results/
     done
 done
 

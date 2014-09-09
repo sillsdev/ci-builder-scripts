@@ -44,6 +44,8 @@ job {
 
     label 'packager';
 
+    logRotator(365, 100, 10, 10);
+
     parameters {
         stringParam("DistributionsToPackage", distros_tobuild,
             "The distributions to build packages for");
@@ -73,5 +75,9 @@ job {
             'subdir_name' : subdir_name ];
 
         shell(Helper.prepareScript(build_script, values));
-     }
+	}
+
+	publishers {
+		archiveArtifacts("results/*");
+	}
 }
