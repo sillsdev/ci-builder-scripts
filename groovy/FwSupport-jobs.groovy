@@ -16,7 +16,7 @@ job {
 
     label 'packager';
 
-    customWorkspace("$HOME/FwSupportTools")
+    customWorkspace("\$HOME/FwSupportTools")
 
     scm {
         git {
