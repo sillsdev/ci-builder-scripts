@@ -18,7 +18,9 @@ stderr "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes
+		if [ $(ls "$pbuilder_path/$dist/$arch/result${source_package_name}_*.changes" 2> /dev/null | wc -l) -ge 1 ]; then
+			rm "$pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes"
+		fi
 	done
 done
 
