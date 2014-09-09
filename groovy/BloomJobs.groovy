@@ -1,17 +1,7 @@
 /*
  * DSL script for Bloom Jenkins jobs
  */
-import groovy.text.*;
-
-public class Helper {
-    def static prepareScript(String script, Map binding) {
-        def templateEngine = new SimpleTemplateEngine();
-        def template = templateEngine.createTemplate(
-            script.replaceAll(~/\$/, /\\\$/).replaceAll(~/@@/, /\$/));
-
-        return template.make(binding).toString();
-    }
-}
+import utilities.Helper
 
 // Variables
 def packagename = 'Bloom';
@@ -45,36 +35,11 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
  */
 
 job {
-    name 'FwSupportTools-Linux-packager-debug-checkoutonly'
-
-    description '''
-This job keeps the FwSupportTools directory up-to-date on the packaging machine.
-
-The job is created by the DSL plugin from BloomJobs.groovy script.
-'''
-
-    label 'packager';
-
-    customWorkspace("$HOME/FwSupportTools")
-
-    scm {
-        git("https://github.com/sillsdev/FwSupportTools", "develop")
-    }
-
-    triggers {
-        // Check every hour for new changes
-        // REVIEW: might be more efficient to use the Github Push Notification trigger
-        scm("H * * * *");
-    }
-}
-
-job {
     name 'Bloom_NightlyPackaging-Linux-all-master-debug';
 
     description '''
-Nightly builds of the Bloom default branch.
-
-The job is created by the DSL plugin from BloomJobs.groovy script.
+<p>Nightly builds of the Bloom default branch.</p>
+<p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
     label 'packager';
