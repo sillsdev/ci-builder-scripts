@@ -14,6 +14,14 @@ grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" ||
     ARCHES_TO_PACKAGE="amd64"
 }
 
+stderr "Removing old packages"
+
+for dist in $DISTRIBUTIONS_TO_PACKAGE; do
+	for arch in $ARCHES_TO_PACKAGE; do
+		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes
+	done
+done
+
 stderr "Preparing for building binary package(s)"
 
 mkdir -p "$pbuilder_path"
