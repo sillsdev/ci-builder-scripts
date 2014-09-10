@@ -16,6 +16,10 @@ def arches_tobuild = "amd64 i386";
 
 def build_script = '''
 #!/bin/bash
+# TODO: when moving to git, change this to:
+# export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.${GIT_REVISION:0:6}
+export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.$MERCURIAL_REVISION_SHORT
+
 cd "@@{subdir_name}"
 $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
 	--arches "$ArchesToPackage" \
