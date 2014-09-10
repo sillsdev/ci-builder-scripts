@@ -1,44 +1,20 @@
 /*
  * DSL script for Bloom Jenkins jobs
  */
-import utilities.Helper
+import utilities.common
 
 // Variables
 def packagename = 'Bloom';
-def supported_distros = 'precise trusty utopic wheezy saucy';
-def distros_tobuild = 'precise trusty';
 def subdir_name = 'bloom-desktop';
-def arches_tobuild = "amd64 i386";
-
-/*
- * Definition of build step scripts
- */
-
-def build_script = '''
-#!/bin/bash
-# TODO: when moving to git, change this to:
-# export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.${GIT_REVISION:0:6}
-export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.$MERCURIAL_REVISION_SHORT
-
-cd "@@{subdir_name}"
-$HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
-	--arches "$ArchesToPackage" \
-	--main-package-name "@@{packagename}" \
-	--supported-distros "@@{supported_distros}" \
-	--debkeyid $DEBSIGNKEY
-
-$HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
-	--arches "$ArchesToPackage" \
-	--main-package-name "@@{packagename}" \
-	--supported-distros "@@{supported_distros}" \
-	--debkeyid $DEBSIGNKEY
-'''
+def distros_tobuild = 'precise trusty';
 
 /*
  * Definition of jobs
  */
 
 job {
+    common.defaultPackagingJob(delegate, packagename, subdir_name, distros_tobuild);
+
     name 'Bloom_NightlyPackaging-Linux-all-master-debug';
 
     description '''
@@ -46,43 +22,6 @@ job {
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
-    label 'packager';
-
-    logRotator(365, 100, 10, 10);
-
-    parameters {
-        stringParam("DistributionsToPackage", distros_tobuild,
-            "The distributions to build packages for");
-        stringParam("ArchesToPackage", arches_tobuild,
-            "The architectures to build packages for");
-    }
-
-    scm {
-        //hg('https://bitbucket.org/hatton/bloom-desktop', 'default') { node ->
-        hg('https://bitbucket.org/yautokes/bloom-desktop', 'default') { node ->
-            node / clean('true');
-            node / subdir(subdir_name);
-        }
-    }
-
-    triggers {
-        // Check every day for new changes
-        scm("H H * * *");
-    }
-
-    wrappers {
-        timestamps();
-    }
-
-    steps {
-        def values = [ 'packagename' : packagename,
-            'supported_distros' : supported_distros,
-            'subdir_name' : subdir_name ];
-
-        shell(Helper.prepareScript(build_script, values));
-	}
-
-	publishers {
-		archiveArtifacts("results/*");
-	}
+    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'default', subdir_name);
 }
+
