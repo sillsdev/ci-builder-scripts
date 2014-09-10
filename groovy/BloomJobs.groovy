@@ -58,7 +58,8 @@ job {
     }
 
     scm {
-        hg('https://bitbucket.org/hatton/bloom-desktop', 'default') { node ->
+        //hg('https://bitbucket.org/hatton/bloom-desktop', 'default') { node ->
+        hg('https://bitbucket.org/yautokes/bloom-desktop', 'default') { node ->
             node / clean('true');
             node / subdir(subdir_name);
         }
