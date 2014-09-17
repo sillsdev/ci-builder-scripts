@@ -61,7 +61,8 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             triggers {
                 // Check once every day for new changes
-                scm("H H * * *");
+                // Times are UTC
+                scm("H H(4-10) * * *");
             }
 
             wrappers {
