@@ -23,7 +23,7 @@ job {
 <p>The job is created by the DSL plugin from <i>geckofx29-jobs.groovy</i> script.</p>
 ''';
 
-    //common.hgScm(delegate, 'https://bitbucket.org/geckofx/geckofx-29.0', 'default', subdir_name);
-    common.hgScm(delegate, 'https://bitbucket.org/yautokes/geckofx-29.0', 'default', subdir_name);
+    common.hgScm(delegate, 'https://bitbucket.org/geckofx/geckofx-29.0', 'default', subdir_name);
+    //common.hgScm(delegate, 'https://bitbucket.org/yautokes/geckofx-29.0', 'default', subdir_name);
 }
 
