@@ -14,7 +14,7 @@ def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
  */
 
 job {
-    common.defaultPackagingJob(delegate, packagename, subdir_name, distros_tobuild);
+    common.defaultPackagingJob(delegate, packagename, subdir_name, "", revision, distros_tobuild);
 
     name 'Geckofx_NightlyPackaging-Linux-all-master-debug';
 
