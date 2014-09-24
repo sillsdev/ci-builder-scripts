@@ -81,6 +81,11 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             publishers {
                 archiveArtifacts("results/*");
+
+                configure { project ->
+                    project / publishers << 'hudson.plugins.jira.JiraIssueUpdater' {
+                    }
+                }
             }
         }
     }
