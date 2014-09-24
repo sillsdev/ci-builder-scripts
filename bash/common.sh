@@ -39,7 +39,7 @@ init()
 			# The distros we might possibly want to build
 			--supported-distros) shift; supported_distros_arg=$1 ;;
 			# The package version to use instead a version number based on the last version
-			# from the changelog. Any 0 will be replaced by the corrsponding number from the
+			# from the changelog. Any 0 will be replaced by the corresponding number from the
 			# changelog, e.g. passing 0.0.123.456 with a version from changelog of 3.1.2.3
 			# will result in 3.1.123.456.
 			--package-version) shift; package_version=$1 ;;

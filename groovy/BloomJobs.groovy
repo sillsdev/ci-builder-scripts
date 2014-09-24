@@ -21,6 +21,23 @@ job {
     name 'Bloom_NightlyPackaging-Linux-all-master-debug';
 
     description '''
+<p>Nightly builds of the Bloom 3.0 branch.</p>
+<p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
+<p>For historic reasons the job name doesn't really match what it does. It's a build of
+the 3.0 release branch. Renaming it in the groovy script isn't possible without messing up
+the package version numbers.</p>
+''';
+
+    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'bloom-3.0', subdir_name);
+}
+
+job {
+    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
+        distros_tobuild);
+
+    name 'Bloom_NightlyPackaging-Linux-all-3.1-release';
+
+    description '''
 <p>Nightly builds of the Bloom default branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
