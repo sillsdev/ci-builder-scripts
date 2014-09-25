@@ -36,7 +36,8 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
     --arches "$ArchesToPackage" \
     --main-package-name "@@{packagename}" \
     --supported-distros "@@{supported_distros}" \
-    --debkeyid $DEBSIGNKEY
+    --debkeyid $DEBSIGNKEY \
+    --destination-repository $RepoSection
         '''
 
         /*
@@ -57,6 +58,9 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 choiceParam("PackageBuildKind",
                     ["Nightly", "Release"],
                     "What kind of build is this? A nightly build will have the prefix +nightly2014... appended, a release will just have the version number.");
+                choiceParam("RepoSection",
+                    ["llso-experimental", "llso-main", "pso-experimental", "pso-main"],
+                    "For a release build where should the binary package go?");
             }
 
             triggers {
