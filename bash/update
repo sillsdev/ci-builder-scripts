@@ -1,0 +1,18 @@
+#!/bin/bash
+# Create binary package
+# set supported distros and architectures
+set -e
+
+PROGRAM_NAME="$(basename "$0")"
+
+. $(dirname "$0")/common.sh
+init "$@"
+
+for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
+    for arch in $ARCHES_TO_PACKAGE; do
+        if [ ! -e "$pbuilder_path"/$distribution/$arch/base.tgz ]; then
+            PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
+				$HOME/FwSupportTools/packaging/pbuilder/setup.sh --update
+        fi
+    done
+done
