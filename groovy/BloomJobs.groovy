@@ -28,7 +28,7 @@ the 3.0 release branch. Renaming it in the groovy script isn't possible without 
 the package version numbers.</p>
 ''';
 
-    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'bloom-3.0', subdir_name);
+    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'bloom-3.0Linux', subdir_name);
 }
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
