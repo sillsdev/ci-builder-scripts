@@ -43,6 +43,7 @@ init()
 			# changelog, e.g. passing 0.0.123.456 with a version from changelog of 3.1.2.3
 			# will result in 3.1.123.456.
 			--package-version) shift; package_version=$1 ;;
+			--no-package) no_package=true ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2
@@ -54,20 +55,22 @@ init()
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
 
-	# set Debian/changelog environment
-	export DEBFULLNAME="${main_package_name_arg:-Unknown} Package Signing Key"
-	export DEBEMAIL='jenkins@sil.org'
-
-	package_name_suffix=""
-	repo_base_dir=${WORKSPACE:-$PACKAGING_ROOT/$main_package_name_arg}
 	pbuilder_path="$HOME/pbuilder"
-	debian_path="debian"
-	source_package_name=$(dpkg-parsechangelog |grep ^Source:|cut -d' ' -f2)
+
+	if [ -z "$no_package" ]; then
+		# set Debian/changelog environment
+		export DEBFULLNAME="${main_package_name_arg:-Unknown} Package Signing Key"
+		export DEBEMAIL='jenkins@sil.org'
+
+		package_name_suffix=""
+		repo_base_dir=${WORKSPACE:-$PACKAGING_ROOT/$main_package_name_arg}
+		debian_path="debian"
+		source_package_name=$(dpkg-parsechangelog |grep ^Source:|cut -d' ' -f2)
+	fi
 
 	if [ -d ".hg" ]; then
 		VCS=hg
 	else
 		VCS=git
 	fi
-
 }

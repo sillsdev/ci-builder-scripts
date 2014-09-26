@@ -25,18 +25,8 @@ job {
 
 	steps {
 		shell('''
-$HOME/ci-builder-scripts/bash/update --dists "$Distributions"
+$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"
 ''');
 	}
-
-	publishers {
-		archiveArtifacts("results/*");
-
-		configure { project ->
-			project / publishers << 'hudson.plugins.jira.JiraIssueUpdater' {
-			}
-		}
-	}
-
 }
 
