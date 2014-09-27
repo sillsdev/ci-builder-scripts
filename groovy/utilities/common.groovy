@@ -15,7 +15,7 @@ class common {
          * Definition of build step scripts
          */
 
-        // Remember: this is a dash script!
+        // Remember: this is a dash, not a bash, script!
         def build_script = '''
 export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.@@{revision}
 

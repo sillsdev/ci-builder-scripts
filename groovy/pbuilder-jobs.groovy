@@ -19,6 +19,12 @@ job {
 			"The distributions to update");
 	}
 
+	triggers {
+		// Run every Sunday
+		// Times are UTC
+		cron("H H * * 0");
+	}
+
 	wrappers {
 		timestamps();
 	}
