@@ -48,7 +48,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             label 'packager';
 
-            logRotator(365, 100, 10, 10);
+            logRotator(365, 20, 10, 10);
 
             parameters {
                 stringParam("DistributionsToPackage", distros_tobuild,
