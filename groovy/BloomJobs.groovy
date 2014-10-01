@@ -24,11 +24,11 @@ job {
     name 'Bloom_Packaging-Linux-all-3.0-release';
 
     description '''
-<p>Nightly builds of the Bloom 3.0 branch.</p>
+<p>Nightly builds of the default branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
-    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'bloom-3.0Linux', subdir_name);
+    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'default', subdir_name);
 }
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
@@ -39,8 +39,12 @@ job {
 
     name 'Bloom_Packaging-Linux-all-master-release';
 
+    disabled(true);
+
     description '''
 <p>Nightly builds of the Bloom default branch.</p>
+<p>This job is currently disabled - we build Bloom_Packaging-Linux-all-3.0-release from default
+branch instead</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
