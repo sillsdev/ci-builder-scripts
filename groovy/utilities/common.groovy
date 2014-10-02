@@ -81,7 +81,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             publishers {
                 archiveArtifacts {
-                    pattern("results/*, ${packagename}*");
+                    pattern("results/*, ${subdir_name}*");
                     allowEmpty(true);
                 }
 
