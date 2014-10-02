@@ -122,7 +122,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	if [ "$destination_repository_arg" = "llso-main" ]; then
 		destination_repository="ubuntu/$dist"
 	fi
-	dput $dput_simulate -U llso:$destination_repository ${packagedsc}
+	dput $dput_simulate -U llso:$destination_repository ${source_package_name}_*source.changes
 	# uploading once is sufficient, so we break here
 	break
 done
