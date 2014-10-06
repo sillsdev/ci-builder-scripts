@@ -28,7 +28,7 @@ job {
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
-    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'default', subdir_name);
+    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name, false, true);
 }
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
@@ -48,6 +48,6 @@ branch instead</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
-    common.hgScm(delegate, 'https://bitbucket.org/hatton/bloom-desktop', 'default', subdir_name_unstable);
+    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name_unstable, false, true);
 }
 

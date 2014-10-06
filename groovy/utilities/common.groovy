@@ -93,6 +93,48 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
         }
     }
 
+    static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",
+        disableSubmodules_ = false, commitAuthorInChangelog_ = false, scmName_ = "",
+        refspec_ = "") {
+        jobContext.with {
+            scm {
+                git {
+                    remote {
+                        url(url_);
+                        if (refspec_ != "") {
+                            refspec(refspec_);
+                        }
+                    }
+                    branch(branch_);
+                    createTag(createTag_);
+                    if (subdir != "") {
+                        relativeTargetDir(subdir);
+                    }
+
+                    if (disableSubmodules_ || scmName_ != "" | commitAuthorInChangelog_) {
+                        configure { node ->
+                            if (disableSubmodules_) {
+                                node / extensions / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
+                                    disableSubmodules(disableSubmodules_);
+                                    /* recursiveSubmodules(false);
+                                    trackingSubmodules(false); */
+                                }
+                            }
+                            if (scmName_ != "") {
+                                node / extensions / 'hudson.plugins.git.extensions.impl.ScmName' {
+                                    name(scmName_);
+                                }
+                            }
+                            if (commitAuthorInChangelog_) {
+                                node / extensions / 'hudson.plugins.git.extensions.impl.AuthorInChangelog';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     static void hgScm(jobContext, project, branch, subdir_name) {
         jobContext.with {
             scm {
