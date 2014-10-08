@@ -7,7 +7,7 @@ import utilities.common
 def packagename = 'Bloom';
 def subdir_name = 'bloom-desktop';
 def distros_tobuild = 'precise trusty';
-def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
+def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)";
 def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
 
 /*
