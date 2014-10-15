@@ -89,6 +89,10 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     project / publishers << 'hudson.plugins.jira.JiraIssueUpdater' {
                     }
                 }
+
+                allowBrokenBuildClaiming();
+
+                mailer("eb1@sil.org");
             }
         }
     }
