@@ -60,9 +60,10 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
             }
 
             triggers {
+                githubPush();
                 // Check once every day for new changes
                 // Times are UTC
-                scm("H H(4-10) * * *");
+                //scm("H H(4-10) * * *");
             }
 
             wrappers {
@@ -87,6 +88,16 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
                 configure { project ->
                     project / publishers << 'hudson.plugins.jira.JiraIssueUpdater' {
+                    }
+                    project / publishers << 'hudson.plugins.build__publisher.BuildPublisher' {
+                        publishUnstableBuilds(true);
+                        publishFailedBuilds(true);
+                        logRotator {
+                            daysToKeep 365
+                            numToKeep 20
+                            artifactDaysToKeep 10
+                            artifactNumToKeep 20
+                        }
                     }
                 }
 
