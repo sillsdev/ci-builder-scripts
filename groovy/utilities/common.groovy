@@ -59,13 +59,6 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     "What kind of build is this? A nightly build will have the prefix +nightly2014... appended, a release will just have the version number.");
             }
 
-            triggers {
-                githubPush();
-                // Check once every day for new changes
-                // Times are UTC
-                //scm("H H(4-10) * * *");
-            }
-
             wrappers {
                 timestamps();
             }
