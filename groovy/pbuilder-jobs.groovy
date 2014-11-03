@@ -15,7 +15,7 @@ job {
 	logRotator(365, 100, 10, 10);
 
 	parameters {
-		stringParam("Distributions", "precise saucy trusty wheezy jessie",
+		stringParam("Distributions", "precise saucy trusty utopic wheezy jessie",
 			"The distributions to update");
 	}
 
