@@ -6,7 +6,7 @@ import utilities.common
 // Variables
 def packagename = 'geckofx29';
 def subdir_name = packagename;
-def distros_tobuild = 'precise trusty';
+def distros_tobuild = 'precise trusty utopic';
 def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
 
 /*
