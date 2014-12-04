@@ -1,0 +1,26 @@
+#!/bin/bash
+# Clean out previously built binary packages, or any cancelled builds left on disk
+set -e
+
+PROGRAM_NAME="$(basename "$0")"
+
+. $(dirname "$0")/common.sh
+init "$@"
+
+if [ ! -d "$pbuilder_path" ]; then
+	echo "pbuilder directory $pbuilder_path doesn't exist"
+	exit
+fi
+
+cd "$pbuilder_path"
+for f in $(find */*/result -mindepth 1 -maxdepth 1 -mtime +2); do
+	rm $f || true
+done
+
+for oldbuild in $(find */*/build -mindepth 1 -maxdepth 1 -type d -mtime +2); do
+	sudo umount $oldbuild/proc 2>/dev/null || true
+	sudo umount $oldbuild/dev/pts 2>/dev/null || true
+	sudo umount $oldbuild/dev 2>/dev/null || true
+	sudo rm -rf $oldbuild
+done
+
