@@ -80,9 +80,9 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 }
 
                 configure { project ->
-                    project / publishers << 'hudson.plugins.jira.JiraIssueUpdater' {
+                    project / 'publishers' << 'hudson.plugins.jira.JiraIssueUpdater' {
                     }
-                    project / publishers << 'hudson.plugins.build__publisher.BuildPublisher' {
+                    project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
                         publishUnstableBuilds(true);
                         publishFailedBuilds(true);
                         logRotator {
@@ -122,19 +122,19 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     if (disableSubmodules_ || scmName_ != "" | commitAuthorInChangelog_) {
                         configure { node ->
                             if (disableSubmodules_) {
-                                node / extensions / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
+                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
                                     disableSubmodules(disableSubmodules_);
                                     /* recursiveSubmodules(false);
                                     trackingSubmodules(false); */
                                 }
                             }
                             if (scmName_ != "") {
-                                node / extensions / 'hudson.plugins.git.extensions.impl.ScmName' {
+                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.ScmName' {
                                     name(scmName_);
                                 }
                             }
                             if (commitAuthorInChangelog_) {
-                                node / extensions / 'hudson.plugins.git.extensions.impl.AuthorInChangelog';
+                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog';
                             }
                         }
                     }

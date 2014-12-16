@@ -31,9 +31,9 @@ job {
 			}
 			branch("develop");
 			configure { scm ->
-				scm / extensions << 'hudson.plugins.git.extensions.impl.BuildChooserSetting' {
+				scm / 'extensions' << 'hudson.plugins.git.extensions.impl.BuildChooserSetting' {
 					buildChooser(
-						class: 'com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritTriggerBuildChooser', 
+						class: 'com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritTriggerBuildChooser',
 						'Gerrit') {
 							separator('#');
 					}
@@ -45,7 +45,7 @@ job {
     triggers {
 		gerrit {
 			events {
-				RefUpdated
+				refUpdated()
 			}
 			project('FwSupportTools', 'develop');
 		}

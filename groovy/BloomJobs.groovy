@@ -54,4 +54,3 @@ branch instead</p>
 
     common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name_unstable, false, true);
 }
-
