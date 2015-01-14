@@ -153,4 +153,21 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
             }
         }
     }
+
+    static void buildPublishers(jobContext, daysToKeepVal = 365, numToKeepVal = 20, artifactDaysToKeepVal = 10, artifactNumToKeepVal = 20) {
+        jobContext.with {
+            configure { project ->
+                project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
+                    publishUnstableBuilds(true);
+                    publishFailedBuilds(true);
+                    logRotator {
+                        daysToKeep daysToKeepVal
+                        numToKeep numToKeepVal
+                        artifactDaysToKeep artifactDaysToKeepVal
+                        artifactNumToKeep artifactNumToKeepVal
+                    }
+                }
+            }
+        }
+    }
 }

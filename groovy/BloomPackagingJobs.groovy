@@ -1,5 +1,5 @@
 /*
- * DSL script for Bloom Jenkins jobs
+ * DSL script for Jenkins Bloom Packaging jobs
  */
 import utilities.common
 
@@ -25,7 +25,7 @@ job {
 
     description '''
 <p>Nightly builds of the default branch.</p>
-<p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 
     triggers {
@@ -49,7 +49,7 @@ job {
 <p>Nightly builds of the Bloom default branch.</p>
 <p>This job is currently disabled - we build Bloom_Packaging-Linux-all-3.0-release from default
 branch instead</p>
-<p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 
     common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name_unstable, false, true);
