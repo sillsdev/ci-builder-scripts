@@ -253,15 +253,19 @@ echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
 
 	configure { project ->
 		project / 'builders' << 'hudson.plugins.msbuild.MsBuildBuilder' {
-			msBuildName '.NET 4.0';
-			msBuildFile 'Bloom VS2010.sln';
+			msBuildName '.NET 4.0'
+			msBuildFile 'Bloom VS2010.sln'
+			cmdLineArgs ''
+			buildVariablesAsProperties false
+			continueOnBuildFailure false
+			unstableIfWarnings false
 		}
 
 		project / 'builders' << 'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerBuilder' {
 			entry {
-				includes 'output/**/*, packages/NUnit.Runners.*/**/*, DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*';
-				remote '$HOME/archive/$BUILD_TAG';
-				deleteRemoteArtifacts true;
+				includes 'output/**/*, packages/NUnit.Runners.*/**/*, DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*'
+				remote '$HOME/archive/$BUILD_TAG'
+				deleteRemoteArtifacts true
 			}
 		}
 	}
