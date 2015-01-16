@@ -68,7 +68,8 @@ back to GitHub.</p>
 				'ALWAYS', false,
 				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
 				currentBuild();
-				predefinedProps('ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}" UPSTREAM_BUILD_TAG=${BUILD_TAG}')
+				predefinedProps('''ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
+				UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
 			}
 		}
 
