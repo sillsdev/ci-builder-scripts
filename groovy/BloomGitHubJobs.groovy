@@ -182,6 +182,8 @@ job {
 	configure { project ->
 		project / 'buildWrappers' << 'org.jenkinsci.plugins.xvfb.XvfbBuildWrapper' {
 			installationName 'default'
+			screen '1024x768x24'
+			displayNameOffset 1
 		}
 		project / 'buildWrappers' << 'com.datalex.jenkins.plugins.nodestalker.wrapper.NodeStalkerBuildWrapper' {
 			job 'GitHub-Bloom-Linux-any-PR-debug'
