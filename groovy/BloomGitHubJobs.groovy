@@ -241,12 +241,13 @@ job {
 	}
 
 	steps {
-		batchFile('''cd build
+		batchFile('''CD build
 SET TEMP=%HOME%\\tmp
 IF NOT EXIST %TEMP% MKDIR %TEMP%
-echo "which mkdir" > %TEMP%\\%BUILD_TAG%.txt
-echo "./getDependencies-windows.sh" >> %TEMP%\\%BUILD_TAG%.txt
-"c:\\Program Files (x86)\\Git\\bin\\bash.exe" --login -i < %TEMP%\\%BUILD_TAG%.txt''');
+echo which mkdir > %TEMP%\\%BUILD_TAG%.txt
+echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
+"c:\\Program Files (x86)\\Git\\bin\\bash.exe" --login -i < %TEMP%\\%BUILD_TAG%.txt
+''');
 
 	}
 
