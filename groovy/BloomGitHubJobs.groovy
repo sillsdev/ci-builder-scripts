@@ -58,12 +58,14 @@ back to GitHub.</p>
 
 		downstreamParameterized {
 			trigger('GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug',
-				'SUCCESS', true,
+				'ALWAYS', false,
 				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
 				currentBuild()
 			}
+		}
+		downstreamParameterized {
 			trigger('GitHub-Bloom-Linux-any-PR-debug-Tests, Bloom-Win32-default-debug-Tests',
-				'SUCCESS', true,
+				'ALWAYS', false,
 				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
 				currentBuild();
 				predefinedProps('ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}" UPSTREAM_BUILD_TAG=${BUILD_TAG}')
