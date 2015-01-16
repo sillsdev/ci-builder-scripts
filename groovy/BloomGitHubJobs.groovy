@@ -114,7 +114,7 @@ class Bloom {
 			scm {
 				git {
 					remote {
-						github("BloomBooks/BloomDesktop");
+						github("BloomBooks/BloomDesktop", "git");
 						refspec('+refs/pull/*:refs/remotes/origin/pr/*')
 					}
 					branch('${sha1}')
