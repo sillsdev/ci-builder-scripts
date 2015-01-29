@@ -48,5 +48,9 @@ job {
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 
+    triggers {
+        githubPush();
+    }
+
     common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name_unstable, false, true);
 }
