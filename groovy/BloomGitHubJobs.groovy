@@ -266,7 +266,7 @@ echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
 			entry {
 				includes 'output/**/*, packages/NUnit.Runners.*/**/*, DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*'
 				remote '$HOME/archive/$BUILD_TAG'
-				deleteRemoteArtifacts true
+				deleteRemoteArtifacts false
 			}
 		}
 	}
