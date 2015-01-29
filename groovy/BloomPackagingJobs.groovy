@@ -32,7 +32,7 @@ job {
         githubPush();
     }
 
-    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name, false, true);
+    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'Version3.0', false, subdir_name, false, true);
 }
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
@@ -43,12 +43,8 @@ job {
 
     name 'Bloom_Packaging-Linux-all-master-release';
 
-    disabled(true);
-
     description '''
-<p>Nightly builds of the Bloom default branch.</p>
-<p>This job is currently disabled - we build Bloom_Packaging-Linux-all-3.0-release from default
-branch instead</p>
+<p>Nightly builds of the Bloom master branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 
