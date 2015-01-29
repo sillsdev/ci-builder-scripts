@@ -24,7 +24,7 @@ job {
     name 'Bloom_Packaging-Linux-all-3.0-release';
 
     description '''
-<p>Nightly builds of the default branch.</p>
+<p>Nightly builds of the Version3.0 branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 
