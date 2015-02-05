@@ -41,7 +41,7 @@ back to GitHub.</p>
 		pullRequest {
 			admin('ermshiperete');
 			useGitHubHooks(true);
-			userWhitelist('StephenMcConnel hatton phillip-hopper davidmoore1');
+			userWhitelist('StephenMcConnel hatton phillip-hopper davidmoore1 gmartin7 JohnThomson');
 			orgWhitelist('BloomBooks');
 			cron('H/5 * * * *');
 		}
