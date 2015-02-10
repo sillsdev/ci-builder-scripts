@@ -57,7 +57,7 @@ back to GitHub.</p>
 		shell('echo -n ${BUILD_TAG} > ${WORKSPACE}/magic.txt')
 
 		downstreamParameterized {
-			trigger('GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug',
+			trigger('GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug,GitHub-Bloom-Linux-any-PR--JSTests',
 				'ALWAYS', false,
 				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
 				currentBuild()
@@ -82,10 +82,17 @@ back to GitHub.</p>
 			'Bloom-Win32-default-debug-Tests-results/', true, true) {
 			latestSuccessful(false)
 		}
+
+		copyArtifacts('GitHub-Bloom-Linux-any-PR--JSTests', 'src/BloomBrowserUI/test-results.xml',
+			'GitHub-Bloom-Linux-any-PR--JSTests-results/', true, true) {
+			latestSuccessful(false)
+		}
+
 	}
 
 	publishers {
 		fingerprint('magic.txt')
+		archiveJunit('GitHub-Bloom-Linux-any-PR--JSTests-results/test-results.xml');
 		configure { project ->
 			project / 'publishers' << 'hudson.plugins.nunit.NUnitPublisher' {
 				testResultsPattern('**/BloomTests.dll.results.xml')
@@ -195,12 +202,6 @@ job {
 		}
 	}
 
-	// REVIEW: in the manual created job we also injected environment variables:
-	// NO_PROXY=localhost
-	// HTTP_PROXY=http://proxy.wycliffe.ca:4128
-	// http_proxy=http://proxy.wycliffe.ca:4128
-	// However, this should not be necessary since the node should set those.
-
 	steps {
 		// Run unit tests
 		shell('''. ./environ
@@ -211,9 +212,8 @@ mono --debug ../../packages/NUnit.Runners.Net4.2.6.3/tools/nunit-console.exe -ap
 exit 0
 		''');
 
-		shell('''# this is needed so that upstream aggregation of unit tests works
-echo -n ${UPSTREAM_BUILD_TAG} > ${WORKSPACE}/magic.txt
-		''');
+		// this is needed so that upstream aggregation of unit tests works
+		common.addMagicAggregationFile(delegate);
 	}
 
 	publishers {
@@ -273,3 +273,35 @@ echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
 
 }
 
+// *********************************************************************************************
+job {
+	Bloom.defaultGitHubPRBuildJob(delegate, 'GitHub-Bloom-Linux-any-PR--JSTests',
+		'Run JS unit tests for pull request.');
+
+	parameters {
+		stringParam("UPSTREAM_BUILD_TAG", "",
+			"The upstream build tag.");
+	}
+
+	label 'linux';
+
+	steps {
+		// Install nodejs dependencies
+		common.addInstallKarmaBuildStep(delegate);
+
+		// Get dependencies
+		common.addGetDependenciesBuildStep(delegate);
+
+		// run unit tests
+		common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI');
+
+		// this is needed so that upstream aggregation of unit tests works
+		common.addMagicAggregationFile(delegate);
+	}
+
+	publishers {
+		fingerprint('magic.txt')
+		archiveJunit('src/BloomBrowserUI/test-results.xml');
+		archiveArtifacts('src/BloomBrowserUI/test-results.xml')
+	}
+}
