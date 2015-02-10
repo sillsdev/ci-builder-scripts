@@ -283,7 +283,7 @@ job {
 			"The upstream build tag.");
 	}
 
-	label 'linux';
+	label 'linux && !wheezy';
 
 	steps {
 		// Install nodejs dependencies

@@ -180,7 +180,9 @@ if [ ! -f node_modules/.bin/karma ]; then
     sudo apt-get install -y npm
     mkdir -p ~/bin
     PATH="$HOME/bin:$PATH"
-    ln -s /usr/bin/nodejs ~/bin/node
+    if [ -f /usr/bin/nodejs ]; then
+        ln -s /usr/bin/nodejs ~/bin/node
+    fi
     npm install karma@~0.12 karma-cli@~0.0 karma-phantomjs-launcher phantomjs jasmine@~2.1 karma-jasmine@~0.3 karma-junit-reporter
 fi
 ''');

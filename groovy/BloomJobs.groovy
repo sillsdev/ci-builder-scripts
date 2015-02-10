@@ -18,7 +18,7 @@ job {
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 ''';
 
-	label 'linux';
+	label 'linux && !wheezy';
 
 	scm {
 		git {
