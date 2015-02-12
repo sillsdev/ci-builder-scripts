@@ -88,10 +88,6 @@ job {
 	}
 
 	configure common.MsBuildBuilder('Bloom VS2010.sln')
-
-	configure common.ArtifactDeployerPublisher('output/**/*, packages/NUnit.Runners.*/**/*, ' +
-		'DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*',
-		'$HOME/archive/$BUILD_TAG')
 }
 
 
@@ -129,12 +125,9 @@ job {
 
 	label 'windows';
 
-	configure common.RunOnSameNodeAs('Bloom-Win32-default-debug', false);
+	configure common.RunOnSameNodeAs('Bloom-Win32-default-debug', true);
 
 	steps {
-		// Copy artifacts
-		common.addCopyArtifactsWindowsBuildStep(delegate)
-
 		// Run unit tests
 		common.addRunUnitTestsWindowsBuildStep(delegate, 'BloomTests.dll')
 

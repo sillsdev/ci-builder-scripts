@@ -61,7 +61,7 @@ back to GitHub.</p>
 			'GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug,GitHub-Bloom-Linux-any-PR--JSTests')
 
 		common.addTriggerDownstreamBuildStep(delegate,
-			'GitHub-Bloom-Linux-any-PR-debug-Tests, Bloom-Win32-default-debug-Tests',
+			'GitHub-Bloom-Linux-any-PR-debug-Tests, GitHub-Bloom-Win32-PR-debug-Tests',
 			'''ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
 UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
 
@@ -70,8 +70,8 @@ UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
 			latestSuccessful(false)
 		}
 
-		copyArtifacts('Bloom-Win32-default-debug-Tests', 'output/Debug/BloomTests.dll.results.xml',
-			'Bloom-Win32-default-debug-Tests-results/', true, true) {
+		copyArtifacts('GitHub-Bloom-Win32-PR-debug-Tests', 'output/Debug/BloomTests.dll.results.xml',
+			'GitHub-Bloom-Win32-PR-debug-Tests-results/', true, true) {
 			latestSuccessful(false)
 		}
 
@@ -155,9 +155,35 @@ job {
 	}
 
 	configure common.MsBuildBuilder('Bloom VS2010.sln')
-	configure common.ArtifactDeployerPublisher('output/**/*, packages/NUnit.Runners.*/**/*, ' +
-		'DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*',
-		'$HOME/archive/$BUILD_TAG')
+}
+
+// *********************************************************************************************
+job {
+	Bloom.defaultGitHubPRBuildJob(delegate, 'GitHub-Bloom-Win32-PR-debug-Tests',
+		'Run unit tests for pull request.');
+
+	parameters {
+		stringParam("ARTIFACTS_TAG", "", "The artifact tag");
+		stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.");
+	}
+
+	label 'windows';
+
+	configure common.RunOnSameNodeAs('GitHub-Bloom-Win32-PR-debug', true);
+
+	steps {
+		// Run unit tests
+		common.addRunUnitTestsWindowsBuildStep(delegate, 'BloomTests.dll')
+
+		// this is needed so that upstream aggregation of unit tests works
+		common.addMagicAggregationFileWindows(delegate);
+	}
+
+	publishers {
+		fingerprint('magic.txt')
+		archiveArtifacts('output/Debug/BloomTests.dll.results.xml')
+		configure common.NUnitPublisher('output/Debug/BloomTests.dll.results.xml')
+	}
 }
 
 // *********************************************************************************************
