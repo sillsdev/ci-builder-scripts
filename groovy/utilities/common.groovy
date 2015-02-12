@@ -189,6 +189,21 @@ fi
         }
     }
 
+    static void addInstallPackagesBuildStep(stepContext) {
+        stepContext.with {
+            shell('''cd build
+mozroots --import --sync
+./install-deps''');
+        }
+    }
+
+    static void addXbuildBuildStep(stepContext, projFile) {
+        stepContext.with {
+            shell('''. ./environ
+xbuild ''' + projFile);
+        }
+    }
+
     static void addGetDependenciesBuildStep(stepContext) {
         stepContext.with {
             // for whatever reason http_proxy doesn't come through - it is set in the build agent,
@@ -200,6 +215,18 @@ echo "Fetching dependencies"
 export http_proxy=$HTTP_PROXY
 cd build
 ./getDependencies-Linux.sh
+''');
+        }
+    }
+
+    static void addGetDependenciesWindowsBuildStep(stepContext) {
+        stepContext.with {
+            batchFile('''CD build
+SET TEMP=%HOME%\\tmp
+IF NOT EXIST %TEMP% MKDIR %TEMP%
+echo which mkdir > %TEMP%\\%BUILD_TAG%.txt
+echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
+"c:\\Program Files (x86)\\Git\\bin\\bash.exe" --login -i < %TEMP%\\%BUILD_TAG%.txt
 ''');
         }
     }
@@ -223,12 +250,103 @@ export NODE_PATH
         }
     }
 
+    static void addRunUnitTestsLinuxBuildStep(stepContext, testDll) {
+        stepContext.with {
+            shell('''. ./environ
+dbus-launch --exit-with-session
+cd output/Debug
+mono --debug ../../packages/NUnit.Runners.Net4.2.6.3/tools/nunit-console.exe -apartment=STA -nothread \
+-labels -xml=''' + testDll + '.results.xml ' + testDll + ''' || true
+exit 0
+            ''');
+        }
+    }
+
+    static void addRunUnitTestsWindowsBuildStep(stepContext, testDll) {
+        stepContext.with {
+            batchFile('packages\\NUnit.Runners.Net4.2.6.3\\tools\nunit-console-x86.exe -exclude=RequiresUI -xml=output\\Debug\\' +
+                testDll + '.results.xml output\\Debug\\' + testDll + '''
+exit 0
+            ''');
+        }
+    }
+
+    static void addCopyArtifactsWindowsBuildStep(stepContext) {
+        stepContext.with {
+            batchFile('xcopy /q /e /s /r /h /y %HOME%\\archive\\%ARTIFACTS_TAG%\\*.* .');
+        }
+    }
+
     static void addMagicAggregationFile(stepContext) {
         stepContext.with {
             shell('''
 # this is needed so that upstream aggregation of unit tests works
 echo -n ${UPSTREAM_BUILD_TAG} > ${WORKSPACE}/magic.txt
 ''');
+        }
+    }
+
+    static void addMagicAggregationFileWindows(stepContext) {
+        stepContext.with {
+            batchFile('''
+REM This is needed so that upstream aggregation of test results works
+echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
+''');
+        }
+    }
+    // usage: configure MsBuildBuilder('my.sln')
+    static Closure MsBuildBuilder(projFile) {
+        return { project ->
+            project / 'builders' << 'hudson.plugins.msbuild.MsBuildBuilder' {
+                msBuildName '.NET 4.0'
+                msBuildFile projFile
+                cmdLineArgs ''
+                buildVariablesAsProperties false
+                continueOnBuildFailure false
+                unstableIfWarnings false
+            }
+        }
+    }
+
+    static Closure ArtifactDeployerPublisher(includedFiles, destination) {
+        return { project ->
+            project / 'publishers' << 'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher' {
+                entries {
+                    'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry' {
+                        includes includedFiles
+                        remote destination
+                        deleteRemoteArtifacts false
+                    }
+                }
+            }
+        }
+    }
+
+    static Closure XvfbBuildWrapper() {
+        return { project ->
+            project / 'buildWrappers' << 'org.jenkinsci.plugins.xvfb.XvfbBuildWrapper' {
+                installationName 'default'
+                screen '1024x768x24'
+                displayNameOffset 1
+            }
+        }
+    }
+
+    static Closure RunOnSameNodeAs(nodeName, doShareWorkspace) {
+        return { project ->
+            project / 'buildWrappers' << 'com.datalex.jenkins.plugins.nodestalker.wrapper.NodeStalkerBuildWrapper' {
+                job nodeName
+                shareWorkspace doShareWorkspace
+                firstTimeFlag true
+            }
+        }
+    }
+
+    static Closure NUnitPublisher(results) {
+        return { project ->
+            project / 'publishers' << 'hudson.plugins.nunit.NUnitPublisher' {
+                testResultsPattern(results)
+            }
         }
     }
 }
