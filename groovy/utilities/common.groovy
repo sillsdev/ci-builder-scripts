@@ -294,6 +294,21 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 ''');
         }
     }
+
+    static void addTriggerDownstreamBuildStep(stepContext, projects, predefProps = null) {
+        stepContext.with {
+            downstreamParameterized {
+                trigger(projects,
+                    'ALWAYS', false,
+                    ["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
+                    currentBuild()
+                    if (predefProps != null)
+                        predefinedProps(predefProps)
+                }
+            }
+        }
+    }
+
     // usage: configure MsBuildBuilder('my.sln')
     static Closure MsBuildBuilder(projFile) {
         return { project ->

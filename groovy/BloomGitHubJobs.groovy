@@ -57,22 +57,13 @@ back to GitHub.</p>
 	steps {
 		shell('echo -n ${BUILD_TAG} > ${WORKSPACE}/magic.txt')
 
-		downstreamParameterized {
-			trigger('GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug,GitHub-Bloom-Linux-any-PR--JSTests',
-				'ALWAYS', false,
-				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
-				currentBuild()
-			}
-		}
-		downstreamParameterized {
-			trigger('GitHub-Bloom-Linux-any-PR-debug-Tests, Bloom-Win32-default-debug-Tests',
-				'ALWAYS', false,
-				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
-				currentBuild();
-				predefinedProps('''ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
-				UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
-			}
-		}
+		common.addTriggerDownstreamBuildStep(delegate,
+			'GitHub-Bloom-Linux-any-PR-debug,GitHub-Bloom-Win32-PR-debug,GitHub-Bloom-Linux-any-PR--JSTests')
+
+		common.addTriggerDownstreamBuildStep(delegate,
+			'GitHub-Bloom-Linux-any-PR-debug-Tests, Bloom-Win32-default-debug-Tests',
+			'''ARTIFACTS_TAG="jenkins-GitHub-Bloom-Win32-PR-debug-${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
+UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
 
 		copyArtifacts('GitHub-Bloom-Linux-any-PR-debug-Tests', 'output/Debug/BloomTests.dll.results.xml',
 			'GitHub-Bloom-Linux-any-PR-debug-Tests-results/', true, true) {

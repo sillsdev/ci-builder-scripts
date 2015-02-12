@@ -65,10 +65,9 @@ job {
 
 		// Build
 		common.addXbuildBuildStep(delegate, 'Bloom\\ VS2010.sln');
-	}
 
-	publishers {
-		downstream('Bloom-Linux-any-default-debug-Tests')
+		// Trigger downstream build
+		common.addTriggerDownstreamBuildStep(delegate, 'Bloom-Linux-any-default-debug-Tests')
 	}
 }
 
@@ -82,6 +81,10 @@ job {
 	steps {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
+
+		// Trigger test run
+		common.addTriggerDownstreamBuildStep(delegate, 'Bloom-Win32-default-debug-Tests',
+			'ARTIFACTS_TAG=$BUILD_TAG')
 	}
 
 	configure common.MsBuildBuilder('Bloom VS2010.sln')
@@ -89,14 +92,6 @@ job {
 	configure common.ArtifactDeployerPublisher('output/**/*, packages/NUnit.Runners.*/**/*, ' +
 		'DistFiles/**/*, src/BloomBrowserUI/**/*, Mercurial/**/*, MercurialExtensions/**/*, lib/**/*',
 		'$HOME/archive/$BUILD_TAG')
-
-	publishers {
-		downstreamParameterized {
-			trigger('Bloom-Win32-default-debug-Tests', 'SUCCESS') {
-				predefinedProp('ARTIFACTS_TAG', '$BUILD_TAG')
-			}
-		}
-	}
 }
 
 
