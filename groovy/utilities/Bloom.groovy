@@ -37,7 +37,7 @@ class Bloom {
 	}
 
 	static void defaultBuildJob(jobContext, jobName, descriptionVal, useTimeout = true) {
-		generalBloomBuildJob(jobContext, jobName)
+		generalBloomBuildJob(jobContext, jobName, useTimeout)
 
 		jobContext.with {
 			description '<p>' + descriptionVal + ''' This job gets triggered by Bloom-Wrapper-Trigger-debug.<p>
@@ -56,7 +56,7 @@ class Bloom {
 	}
 
 	static void defaultGitHubPRBuildJob(jobContext, jobName, descriptionVal, useTimeout = true) {
-		generalBloomBuildJob(jobContext, jobName)
+		generalBloomBuildJob(jobContext, jobName, useTimeout)
 		jobContext.with {
 			description '<p>' + descriptionVal + ''' This job gets triggered by GitHub-Bloom-Wrapper-debug.<p>
 <p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>''';

@@ -94,7 +94,7 @@ UPSTREAM_BUILD_TAG=${BUILD_TAG}''')
 // *********************************************************************************************
 job {
 	Bloom.defaultGitHubPRBuildJob(delegate, 'GitHub-Bloom-Linux-any-PR-debug',
-		'Pre-merge builds of GitHub pull requests.', false);
+		'Pre-merge builds of GitHub pull requests.');
 
 	label 'ubuntu && supported';
 
@@ -145,7 +145,7 @@ job {
 // *********************************************************************************************
 job {
 	Bloom.defaultGitHubPRBuildJob(delegate, 'GitHub-Bloom-Win32-PR-debug',
-		'Pre-merge builds of GitHub pull requests.', false);
+		'Pre-merge builds of GitHub pull requests.');
 
 	label 'windows';
 

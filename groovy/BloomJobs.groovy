@@ -41,6 +41,10 @@ change got merged and collects the results.</p>
 		// Trigger downstream build
 		common.addTriggerDownstreamBuildStep(delegate,
 			'Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests')
+
+		common.addTriggerDownstreamBuildStep(delegate,
+			'Bloom-Linux-any-default-debug-Tests, Bloom-Win32-default-debug-Tests')
+
 	}
 
 	common.buildPublishers(delegate, 365, 100);
@@ -49,7 +53,7 @@ change got merged and collects the results.</p>
 // *********************************************************************************************
 job {
 	Bloom.defaultBuildJob(delegate, 'Bloom-Linux-any-default-debug',
-		'Linux builds of master branch', false);
+		'Linux builds of master branch');
 
 	label 'ubuntu && supported';
 
@@ -71,7 +75,7 @@ job {
 // *********************************************************************************************
 job {
 	Bloom.defaultBuildJob(delegate, 'Bloom-Win32-default-debug',
-		'Windows builds of master branch', false);
+		'Windows builds of master branch');
 
 	label 'windows';
 
