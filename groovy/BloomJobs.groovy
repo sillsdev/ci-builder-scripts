@@ -66,9 +66,6 @@ job {
 
 		// Build
 		common.addXbuildBuildStep(delegate, 'Bloom\\ VS2010.sln');
-
-		// Trigger downstream build
-		common.addTriggerDownstreamBuildStep(delegate, 'Bloom-Linux-any-default-debug-Tests')
 	}
 }
 
@@ -82,10 +79,6 @@ job {
 	steps {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
-
-		// Trigger test run
-		common.addTriggerDownstreamBuildStep(delegate, 'Bloom-Win32-default-debug-Tests',
-			'ARTIFACTS_TAG=$BUILD_TAG')
 	}
 
 	configure common.MsBuildBuilder('Bloom VS2010.sln')
