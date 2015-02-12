@@ -22,6 +22,8 @@ change got merged and collects the results.</p>
 
 	priority(100);
 
+	label 'linux'
+
 	scm {
 		git {
 			remote {
