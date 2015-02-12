@@ -38,13 +38,9 @@ change got merged and collects the results.</p>
 	}
 
 	steps {
-		downstreamParameterized {
-			trigger('Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests',
-				'ALWAYS', false,
-				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
-				currentBuild()
-			}
-		}
+		// Trigger downstream build
+		common.addTriggerDownstreamBuildStep(delegate,
+			'Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests')
 	}
 
 	common.buildPublishers(delegate, 365, 100);
@@ -52,7 +48,8 @@ change got merged and collects the results.</p>
 
 // *********************************************************************************************
 job {
-	Bloom.defaultBuildJob(delegate, 'Bloom-Linux-any-default-debug', 'Linux builds of master branch');
+	Bloom.defaultBuildJob(delegate, 'Bloom-Linux-any-default-debug',
+		'Linux builds of master branch', false);
 
 	label 'ubuntu && supported';
 
@@ -74,7 +71,7 @@ job {
 // *********************************************************************************************
 job {
 	Bloom.defaultBuildJob(delegate, 'Bloom-Win32-default-debug',
-		'Windows builds of master branch');
+		'Windows builds of master branch', false);
 
 	label 'windows';
 

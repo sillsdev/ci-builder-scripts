@@ -6,7 +6,7 @@ import utilities.Helper;
 import utilities.common;
 
 class Bloom {
-	static void generalBloomBuildJob(jobContext, jobName) {
+	static void generalBloomBuildJob(jobContext, jobName, useTimeout = true) {
 		jobContext.with {
 			name jobName
 
@@ -15,16 +15,20 @@ class Bloom {
 
 			wrappers {
 				timestamps()
-				timeout {
-					noActivity 180
+				if (useTimeout) {
+					timeout {
+						noActivity 180
+					}
 				}
 			}
 
-			// Job DSL currently doesn't support to abort the build in the case of a timeout.
-			// Therefore we have to use this clumsy way to add it.
-			configure { project ->
-				project / 'buildWrappers' / 'hudson.plugins.build__timeout.BuildTimeoutWrapper' / 'operationList' {
-					'hudson.plugins.build__timeout.operations.AbortOperation'()
+			if (useTimeout) {
+				// Job DSL currently doesn't support to abort the build in the case of a timeout.
+				// Therefore we have to use this clumsy way to add it.
+				configure { project ->
+					project / 'buildWrappers' / 'hudson.plugins.build__timeout.BuildTimeoutWrapper' / 'operationList' {
+						'hudson.plugins.build__timeout.operations.AbortOperation'()
+					}
 				}
 			}
 
@@ -32,7 +36,7 @@ class Bloom {
 		}
 	}
 
-	static void defaultBuildJob(jobContext, jobName, descriptionVal) {
+	static void defaultBuildJob(jobContext, jobName, descriptionVal, useTimeout = true) {
 		generalBloomBuildJob(jobContext, jobName)
 
 		jobContext.with {
@@ -51,7 +55,7 @@ class Bloom {
 		}
 	}
 
-	static void defaultGitHubPRBuildJob(jobContext, jobName, descriptionVal) {
+	static void defaultGitHubPRBuildJob(jobContext, jobName, descriptionVal, useTimeout = true) {
 		generalBloomBuildJob(jobContext, jobName)
 		jobContext.with {
 			description '<p>' + descriptionVal + ''' This job gets triggered by GitHub-Bloom-Wrapper-debug.<p>
