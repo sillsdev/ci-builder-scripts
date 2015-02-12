@@ -37,8 +37,14 @@ change got merged and collects the results.</p>
 		githubPush()
 	}
 
-	publishers {
-		downstream('Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests')
+	steps {
+		downstreamParameterized {
+			trigger('Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests',
+				'ALWAYS', false,
+				["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
+				currentBuild()
+			}
+		}
 	}
 
 	common.buildPublishers(delegate, 365, 100);
