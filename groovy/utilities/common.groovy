@@ -212,7 +212,9 @@ xbuild ''' + projFile);
             // different from HTTP_PROXY)
             shell('''
 echo "Fetching dependencies"
-export http_proxy=$HTTP_PROXY
+if [ -z "$http_proxy" ]; then
+    export http_proxy=$HTTP_PROXY
+fi
 cd build
 ./getDependencies-Linux.sh
 ''');
