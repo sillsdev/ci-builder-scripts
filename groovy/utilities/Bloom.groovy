@@ -58,8 +58,8 @@ class Bloom {
 	static void defaultGitHubPRBuildJob(jobContext, jobName, descriptionVal, useTimeout = true) {
 		generalBloomBuildJob(jobContext, jobName, useTimeout)
 		jobContext.with {
-			description '<p>' + descriptionVal + ''' This job gets triggered by GitHub-Bloom-Wrapper-debug.<p>
-<p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>''';
+			description """<p>$descriptionVal This job gets triggered by GitHub-Bloom-Wrapper-*.<p>
+<p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>""";
 
 			parameters {
 				stringParam("sha1", "",
@@ -73,10 +73,6 @@ class Bloom {
 						refspec('+refs/pull/*:refs/remotes/origin/pr/*')
 					}
 					branch('${sha1}')
-
-					configure { node ->
-						node / 'extensions' / 'hudson.plugins.git.extensions.impl.CleanCheckout'
-					}
 				}
 			}
 		}
