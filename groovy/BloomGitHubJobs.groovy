@@ -50,11 +50,15 @@ collects the results and reports them back to GitHub.</p>
 			}
 		}
 
+		// There's something weird going on: if we directly use branchName as the name for the
+		// branch below, it'll insert the last value in the list (Version3.0). If instead we
+		// define a variable and use that everything works as expected.
+		def BRANCHNAME=branchName
 		configure { project ->
 			project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'displayBuildErrorsOnDownstreamBuilds'(true)
 			project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'allowMembersOfWhitelistedOrgsAsAdmin'(true)
 			project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'whiteListTargetBranches' {
-				'org.jenkinsci.plugins.ghprb.GhprbBranch' { 'branch'(branchName) }
+				'org.jenkinsci.plugins.ghprb.GhprbBranch' { 'branch'(BRANCHNAME) }
 			}
 		}
 
