@@ -31,14 +31,14 @@ mkdir -p "$pbuilder_path"
 [ -f "${pbuilder_path}/sil-testing.gpg" ] || wget -q -O "${pbuilder_path}/sil-testing.gpg" http://linux.lsdev.sil.org/downloads/sil-testing.gpg
 [ -f "${pbuilder_path}/sil.gpg" ] || wget -q -O "${pbuilder_path}/sil.gpg" http://packages.sil.org/sil.gpg
 
-[ -f "$HOME/.pbuilderrc" ] || cp $HOME/FwSupportTools/packaging/pbuilder/pbuilderrc $HOME/.pbuilderrc
+[ -f "$HOME/.pbuilderrc" ] || cp $PBUILDER_TOOLS_PATH/pbuilderrc $HOME/.pbuilderrc
 
 # Make sure base.tgz is in place for any distributions being used.
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
     for arch in $ARCHES_TO_PACKAGE; do
         if [ ! -e "$pbuilder_path"/$distribution/$arch/base.tgz ]; then
             PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
-				$HOME/FwSupportTools/packaging/pbuilder/setup.sh
+				$PBUILDER_TOOLS_PATH/setup.sh
         fi
     done
 done
@@ -47,7 +47,7 @@ stderr "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc="${source_package_name}_*.dsc"
-sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$HOME/FwSupportTools/packaging/pbuilder/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" FULL_BUILD_NUMBER="$FULL_BUILD_NUMBER" $HOME/FwSupportTools/packaging/pbuilder/build-multi.sh "$packagedsc"
+sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$PBUILDER_TOOLS_PATH/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" FULL_BUILD_NUMBER="$FULL_BUILD_NUMBER" $PBUILDER_TOOLS_PATH/build-multi.sh "$packagedsc"
 
 stderr "Signing package(s)"
 

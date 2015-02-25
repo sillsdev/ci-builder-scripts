@@ -54,8 +54,9 @@ init()
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
+	[ -z $PBUILDER_TOOLS_PATH ] && PBUILDER_TOOLS_PATH="$HOME/FwSupportTools/packaging/pbuilder"
 
-	pbuilder_path="$HOME/pbuilder"
+	pbuilder_path="${PBUILDERDIR:-$HOME/pbuilder}"
 
 	if [ -z "$no_package" ]; then
 		# set Debian/changelog environment
