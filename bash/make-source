@@ -72,7 +72,10 @@ fi
 
 stderr "Building source package:"
 cd $repo_base_dir/${source_package_name}
-if [ -n "$DEBSIGNKEY" ]; then
+if [ -n "$debkeyid" ]; then
+	signing_opt="-k$debkeyid"
+	echo "Setting signing opts to ^$signing_opt^"
+elif [ -n "$DEBSIGNKEY" ]; then
 	signing_opt="-k$DEBSIGNKEY"
 	echo "Setting signing opts to ^$signing_opt^"
 fi
