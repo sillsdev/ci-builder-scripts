@@ -28,6 +28,8 @@ collects the results and reports them back to GitHub.</p>
 				"What pull request to build, e.g. origin/pr/9/head");
 		}
 
+		label 'linux';
+
 		priority(100);
 
 		scm {
