@@ -17,11 +17,11 @@ import utilities.Bloom;
 		name "GitHub-Bloom-Wrapper-$branchName-debug";
 
 		description """
-	<p>Wrapper job for GitHub pull requests of $branchName branch. This job kicks off
-	several other builds when a new pull request gets created or an existing one updated,
-	collects the results and reports them back to GitHub.</p>
-	<p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>
-	""";
+<p>Wrapper job for GitHub pull requests of $branchName branch. This job kicks off
+several other builds when a new pull request gets created or an existing one updated,
+collects the results and reports them back to GitHub.</p>
+<p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>
+""";
 
 		parameters {
 			stringParam("sha1", "",
