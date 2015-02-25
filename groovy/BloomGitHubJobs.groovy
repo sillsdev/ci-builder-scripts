@@ -206,7 +206,7 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 				"The upstream build tag.");
 		}
 
-		label 'linux && !wheezy';
+		label 'jstests';
 
 		steps {
 			// Install nodejs dependencies
