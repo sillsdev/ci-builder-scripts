@@ -64,6 +64,8 @@ collects the results and reports them back to GitHub.</p>
 			}
 		}
 
+		def branchNameForParameterizedTrigger=branchName.replaceAll('([^A-Za-z0-9])', '_').replaceAll('([_]+)', '_')
+
 		steps {
 			shell('echo -n ${BUILD_TAG} > ${WORKSPACE}/magic.txt')
 
@@ -77,17 +79,17 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 
 			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-debug-Tests", 'output/Debug/BloomTests.dll.results.xml',
 				"GitHub-Bloom-Linux-any-$branchName-debug-Tests-results/", true, true) {
-				latestSuccessful(false)
+				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_debug_Tests}")
 			}
 
 			copyArtifacts("GitHub-Bloom-Win32-$branchName-debug-Tests", 'output/Debug/BloomTests.dll.results.xml',
 				"GitHub-Bloom-Win32-$branchName-debug-Tests-results/", true, true) {
-				latestSuccessful(false)
+				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Win32_${branchNameForParameterizedTrigger}_debug_Tests}")
 			}
 
 			copyArtifacts("GitHub-Bloom-Linux-any-$branchName--JSTests", 'src/BloomBrowserUI/test-results.xml',
 				"GitHub-Bloom-Linux-any-$branchName--JSTests-results/", true, true) {
-				latestSuccessful(false)
+				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_JSTests}")
 			}
 
 		}
