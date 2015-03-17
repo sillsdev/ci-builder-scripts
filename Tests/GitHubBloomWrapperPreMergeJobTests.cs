@@ -40,7 +40,7 @@ namespace Tests
 		{
 			_jenkins = Jenkins.Connect();
 			_jenkins.Login();
-			_jenkins.OpenPage(string.Format("GitHub-Bloom-Wrapper-{0}-debug", BranchName));
+			_jenkins.OpenConfigurePage(string.Format("job/GitHub-Bloom-Wrapper-{0}-debug", BranchName));
 		}
 
 		[TestFixtureTearDown]

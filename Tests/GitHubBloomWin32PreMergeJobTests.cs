@@ -14,7 +14,7 @@ namespace Tests
 		{
 			_jenkins = Jenkins.Connect();
 			_jenkins.Login();
-			_jenkins.OpenPage("GitHub-Bloom-Win32-master-debug");
+			_jenkins.OpenConfigurePage("job/GitHub-Bloom-Win32-master-debug");
 		}
 
 		[TestFixtureTearDown]

@@ -75,10 +75,17 @@ namespace Tests
 			loginButton.Click();
 		}
 
-		public void OpenPage(string page)
+		public void OpenConfigurePage(string page)
 		{
-			_driver.Url = string.Format("{0}/job/{1}/configure", Url, page);
-			_wait.Until(d => d.Title.StartsWith(page));
+			_driver.Url = string.Format("{0}/{1}/configure", Url, page);
+			var parts = page.Split('/');
+			_wait.Until(d => d.Title.StartsWith(parts[parts.Length - 1]));
+		}
+
+		public void OpenPage(string page, string pageTitle)
+		{
+			_driver.Url = string.Format("{0}/{1}", Url, page);
+			_wait.Until(d => d.Title.StartsWith(pageTitle));
 		}
 
 		public PhantomJSDriver Driver
