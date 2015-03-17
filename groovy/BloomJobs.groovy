@@ -38,10 +38,10 @@ change got merged and collects the results.</p>
 	steps {
 		// Trigger downstream build
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Win32-default-debug,Bloom-Linux-any-default-debug,Bloom-Linux-any-master--JSTests')
+			'Bloom-Win32-master-debug,Bloom-Linux-any-master-debug,Bloom-Linux-any-master--JSTests')
 
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Linux-any-default-debug-Tests, Bloom-Win32-default-debug-Tests')
+			'Bloom-Linux-any-master-debug-Tests, Bloom-Win32-master-debug-Tests')
 
 	}
 
@@ -49,10 +49,12 @@ change got merged and collects the results.</p>
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Linux-any-default-debug') {
+freeStyleJob('Bloom-Linux-any-master-debug') {
+	previousNames 'Bloom-Linux-any-default-debug'
+
 	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch');
 
-	label 'ubuntu && supported';
+	label 'ubuntu && supported'
 
 	steps {
 		// Install certificates
@@ -67,7 +69,9 @@ freeStyleJob('Bloom-Linux-any-default-debug') {
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Win32-default-debug') {
+freeStyleJob('Bloom-Win32-master-debug') {
+	previousNames 'Bloom-Win32-default-debug'
+
 	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch');
 
 	label 'windows';
@@ -82,16 +86,17 @@ freeStyleJob('Bloom-Win32-default-debug') {
 
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Linux-any-default-debug-Tests') {
-	Bloom.defaultBuildJob(delegate,
-		'Run unit tests.');
+freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
+	previousNames 'Bloom-Linux-any-default-debug-Tests'
+
+	Bloom.defaultBuildJob(delegate, 'Run unit tests.');
 
 	label 'linux';
 
-	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-default-debug';
+	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-debug';
 
 	configure common.XvfbBuildWrapper();
-	configure common.RunOnSameNodeAs('Bloom-Linux-any-default-debug', true);
+	configure common.RunOnSameNodeAs('Bloom-Linux-any-master-debug', true);
 
 	steps {
 		// Run unit tests
@@ -104,7 +109,9 @@ freeStyleJob('Bloom-Linux-any-default-debug-Tests') {
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Win32-default-debug-Tests') {
+freeStyleJob('Bloom-Win32-master-debug-Tests') {
+	previousNames 'Bloom-Win32-default-debug-Tests'
+
 	Bloom.defaultBuildJob(delegate, 'Run Bloom unit tests.');
 
 	parameters {
@@ -114,7 +121,7 @@ freeStyleJob('Bloom-Win32-default-debug-Tests') {
 
 	label 'windows';
 
-	configure common.RunOnSameNodeAs('Bloom-Win32-default-debug', true);
+	configure common.RunOnSameNodeAs('Bloom-Win32-master-debug', true);
 
 	steps {
 		// Run unit tests
