@@ -16,16 +16,7 @@ class Bloom {
 				if (useTimeout) {
 					timeout {
 						noActivity 180
-					}
-				}
-			}
-
-			if (useTimeout) {
-				// Job DSL currently doesn't support to abort the build in the case of a timeout.
-				// Therefore we have to use this clumsy way to add it.
-				configure { project ->
-					project / 'buildWrappers' / 'hudson.plugins.build__timeout.BuildTimeoutWrapper' / 'operationList' {
-						'hudson.plugins.build__timeout.operations.AbortOperation'()
+						abortBuild()
 					}
 				}
 			}
