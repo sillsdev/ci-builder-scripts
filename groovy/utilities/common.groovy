@@ -257,7 +257,7 @@ export NODE_PATH
             shell('''. ./environ
 dbus-launch --exit-with-session
 cd output/Debug
-mono --debug ../../packages/NUnit.Runners.Net4.2.6.3/tools/nunit-console.exe -apartment=STA -nothread \
+mono --debug ../../packages/NUnit.Runners.Net4.2.6.4/tools/nunit-console.exe -apartment=STA -nothread \
 -labels -xml=''' + testDll + '.results.xml ' + testDll + ''' || true
 exit 0
             ''');
@@ -266,7 +266,7 @@ exit 0
 
     static void addRunUnitTestsWindowsBuildStep(stepContext, testDll) {
         stepContext.with {
-            batchFile('packages\\NUnit.Runners.Net4.2.6.3\\tools\\nunit-console-x86.exe -exclude=RequiresUI -xml=output\\Debug\\' +
+            batchFile('packages\\NUnit.Runners.Net4.2.6.4\\tools\\nunit-console-x86.exe -exclude=RequiresUI -xml=output\\Debug\\' +
                 testDll + '.results.xml output\\Debug\\' + testDll + '''
 exit 0
             ''');
