@@ -51,6 +51,7 @@
     <Compile Include="GitHubBloomLinuxTestPreMergeJobTests.cs" />
     <Compile Include="Jenkins.cs" />
     <Compile Include="GitHubBloomWrapperPreMergeJobTests.cs" />
+    <Compile Include="BloomViewsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

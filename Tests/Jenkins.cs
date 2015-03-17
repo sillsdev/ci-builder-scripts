@@ -75,11 +75,15 @@ namespace Tests
 			loginButton.Click();
 		}
 
-		public void OpenConfigurePage(string page)
+		public void OpenConfigurePage(string page, string pageTitle = null)
 		{
 			_driver.Url = string.Format("{0}/{1}/configure", Url, page);
-			var parts = page.Split('/');
-			_wait.Until(d => d.Title.StartsWith(parts[parts.Length - 1]));
+			if (string.IsNullOrEmpty(pageTitle))
+			{
+				var parts = page.Split('/');
+				pageTitle = parts[parts.Length - 1];
+			}
+			_wait.Until(d => d.Title.StartsWith(pageTitle));
 		}
 
 		public void OpenPage(string page, string pageTitle)
