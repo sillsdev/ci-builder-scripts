@@ -83,7 +83,7 @@ class bloomViews {
 				triggerOnlyLatestJob false
 				alwaysAllowManualTrigger true
 				showPipelineDefinitionHeader false
-				showPipelineParameters true
+				showPipelineParameters false
 				showPipelineParametersInHeaders true
 				consoleOutputLinkStyle OutputStyle.Lightbox
 

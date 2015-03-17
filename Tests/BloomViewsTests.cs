@@ -142,7 +142,7 @@ namespace Tests
 			Assert.That(_jenkins.GetValueByXPath("//input[@name='_.showPipelineParametersInHeaders' and @checked='true']"),
 				Is.EqualTo("true"), "'Show pipeline parameters in project headers' is not checked");
 			Assert.That(_jenkins.GetValueByXPath("//input[@name='_.showPipelineParameters' and @checked='true']"),
-				Is.EqualTo("true"), "'Show pipeline parameters in revision box' is not checked");
+				Is.EqualTo("false"), "'Show pipeline parameters in revision box' is not checked");
 			Assert.That(_jenkins.GetValue("Refresh frequency (in seconds)"), Is.EqualTo("3"));
 			Assert.That(_jenkins.GetValue("URL for custom CSS files"), Is.Empty);
 			Assert.That(_jenkins.GetValueByName("_.consoleOutputLinkStyle"),
