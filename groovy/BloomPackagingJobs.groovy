@@ -17,11 +17,9 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
  * and commit and push the changes.
  */
 
-job {
+freeStyleJob('Bloom_Packaging-Linux-all-3.0-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
         distros_tobuild);
-
-    name 'Bloom_Packaging-Linux-all-3.0-release';
 
     description '''
 <p>Nightly builds of the Version3.0 branch.</p>
@@ -37,11 +35,9 @@ job {
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
 
-job {
+freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
         distros_tobuild);
-
-    name 'Bloom_Packaging-Linux-all-master-release';
 
     description '''
 <p>Nightly builds of the Bloom master branch.</p>

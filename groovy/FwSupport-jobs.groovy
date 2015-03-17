@@ -6,9 +6,7 @@
  * Definition of jobs
  */
 
-job {
-    name 'FwSupportTools-Linux-packager-debug-checkoutonly'
-
+freeStyleJob('FwSupportTools-Linux-packager-debug-checkoutonly') {
     description '''
 <p>This job keeps the <i>FwSupportTools</i> directory up-to-date on the packaging machine.</p>
 <p>The job is created by the DSL plugin from <i>FwSupport-jobs.groovy</i> script.<p>

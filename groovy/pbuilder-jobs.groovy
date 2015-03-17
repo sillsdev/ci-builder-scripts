@@ -2,9 +2,7 @@
  * DSL script for package builder Jenkins jobs
  */
 
-job {
-    name 'PBuilder_Update-Linux-all-master-debug';
-
+freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
     description '''
 <p>Maintenance job that updates all chroot instances for pbuilder</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
@@ -36,9 +34,7 @@ $HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"
 	}
 }
 
-job {
-    name 'PBuilder_Cleanup-Linux-all-master-debug';
-
+freeStyleJob('PBuilder_Cleanup-Linux-all-master-debug') {
     description '''
 <p>Maintenance job that cleans out previously built binary packages and cancelled builds left on disk
 that are at least two days old.</p>

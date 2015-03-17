@@ -11,10 +11,8 @@ def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
  * Definition of jobs
  */
 
-job {
+freeStyleJob('Geckofx29_NightlyPackaging-Linux-all-master-debug') {
     common.defaultPackagingJob(delegate, 'geckofx29', 'geckofx29', "", revision, distros_tobuild);
-
-    name 'Geckofx29_NightlyPackaging-Linux-all-master-debug';
 
     description '''
 <p>Nightly builds of the geckofx-29.0 default branch.</p>
@@ -30,10 +28,8 @@ job {
     common.hgScm(delegate, 'https://bitbucket.org/geckofx/geckofx-29.0', 'default', 'geckofx29');
 }
 
-job {
+freeStyleJob('Geckofx33_NightlyPackaging-Linux-all-master-debug') {
     common.defaultPackagingJob(delegate, 'geckofx33', 'geckofx33', "", revision, distros_tobuild);
-
-    name 'Geckofx33_NightlyPackaging-Linux-all-master-debug';
 
     description '''
 <p>Nightly builds of the geckofx-33.0 default branch.</p>

@@ -13,8 +13,7 @@ import utilities.Bloom;
 
  for (branchName in ['master', 'Version3.0']) {
 
-	job {
-		name "GitHub-Bloom-Wrapper-$branchName-debug";
+	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-debug") {
 
 		description """
 <p>Wrapper job for GitHub pull requests of $branchName branch. This job kicks off
@@ -104,8 +103,8 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 	}
 
 	// *********************************************************************************************
-	job {
-		Bloom.defaultGitHubPRBuildJob(delegate, "GitHub-Bloom-Linux-any-$branchName-debug",
+	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug") {
+		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Pre-merge builds of GitHub pull requests of $branchName branch");
 
 		label 'ubuntu && supported';
@@ -123,8 +122,8 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 	}
 
 	// *********************************************************************************************
-	job {
-		Bloom.defaultGitHubPRBuildJob(delegate, "GitHub-Bloom-Linux-any-$branchName-debug-Tests",
+	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
+		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Run unit tests for pull request of $branchName branch");
 
 		parameters {
@@ -155,8 +154,8 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 	}
 
 	// *********************************************************************************************
-	job {
-		Bloom.defaultGitHubPRBuildJob(delegate, "GitHub-Bloom-Win32-$branchName-debug",
+	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug") {
+		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Pre-merge builds of GitHub pull requests of $branchName branch");
 
 		label 'windows';
@@ -170,8 +169,8 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 	}
 
 	// *********************************************************************************************
-	job {
-		Bloom.defaultGitHubPRBuildJob(delegate, "GitHub-Bloom-Win32-$branchName-debug-Tests",
+	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug-Tests") {
+		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Run unit tests for pull requests of $branchName branch.");
 
 		parameters {
@@ -199,8 +198,8 @@ UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 	}
 
 	// *********************************************************************************************
-	job {
-		Bloom.defaultGitHubPRBuildJob(delegate, "GitHub-Bloom-Linux-any-$branchName--JSTests",
+	freeStyleJob("GitHub-Bloom-Linux-any-$branchName--JSTests") {
+		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Run JS unit tests for pull requests of $branchName branch");
 
 		parameters {

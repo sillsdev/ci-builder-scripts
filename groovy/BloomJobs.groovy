@@ -11,9 +11,7 @@ import utilities.Bloom;
  * and commit and push the changes.
  */
 
-job {
-	name 'Bloom-Wrapper-Trigger-debug';
-
+freeStyleJob('Bloom-Wrapper-Trigger-debug') {
 	description '''
 <p>Wrapper job for Bloom builds. This job kicks off several other builds after a new
 change got merged and collects the results.</p>
@@ -51,9 +49,8 @@ change got merged and collects the results.</p>
 }
 
 // *********************************************************************************************
-job {
-	Bloom.defaultBuildJob(delegate, 'Bloom-Linux-any-default-debug',
-		'Linux builds of master branch');
+freeStyleJob('Bloom-Linux-any-default-debug') {
+	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch');
 
 	label 'ubuntu && supported';
 
@@ -70,9 +67,8 @@ job {
 }
 
 // *********************************************************************************************
-job {
-	Bloom.defaultBuildJob(delegate, 'Bloom-Win32-default-debug',
-		'Windows builds of master branch');
+freeStyleJob('Bloom-Win32-default-debug') {
+	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch');
 
 	label 'windows';
 
@@ -86,8 +82,8 @@ job {
 
 
 // *********************************************************************************************
-job {
-	Bloom.defaultBuildJob(delegate, 'Bloom-Linux-any-default-debug-Tests',
+freeStyleJob('Bloom-Linux-any-default-debug-Tests') {
+	Bloom.defaultBuildJob(delegate,
 		'Run unit tests.');
 
 	label 'linux';
@@ -108,9 +104,8 @@ job {
 }
 
 // *********************************************************************************************
-job {
-	Bloom.defaultBuildJob(delegate, 'Bloom-Win32-default-debug-Tests',
-		'Run Bloom unit tests.');
+freeStyleJob('Bloom-Win32-default-debug-Tests') {
+	Bloom.defaultBuildJob(delegate, 'Run Bloom unit tests.');
 
 	parameters {
 		stringParam("ARTIFACTS_TAG", "", "The artifact tag");
@@ -137,9 +132,7 @@ job {
 }
 
 // *********************************************************************************************
-job {
-	name 'Bloom-Linux-any-master--JSTests';
-
+freeStyleJob('Bloom-Linux-any-master--JSTests') {
 	description '''
 <p>This job runs JS unit tests for Bloom.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
