@@ -22,6 +22,9 @@ collects the results and reports them back to GitHub.</p>
 <p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>
 """;
 
+		// Bloom team decided that they don't want pre-merge builds
+		disabled(true);
+
 		parameters {
 			stringParam("sha1", "",
 				"What pull request to build, e.g. origin/pr/9/head");
