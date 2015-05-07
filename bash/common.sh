@@ -24,7 +24,8 @@ init()
 			# Don't upload packages at the end
 			--simulate-dput) dput_simulate="-s" ;;
 			--package-version-extension) shift; package_version_extension=$1 ;;
-			--package-name-suffix) shift; package_name_suffix=$1 ;;
+			# Suite location: eg. experimental, updates, proposed, dictionary
+			--suite-name) shift; suite-name=$1 ;;
 			--main-package-name) shift; main_package_name_arg=$1 ;;
 			# Skip cleaning and updating local repository
 			--preserve-repository) preserve_repository_arg=true ;;
@@ -54,6 +55,7 @@ init()
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
+	SUITE_NAME="${suite-name:experimental}"
 	[ -z $PBUILDER_TOOLS_PATH ] && PBUILDER_TOOLS_PATH="$HOME/FwSupportTools/packaging/pbuilder"
 
 	pbuilder_path="${PBUILDERDIR:-$HOME/pbuilder}"
@@ -63,7 +65,6 @@ init()
 		export DEBFULLNAME="${main_package_name_arg:-Unknown} Package Signing Key"
 		export DEBEMAIL='jenkins@sil.org'
 
-		package_name_suffix=""
 		repo_base_dir=${WORKSPACE:-$PACKAGING_ROOT/$main_package_name_arg}
 		debian_path="debian"
 		source_package_name=$(dpkg-parsechangelog |grep ^Source:|cut -d' ' -f2)
