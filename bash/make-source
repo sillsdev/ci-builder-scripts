@@ -16,8 +16,6 @@ mkdir -p "$pbuilder_path"
 # Clean out old source packages
 rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*}
 
-# TODO: Might want to add suffix appending from build-packages script
-
 # Add entry to debian/changelog
 if [ "$VCS" = "hg" ]; then
     hash_of_current_commit=$(hg id -i 2>/dev/null |cut -c -12)

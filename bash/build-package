@@ -106,7 +106,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
-			destination_repository="ubuntu/$dist-experimental"
+			destination_repository="ubuntu/$dist-$SUITE_NAME"
 			if [ "$destination_repository_arg" = "llso-main" ]; then
 				destination_repository="ubuntu/$dist"
 			fi
@@ -118,7 +118,7 @@ done
 stderr "Upload source package"
 cd "$repo_base_dir"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-	destination_repository="ubuntu/$dist-experimental"
+	destination_repository="ubuntu/$dist-$SUITE_NAME"
 	if [ "$destination_repository_arg" = "llso-main" ]; then
 		destination_repository="ubuntu/$dist"
 	fi
