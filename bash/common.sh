@@ -35,8 +35,9 @@ init()
 			--preserve-changelog) preserve_changelog_arg=true ;;
 			# Normally source and binary packages end up getting deleted during future runs of this script. If the source and binary packages from this run are to be kept around so they can be manually processed (eg to sign or upload to a different location), then this argument can be used.
 			--preserve-products) preserve_products_arg=true ;;
-			# Package repository to upload the resulting binary packages to. "llso-main" or "llso-experimental".
-			--destination-repository) shift; destination_repository_arg=$1 ;;
+			# Omit uploading to llso. This parameter should be set when doing a release build on
+			# Jenkins because the package has to be downloaded, signed and manually uploaded.
+			--no-upload) no_upload=true ;;
 			# The distros we might possibly want to build
 			--supported-distros) shift; supported_distros_arg=$1 ;;
 			# The package version to use instead a version number based on the last version

@@ -95,8 +95,8 @@ if [ "$any_failures" = "true" ]; then
     exit 100
 fi
 
-if [ "$destination_repository_arg" = "pso-main" -o "$destination_repository_arg" = "pso-experimental" ]; then
-	# we don't want automatic uploads to pso
+if [ -n "$no_upload" ]; then
+	# don't automatically upload
 	exit 0
 fi
 
@@ -106,11 +106,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
-			destination_repository="ubuntu/$dist-$SUITE_NAME"
-			if [ "$destination_repository_arg" = "llso-main" ]; then
-				destination_repository="ubuntu/$dist"
-			fi
-			dput $dput_simulate -U llso:$destination_repository ${source_package_name}_*.changes
+			dput $dput_simulate -U llso:ubuntu/$dist-$SUITE_NAME ${source_package_name}_*.changes
 		fi
 	done
 done
@@ -118,11 +114,7 @@ done
 stderr "Upload source package"
 cd "$repo_base_dir"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-	destination_repository="ubuntu/$dist-$SUITE_NAME"
-	if [ "$destination_repository_arg" = "llso-main" ]; then
-		destination_repository="ubuntu/$dist"
-	fi
-	dput $dput_simulate -U llso:$destination_repository ${source_package_name}_*source.changes
+	dput $dput_simulate -U llso:ubuntu/$dist-$SUITE_NAME ${source_package_name}_*source.changes
 	# uploading once is sufficient, so we break here
 	break
 done

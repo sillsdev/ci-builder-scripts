@@ -20,7 +20,8 @@ class common {
 export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.@@{revision}
 
 if [ "$PackageBuildKind" = "Release" ]; then
-    RELEASE_PACKAGE="--preserve-changelog"
+    MAKE_SOURCE_ARGS="--preserve-changelog"
+    BUILD_PACKAGE_ARGS="--no-upload"
 fi
 
 cd "@@{subdir_name}"
@@ -30,13 +31,14 @@ $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
     --supported-distros "@@{supported_distros}" \
     --debkeyid $DEBSIGNKEY \
     @@{package_version} \
-    $RELEASE_PACKAGE
+    $MAKE_SOURCE_ARGS
 
 $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
     --arches "$ArchesToPackage" \
     --main-package-name "@@{packagename}" \
     --supported-distros "@@{supported_distros}" \
-    --debkeyid $DEBSIGNKEY
+    --debkeyid $DEBSIGNKEY \
+    $BUILD_PACKAGE_ARGS
         '''
 
         /*
