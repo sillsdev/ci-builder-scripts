@@ -70,10 +70,6 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
     for arch in $ARCHES_TO_PACKAGE; do
         cd $pbuilder_path/$dist/$arch/result
         sha256sum ${source_package_name}_*.changes ${source_package_name}_*.deb || true
-        if [ -n "$preserve_products_arg" ]; then
-            mkdir -p "$PRODUCTS_PRESERVATION_PATH"
-            cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb "$PRODUCTS_PRESERVATION_PATH"/
-        fi
 		mkdir -p "$WORKSPACE/results"
         cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb $WORKSPACE/results/
     done

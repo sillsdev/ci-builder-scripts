@@ -33,8 +33,6 @@ init()
 			--omit-binary-packages) shift; omit_binary_packages_arg=$1 ;;
 			# For making release packages. Do not add a new entry to the changelog. Package versions will be as specified in the last changelog entry, without a nightly timestamp appended.
 			--preserve-changelog) preserve_changelog_arg=true ;;
-			# Normally source and binary packages end up getting deleted during future runs of this script. If the source and binary packages from this run are to be kept around so they can be manually processed (eg to sign or upload to a different location), then this argument can be used.
-			--preserve-products) preserve_products_arg=true ;;
 			# Omit uploading to llso. This parameter should be set when doing a release build on
 			# Jenkins because the package has to be downloaded, signed and manually uploaded.
 			--no-upload) no_upload=true ;;
