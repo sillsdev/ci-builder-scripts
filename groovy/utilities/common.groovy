@@ -82,8 +82,6 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 }
 
                 configure { project ->
-                    project / 'publishers' << 'hudson.plugins.jira.JiraIssueUpdater' {
-                    }
                     project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
                         publishUnstableBuilds(true);
                         publishFailedBuilds(true);
@@ -365,6 +363,13 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         return { project ->
             project / 'publishers' << 'hudson.plugins.nunit.NUnitPublisher' {
                 testResultsPattern(results)
+            }
+        }
+    }
+
+    static Closure JiraIssueUpdater(results) {
+        return { project ->
+            project / 'publishers' << 'hudson.plugins.jira.JiraIssueUpdater' {
             }
         }
     }
