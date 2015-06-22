@@ -79,19 +79,37 @@ collects the results and reports them back to GitHub.</p>
 				"""ARTIFACTS_TAG=\"jenkins-GitHub-Bloom-Win32-$branchName-debug-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
 UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
 
-			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-debug-Tests", 'output/Debug/BloomTests.dll.results.xml',
-				"GitHub-Bloom-Linux-any-$branchName-debug-Tests-results/", true, true) {
-				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_debug_Tests}")
+			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
+				includePatterns 'output/Debug/BloomTests.dll.results.xml'
+				targetDirectory "GitHub-Bloom-Linux-any-$branchName-debug-Tests-results/"
+				flatten true
+				optional true
+				fingerprintArtifacts true
+				buildSelector {
+					buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_debug_Tests}")
+				}
 			}
 
-			copyArtifacts("GitHub-Bloom-Win32-$branchName-debug-Tests", 'output/Debug/BloomTests.dll.results.xml',
-				"GitHub-Bloom-Win32-$branchName-debug-Tests-results/", true, true) {
-				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Win32_${branchNameForParameterizedTrigger}_debug_Tests}")
+			copyArtifacts("GitHub-Bloom-Win32-$branchName-debug-Tests") {
+				includePatterns 'output/Debug/BloomTests.dll.results.xml'
+				targetDirectory "GitHub-Bloom-Win32-$branchName-debug-Tests-results/"
+				flatten true
+				optional true
+				fingerprintArtifacts true
+				buildSelector {
+					buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Win32_${branchNameForParameterizedTrigger}_debug_Tests}")
+				}
 			}
 
-			copyArtifacts("GitHub-Bloom-Linux-any-$branchName--JSTests", 'src/BloomBrowserUI/test-results.xml',
-				"GitHub-Bloom-Linux-any-$branchName--JSTests-results/", true, true) {
-				buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_JSTests}")
+			copyArtifacts("GitHub-Bloom-Linux-any-$branchName--JSTests") {
+				includePatterns 'src/BloomBrowserUI/test-results.xml'
+				targetDirectory "GitHub-Bloom-Linux-any-$branchName--JSTests-results/"
+				flatten true
+				optional true
+				fingerprintArtifacts true
+				buildSelector {
+					buildNumber("\${TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_${branchNameForParameterizedTrigger}_JSTests}")
+				}
 			}
 
 		}

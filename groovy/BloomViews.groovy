@@ -7,12 +7,7 @@
 class bloomViews {
 	static void BloomViewAll(viewContext) {
 		viewContext.with {
-			view('All') {
-				configure { view ->
-					view.name = 'org.jenkinsci.plugins.categorizedview.CategorizedJobsView'
-					view / 'name' << 'All'
-				}
-
+			categorizedJobsView('All') {
 				description 'All <b>Bloom</b> jobs'
 				filterBuildQueue false
 				filterExecutors false
@@ -21,43 +16,23 @@ class bloomViews {
 					regex('(^Bloom(-|_).*|^GitHub-Bloom-.*)')
 				}
 
-				configure { view ->
-					view / columns / 'hudson.views.StatusColumn'
-					view / columns / 'hudson.views.WeatherColumn'
-					view / columns / 'org.jenkinsci.plugins.categorizedview.IndentedJobColumn'
-					view / columns / 'hudson.views.LastSuccessColumn'
-					view / columns / 'hudson.views.LastFailureColumn'
-					view / columns / 'hudson.views.LastDurationColumn'
-					view / columns / 'hudson.views.BuildButtonColumn'
+				columns {
+					status()
+					weather()
+					categorizedJob()
+					lastSuccess()
+					lastFailure()
+					lastDuration()
+					buildButton()
 				}
 
-				configure { view ->
-					view / categorizationCriteria {
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('^Bloom-.*-(default|master)-debug$')
-							namingRule('master branch compile jobs')
-						}
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('^Bloom-.*-(default|master)-.*Tests$')
-							namingRule('master branch unit tests')
-						}
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('.*(Packaging).*')
-							namingRule('')
-						}
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('.*-Trigger-.*')
-							namingRule('master branch builds')
-						}
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('^GitHub.*-master-.*')
-							namingRule('Pre-merge builds of GitHub pull requests (master branch)')
-						}
-						'org.jenkinsci.plugins.categorizedview.GroupingRule' {
-							groupRegex('^GitHub.*-Version3.0-.*')
-							namingRule('Pre-merge builds of GitHub pull requests (Version3.0 branch)')
-						}
-					}
+				categorizationCriteria {
+					regexGroupingRule('^Bloom-.*-(default|master)-debug$', 'master branch compile jobs')
+					regexGroupingRule('^Bloom-.*-(default|master)-.*Tests$', 'master branch unit tests')
+					regexGroupingRule('.*(Packaging).*', '')
+					regexGroupingRule('.*-Trigger-.*', 'master branch builds')
+					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
+					regexGroupingRule('^GitHub.*-Version3.0-.*', 'Pre-merge builds of GitHub pull requests (Version3.0 branch)')
 				}
 			}
 		}
@@ -66,7 +41,7 @@ class bloomViews {
 	static void BloomViewBuildPipeline(viewContext, viewName, branchName, selectedJobName,
 		preMerge) {
 		viewContext.with {
-			view(viewName, type: BuildPipelineView) {
+			buildPipelineView(viewName) {
 
 				title "Builds of the `$branchName` branch"
 				if (preMerge)
@@ -94,7 +69,7 @@ class bloomViews {
 
 	static void BloomViewPackageBuilds(viewContext) {
 		viewContext.with {
-			view('Package builds') {
+			listView('Package builds') {
 				description 'Package builds of <b>Bloom</b>'
 				filterBuildQueue false
 				filterExecutors false
@@ -103,16 +78,18 @@ class bloomViews {
 					regex('^Bloom_Packaging-.*')
 				}
 
+				columns {
+					status()
+					weather()
+					name()
+					lastSuccess()
+					lastFailure()
+					lastDuration()
+					buildButton()
+					lastBuildNode()
+					lastBuildConsole()
+				}
 				configure { view ->
-					view / columns / 'hudson.views.StatusColumn'
-					view / columns / 'hudson.views.WeatherColumn'
-					view / columns / 'hudson.views.JobColumn'
-					view / columns / 'hudson.views.LastSuccessColumn'
-					view / columns / 'hudson.views.LastFailureColumn'
-					view / columns / 'hudson.views.LastDurationColumn'
-					view / columns / 'hudson.views.BuildButtonColumn'
-					view / columns / 'org.jenkins.plugins.builton.BuiltOnColumn'
-					view / columns / 'de.fspengler.hudson.pview.ConsoleViewColumn'
 					view / columns / 'hudson.plugins.nodenamecolumn.NodeNameColumn'
 				}
 			}

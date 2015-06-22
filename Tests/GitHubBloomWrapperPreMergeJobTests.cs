@@ -183,7 +183,7 @@ namespace Tests
 			Assert.That(copyArtifactsTables[0].FindElement(By.XPath(
 				"./tr/td[preceding-sibling::td[text()='Which build']]/select/option[@selected]")).GetAttribute("textContent"),
 				Is.EqualTo("Specific build"));
-			Assert.That(copyArtifactsTables[0].FindElement(By.Name("buildNumber")).GetAttribute("value"),
+			Assert.That(copyArtifactsTables[0].FindElement(By.Name("_.buildNumber")).GetAttribute("value"),
 				Is.EqualTo(string.Format("${{TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_{0}_debug_Tests}}",
 					SanitizedBranchName)));
 			Assert.That(copyArtifactsTables[0].FindElement(By.Name("_.filter")).GetAttribute("value"),
@@ -206,7 +206,7 @@ namespace Tests
 			Assert.That(copyArtifactsTables[1].FindElement(By.XPath(
 				"./tr/td[preceding-sibling::td[text()='Which build']]/select/option[@selected]")).GetAttribute("textContent"),
 				Is.EqualTo("Specific build"));
-			Assert.That(copyArtifactsTables[1].FindElement(By.Name("buildNumber")).GetAttribute("value"),
+			Assert.That(copyArtifactsTables[1].FindElement(By.Name("_.buildNumber")).GetAttribute("value"),
 				Is.EqualTo(string.Format("${{TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Win32_{0}_debug_Tests}}",
 					SanitizedBranchName)));
 			Assert.That(copyArtifactsTables[1].FindElement(By.Name("_.filter")).GetAttribute("value"),
@@ -229,7 +229,7 @@ namespace Tests
 			Assert.That(copyArtifactsTables[2].FindElement(By.XPath(
 				"./tr/td[preceding-sibling::td[text()='Which build']]/select/option[@selected]")).GetAttribute("textContent"),
 				Is.EqualTo("Specific build"));
-			Assert.That(copyArtifactsTables[2].FindElement(By.Name("buildNumber")).GetAttribute("value"),
+			Assert.That(copyArtifactsTables[2].FindElement(By.Name("_.buildNumber")).GetAttribute("value"),
 				Is.EqualTo(string.Format("${{TRIGGERED_BUILD_NUMBER_GitHub_Bloom_Linux_any_{0}_JSTests}}",
 					SanitizedBranchName)));
 			Assert.That(copyArtifactsTables[2].FindElement(By.Name("_.filter")).GetAttribute("value"),
