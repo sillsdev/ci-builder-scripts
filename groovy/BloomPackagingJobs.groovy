@@ -19,7 +19,7 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
 
 freeStyleJob('Bloom_Packaging-Linux-all-3.0-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-        distros_tobuild);
+        distros_tobuild, 'Version3.0');
 
     description '''
 <p>Nightly builds of the Version3.0 branch.</p>
@@ -30,14 +30,15 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.0-release') {
         githubPush();
     }
 
-    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'Version3.0', false, subdir_name, false, true);
+    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', "\$BranchOrTagToBuild",
+        false, subdir_name, false, true);
 }
 
 def subdir_name_unstable = 'bloom-desktop-unstable';
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
-        distros_tobuild);
+        distros_tobuild, 'master');
 
     description '''
 <p>Nightly builds of the Bloom master branch.</p>
@@ -48,5 +49,6 @@ freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
         githubPush();
     }
 
-    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', 'master', false, subdir_name_unstable, false, true);
+    common.gitScm(delegate, 'git://github.com/BloomBooks/BloomDesktop.git', "\$BranchOrTagToBuild",
+        false, subdir_name_unstable, false, true);
 }

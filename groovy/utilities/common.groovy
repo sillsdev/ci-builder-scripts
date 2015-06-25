@@ -9,8 +9,9 @@ class common {
         package_version = "",
         revision = "",
         distros_tobuild = "precise trusty",
+        branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic wheezy jessie") {
+        supported_distros = "precise trusty utopic vivid wheezy jessie") {
         /*
          * Definition of build step scripts
          */
@@ -59,6 +60,8 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 choiceParam("PackageBuildKind",
                     ["Nightly", "Release"],
                     "What kind of build is this? A nightly build will have the prefix +nightly2014... appended, a release will just have the version number.");
+                stringParam("BranchOrTagToBuild", "refs/heads/$branch",
+                    "What branch/tag to build? (example: refs/heads/master, refs/tags/bloom-3.1)");
             }
 
             wrappers {
