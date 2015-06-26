@@ -100,6 +100,21 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 allowBrokenBuildClaiming();
 
                 mailer("eb1@sil.org");
+
+                flexiblePublish {
+                    condition {
+                        not {
+                            stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
+                        }
+                    }
+                    step {
+                        downstreamParameterized {
+                            trigger(jobContext.name, 'ALWAYS', false) {
+                               predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
