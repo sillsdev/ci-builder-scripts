@@ -32,7 +32,7 @@ class bloomViews {
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('.*-Trigger-.*', 'master branch builds')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
-					regexGroupingRule('^GitHub.*-Version3.0-.*', 'Pre-merge builds of GitHub pull requests (Version3.0 branch)')
+					regexGroupingRule('^GitHub.*-Version.*-.*', 'Pre-merge builds of GitHub pull requests (Release branch)')
 				}
 			}
 		}
@@ -105,8 +105,8 @@ nestedView('Bloom') {
 		bloomViews.BloomViewAll(delegate)
 		bloomViews.BloomViewBuildPipeline(delegate, "Build Pipeline master branch",
 			"master", 'Bloom-Wrapper-Trigger-debug', false)
-		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.0",
-			"Version3.0", 'GitHub-Bloom-Wrapper-Version3.0-debug', true)
+		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.3",
+			"Version3.3", 'GitHub-Bloom-Wrapper-Version3.3-debug', true)
 		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline master branch",
 			"master", 'GitHub-Bloom-Wrapper-master-debug', true)
 		bloomViews.BloomViewPackageBuilds(delegate)

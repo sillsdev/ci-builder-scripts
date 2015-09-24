@@ -11,7 +11,7 @@ import utilities.Bloom;
  * and commit and push the changes.
  */
 
- for (branchName in ['master', 'Version3.0']) {
+ for (branchName in ['master', 'Version3.3']) {
 
 	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-debug") {
 
@@ -55,7 +55,7 @@ collects the results and reports them back to GitHub.</p>
 		}
 
 		// There's something weird going on: if we directly use branchName as the name for the
-		// branch below, it'll insert the last value in the list (Version3.0). If instead we
+		// branch below, it'll insert the last value in the list (Version3.3). If instead we
 		// define a variable and use that everything works as expected.
 		def BRANCHNAME=branchName
 		configure { project ->
