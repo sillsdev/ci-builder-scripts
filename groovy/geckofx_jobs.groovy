@@ -4,7 +4,7 @@
 import utilities.common
 
 // Variables
-def distros_tobuild = 'precise trusty utopic';
+def distros_tobuild = 'precise trusty utopic xenial';
 def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
 
 /*
@@ -16,7 +16,7 @@ freeStyleJob('Geckofx29_NightlyPackaging-Linux-all-master-debug') {
 
     description '''
 <p>Nightly builds of the geckofx-29.0 default branch.</p>
-<p>The job is created by the DSL plugin from <i>geckofx29-jobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>geckofx-jobs.groovy</i> script.</p>
 ''';
 
     triggers {
