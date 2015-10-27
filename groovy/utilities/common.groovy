@@ -224,15 +224,8 @@ xbuild ''' + projFile);
 
     static void addGetDependenciesBuildStep(stepContext) {
         stepContext.with {
-            // for whatever reason http_proxy doesn't come through - it is set in the build agent,
-            // but in here it is not set. So we set it here again to a neutral value so that it
-            // should work on all machines (except in the rare case where http_proxy should be
-            // different from HTTP_PROXY)
             shell('''
 echo "Fetching dependencies"
-if [ -z "$http_proxy" ]; then
-    export http_proxy=$HTTP_PROXY
-fi
 cd build
 ./getDependencies-Linux.sh
 ''');
