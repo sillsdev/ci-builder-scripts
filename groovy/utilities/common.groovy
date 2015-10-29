@@ -11,7 +11,8 @@ class common {
         distros_tobuild = "precise trusty",
         branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic vivid wheezy jessie") {
+        supported_distros = "precise trusty utopic vivid wheezy jessie",
+        email = "eb1@sil.org") {
         /*
          * Definition of build step scripts
          */
@@ -99,7 +100,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
                 allowBrokenBuildClaiming();
 
-                mailer("eb1@sil.org");
+                mailer(email);
 
                 flexiblePublish {
                     condition {
