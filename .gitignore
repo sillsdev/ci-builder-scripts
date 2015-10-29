@@ -1,2 +1,4 @@
 *~
 *.swp
+/.idea/
+ci-builder-scripts.iml

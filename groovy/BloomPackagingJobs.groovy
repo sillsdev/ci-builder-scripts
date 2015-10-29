@@ -34,7 +34,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.3-release') {
         false, subdir_name, false, true);
 }
 
-def subdir_name_unstable = 'bloom-desktop-beta';
+def subdir_name_unstable = 'bloom-desktop-unstable';
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
