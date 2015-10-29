@@ -23,7 +23,7 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
 
 freeStyleJob('Bloom_Packaging-Linux-all-3.3-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-        distros_tobuild, 'Version3.3', email: email_recipients);
+        distros_tobuild, email_recipients, 'Version3.3');
 
     description '''
 <p>Nightly builds of the Version3.3 branch.</p>
@@ -40,7 +40,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.3-release') {
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
-        distros_tobuild, 'master', email: email_recipients);
+        distros_tobuild, email_recipients, 'master');
 
     description '''
 <p>Nightly builds of the Bloom master branch.</p>

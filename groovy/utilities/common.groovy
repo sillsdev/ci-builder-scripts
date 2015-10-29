@@ -9,10 +9,10 @@ class common {
         package_version = "",
         revision = "",
         distros_tobuild = "precise trusty",
+        email = "eb1@sil.org",
         branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic vivid wheezy jessie",
-        email = "eb1@sil.org") {
+        supported_distros = "precise trusty utopic vivid wheezy jessie") {
         /*
          * Definition of build step scripts
          */
@@ -49,7 +49,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
         jobContext.with {
 
-            label 'packager';
+            label('packager');
 
             logRotator(365, 20, 10, 10);
 
