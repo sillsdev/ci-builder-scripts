@@ -110,8 +110,15 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     }
                     step {
                         downstreamParameterized {
-                            trigger(jobContext.name, 'ALWAYS', false) {
-                               predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                            trigger(jobContext.name) {
+                                block {
+                                    buildStepFailure('FAILURE')
+                                    failure('FAILURE')
+                                    unstable('UNSTABLE')
+                                }
+                                parameters {
+                                    predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                }
                             }
                         }
                     }
@@ -312,12 +319,17 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
     static void addTriggerDownstreamBuildStep(stepContext, projects, predefProps = null) {
         stepContext.with {
             downstreamParameterized {
-                trigger(projects,
-                    'ALWAYS', false,
-                    ["buildStepFailure": "FAILURE", "failure": "FAILURE", "unstable": "UNSTABLE"]) {
-                    currentBuild()
-                    if (predefProps != null)
-                        predefinedProps(predefProps)
+                trigger(projects) {
+                    block {
+                        buildStepFailure('FAILURE')
+                        failure('FAILURE')
+                        unstable('UNSTABLE')
+                    }
+                    parameters {
+                        currentBuild()
+                        if (predefProps != null)
+                            predefinedProps(predefProps)
+                    }
                 }
             }
         }

@@ -76,8 +76,9 @@ collects the results and reports them back to GitHub.</p>
 
 			common.addTriggerDownstreamBuildStep(delegate,
 				"GitHub-Bloom-Linux-any-$branchName-debug-Tests, GitHub-Bloom-Win32-$branchName-debug-Tests",
-				"""ARTIFACTS_TAG=\"jenkins-GitHub-Bloom-Win32-$branchName-debug-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}"
-UPSTREAM_BUILD_TAG=\${BUILD_TAG}""")
+				["ARTIFACTS_TAG":
+				"jenkins-GitHub-Bloom-Win32-$branchName-debug-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}",
+				"UPSTREAM_BUILD_TAG": "\${BUILD_TAG}"])
 
 			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
 				includePatterns 'output/Debug/BloomTests.dll.results.xml'
