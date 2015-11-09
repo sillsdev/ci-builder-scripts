@@ -1,0 +1,10 @@
+{
+    "name": "Tests",
+    "dependencies": {
+        "phantomjs": "latest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sillsdev/ci-builder-scripts.git"
+    }
+}
