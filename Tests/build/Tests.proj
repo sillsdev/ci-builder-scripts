@@ -1,0 +1,59 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<RootDir Condition="'$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+		<Platform Condition="'$(OS)'=='Windows_NT' And '$(Platform)'==''">Mixed Platforms</Platform>
+		<Platform Condition="'$(OS)'!='Windows_NT' And '$(Platform)'==''">Any CPU</Platform>
+		<Solution>Tests.sln</Solution>
+		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
+		<OutputDir>$(RootDir)/bin/$(Configuration)</OutputDir>
+		<Runtime Condition="'$(OS)'!='Windows_NT'">mono --debug</Runtime>
+		<Runtime Condition="'$(OS)'=='Windows_NT'"></Runtime>
+	</PropertyGroup>
+
+	<Import Project="NuGet.targets"/>
+<!--
+	<UsingTask AssemblyFile="$(RootDir)/packages/MSBuild.NUnit.1.0.2/tools/MSBuild.NUnit.dll"
+		TaskName="MSBuild.Tasks.NUnit" />
+-->
+
+	<Target Name="Build">
+		<CallTarget Targets="Clean"/>
+		<CallTarget Targets="Compile"/>
+		<Message Text="Build Complete"/>
+	</Target>
+
+	<ItemGroup>
+		<ExistingObjectFiles
+			Include="$(RootDir)/output/$(Configuration)/**/*"
+			Exclude="$(RootDir)/.git/**/*"
+		/>
+	</ItemGroup>
+
+	<Target Name="Clean">
+		<Delete Files="@(ExistingObjectFiles)" />
+		<Delete Condition="'$(OS)'=='Windows_NT'"
+			 Files="$(RootDir)/**/obj/**/*" />
+		<Exec Condition="'$(OS)'!='Windows_NT'"
+			Command="find . %5c( -name obj -o -name bin -o -name test-results %5c) -type d -print0 | xargs -0 rm -rf"
+			WorkingDirectory="$(RootDir)" />
+	</Target>
+
+	<Target Name="Compile" DependsOnTargets="RestorePackages">
+		<MSBuild
+			Projects="$(SolutionPath)"
+			Targets="Build"
+			Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+	</Target>
+
+<!--
+	<Target Name="Test" DependsOnTargets="Build">
+		<NUnit Assemblies="$(OutputDir)/Tests.dll"
+			ToolPath="$(RootDir)/packages/NUnit.Runners.Net4.2.6.4/tools/" DisableShadowCopy="true"
+			Force32Bit="false" ProjectConfiguration="$(Configuration)" FrameworkToUse="net-4.5"
+			WorkingDirectory="$(OutputDir)" ContinueOnError="false"
+			ProcessModel="Single" HideDots="false" />
+	</Target>
+-->
+
+</Project>

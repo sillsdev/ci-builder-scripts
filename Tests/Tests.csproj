@@ -56,7 +56,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="node_modules\phantomjs\bin\phantomjs">
+    <None Include="node_modules\phantomjs\lib\phantomjs.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

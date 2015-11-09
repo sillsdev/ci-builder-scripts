@@ -3,4 +3,4 @@ obj/
 /node_modules/
 /packages/
 *.userprefs
-*.sln
+build/NuGet.exe
