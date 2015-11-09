@@ -26,17 +26,13 @@
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
-			Exclude="$(RootDir)/.git/**/*"
+			Exclude="$(RootDir)/.git/**/*;$(RootDir)/node_modules/**/*"
 		/>
 	</ItemGroup>
 
 	<Target Name="Clean">
 		<Delete Files="@(ExistingObjectFiles)" />
-		<Delete Condition="'$(OS)'=='Windows_NT'"
-			 Files="$(RootDir)/**/obj/**/*" />
-		<Exec Condition="'$(OS)'!='Windows_NT'"
-			Command="find . %5c( -name obj -o -name bin -o -name test-results %5c) -type d -print0 | xargs -0 rm -rf"
-			WorkingDirectory="$(RootDir)" />
+		<Delete Files="$(RootDir)/**/obj/**/*" />
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="RestorePackages">
