@@ -16,11 +16,11 @@ namespace Tests
 	}
 
 	[TestFixtureAttribute]
-	public class GitHubBloomWrapperVersion30PreMergeJobTests: GitHubBloomWrapperPreMergeJobTests
+	public class GitHubBloomWrapperVersion33PreMergeJobTests: GitHubBloomWrapperPreMergeJobTests
 	{
 		protected override string BranchName
 		{
-			get { return "Version3.0"; }
+			get { return "Version3.3"; }
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace Tests
 				"./tr/td[preceding-sibling::td[text()='Default Value']]/input"),
 				Is.Empty);
 			Assert.That(_jenkins.GetTextByXPath("String Parameter",
-				"./tr/td[preceding-sibling::td[text()='Description']]//div[@style='']/pre"),
+				"./tr/td[preceding-sibling::td[text()='Description']]/textarea"),
 				Is.EqualTo("What pull request to build, e.g. origin/pr/9/head"));
 		}
 
@@ -166,8 +166,8 @@ namespace Tests
 			Assert.That(triggerBuildsTables[1].FindElement(By.XPath("//b[text()='Current build parameters']")),
 				Is.Not.Null);
 			Assert.That(triggerBuildsTables[1].FindElement(By.Name("_.properties")).GetAttribute("textContent"),
-				Is.EqualTo(string.Format("ARTIFACTS_TAG=\"jenkins-GitHub-Bloom-Win32-{0}-debug-" +
-					"${{TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}}\"\n" +
+				Is.EqualTo(string.Format("ARTIFACTS_TAG=jenkins-GitHub-Bloom-Win32-{0}-debug-" +
+					"${{TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}}\n" +
 					"UPSTREAM_BUILD_TAG=${{BUILD_TAG}}", BranchName)));
 		}
 

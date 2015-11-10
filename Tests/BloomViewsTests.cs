@@ -32,7 +32,7 @@ namespace Tests
 			Assert.That(tabs.Count, Is.EqualTo(6));
 			Assert.That(tabs[0].Text, Is.EqualTo("All"));
 			Assert.That(tabs[1].Text, Is.EqualTo("Build Pipeline master branch"));
-			Assert.That(tabs[2].Text, Is.EqualTo("PR pipeline Version3.0"));
+			Assert.That(tabs[2].Text, Is.EqualTo("PR pipeline Version3.3"));
 			Assert.That(tabs[3].Text, Is.EqualTo("PR pipeline master branch"));
 			Assert.That(tabs[4].Text, Is.EqualTo("Package builds"));
 			Assert.That(tabs[5].Text, Is.EqualTo("+"));
@@ -44,7 +44,7 @@ namespace Tests
 			_jenkins.OpenConfigurePage("view/Bloom/view/All", "Edit View");
 			Assert.That(_jenkins.GetValueByName("name"), Is.EqualTo("All"));
 			Assert.That(_jenkins.GetTextByXPath(
-				"//td[preceding-sibling::td[text()='Description']]//div[@style='']/pre"),
+				"//td[preceding-sibling::td[text()='Description']]/textarea"),
 				Is.EqualTo("All <b>Bloom</b> jobs"));
 			Assert.That(_jenkins.IsCheckedByName("filterQueue"), Is.False,
 				"'Filter build queue' is checked");
@@ -96,15 +96,15 @@ namespace Tests
 
 			Assert.That(groupingTable[5].FindElement(By.XPath(
 				".//td[preceding-sibling::td[text()='Regex for categorization']]/input")).GetAttribute("value"),
-				Is.EqualTo("^GitHub.*-Version3.0-.*"));
+				Is.EqualTo("^GitHub.*-Version.*-.*"));
 			Assert.That(groupingTable[5].FindElement(By.XPath(
 				".//td[preceding-sibling::td[text()='Naming Rule']]/input")).GetAttribute("value"),
-				Is.EqualTo("Pre-merge builds of GitHub pull requests (Version3.0 branch)"));
+				Is.EqualTo("Pre-merge builds of GitHub pull requests (Release branch)"));
 		}
 
 		[Test]
 		[TestCase("Build Pipeline master branch", "master", "Bloom-Wrapper-Trigger-debug", false)]
-		[TestCase("PR pipeline Version3.0", "Version3.0", "GitHub-Bloom-Wrapper-Version3.0-debug", true)]
+		[TestCase("PR pipeline Version3.3", "Version3.3", "GitHub-Bloom-Wrapper-Version3.3-debug", true)]
 		[TestCase("PR pipeline master branch", "master", "GitHub-Bloom-Wrapper-master-debug", true)]
 		public void BuildPipelineMasterBranchView(string viewName, string branch, string initalJob,
 			bool isPreMerge)
@@ -115,7 +115,7 @@ namespace Tests
 				string.Format("Pre-merge builds of the {0} branch of <b>Bloom</b>", branch)
 				: string.Format("<b>Bloom</b> builds of the {0} branch", branch);
 			Assert.That(_jenkins.GetTextByXPath(
-				"//td[preceding-sibling::td[text()='Description']]//div[@style='']/pre"),
+				"//td[preceding-sibling::td[text()='Description']]/textarea"),
 				Is.EqualTo(expectedDescription));
 			Assert.That(_jenkins.IsCheckedByName("filterQueue"), Is.False,
 				"'Filter build queue' is checked");
@@ -155,7 +155,7 @@ namespace Tests
 			_jenkins.OpenConfigurePage("view/Bloom/view/Package builds", "Edit View");
 			Assert.That(_jenkins.GetValueByName("name"), Is.EqualTo("Package builds"));
 			Assert.That(_jenkins.GetTextByXPath(
-				"//td[preceding-sibling::td[text()='Description']]//div[@style='']/pre"),
+				"//td[preceding-sibling::td[text()='Description']]/textarea"),
 				Is.EqualTo("Package builds of <b>Bloom</b>"));
 			Assert.That(_jenkins.IsCheckedByName("filterQueue"), Is.False,
 				"'Filter build queue' is checked");

@@ -10,7 +10,6 @@ namespace Tests
 {
 	public class Jenkins: IDisposable
 	{
-		public const string Url = "http://jenkins-vm.local:8080";
 		private PhantomJSDriver _driver;
 		private WebDriverWait _wait;
 
@@ -20,6 +19,8 @@ namespace Tests
 			options.AddAdditionalCapability("phantomjs.page.customHeaders.Accept-Language", "en");
 			_driver = new PhantomJSDriver(options);
 			_wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+			var jenkinsUrl = Environment.GetEnvironmentVariable("JENKINS_URL");
+			Url = string.IsNullOrEmpty(jenkinsUrl) ? "http://localhost:8080" : jenkinsUrl;
 		}
 
 		#region Disposable stuff
@@ -62,22 +63,26 @@ namespace Tests
 			return new Jenkins();
 		}
 
+		public string Url { get; private set; }
+
 		public void Login()
 		{
-			_driver.Navigate().GoToUrl(Url + "/login");
-			_driver.Manage().Window.Size = new Size(1024, 768);
-			_wait.Until(d => d.Title.StartsWith("Jenkins"));
-			var username = _driver.FindElementById("j_username");
-			username.SendKeys("admin");
-			var pw = _driver.FindElementByName("j_password");
-			pw.SendKeys("admin");
-			var loginButton = _driver.FindElementById("yui-gen1-button");
-			loginButton.Click();
+			// Our Docker based Jenkins test instance doesn't use authentication
+//			_driver.Navigate().GoToUrl(Url + "/login");
+//			_driver.Manage().Window.Size = new Size(1024, 768);
+//			_wait.Until(d => d.Title.StartsWith("Jenkins"));
+//			var username = _driver.FindElementById("j_username");
+//			username.SendKeys("admin");
+//			var pw = _driver.FindElementByName("j_password");
+//			pw.SendKeys("admin");
+//			var loginButton = _driver.FindElementById("yui-gen1-button");
+//			loginButton.Click();
+//			_wait.Until(d => d.Title.StartsWith("Dashboard"));
 		}
 
 		public void OpenConfigurePage(string page, string pageTitle = null)
 		{
-			_driver.Url = string.Format("{0}/{1}/configure", Url, page);
+			_driver.Navigate().GoToUrl(string.Format("{0}/{1}/configure", Url, page));
 			if (string.IsNullOrEmpty(pageTitle))
 			{
 				var parts = page.Split('/');
