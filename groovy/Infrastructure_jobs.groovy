@@ -12,7 +12,7 @@ freeStyleJob('Infrastructure-Linux-master-debug-checkoutonly') {
 
 	description '''
 <p>This job keeps the <i>docker</i> directory up-to-date on the packaging machine.</p>
-<p>The job is created by the DSL plugin from <i>$thisFile</i> script.<p>
+<p>The job is created by the DSL plugin from <i>''' + thisFile + '''</i> script.<p>
 '''
 
 	label 'master';
