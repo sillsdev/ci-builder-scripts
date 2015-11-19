@@ -26,5 +26,11 @@ freeStyleJob('Infrastructure-Linux-master-debug-checkoutonly') {
 			branch("master");
 		}
 	}
+
+	triggers {
+		// Run every Sunday
+		// Times are UTC
+		cron("H H * * 0");
+	}
 }
 
