@@ -16,7 +16,7 @@ folder('Infrastructure')
 freeStyleJob('Infrastructure/image-factory-bootstrap') {
 
 	description '''
-<p>Create the docker image for the image builder and testjenkins slaves.</p>
+<p>Create the docker image for the image builder and testjenkins slaves. Scripts come <i>from cd-infrastructure</i>.</p>
 <p>The job is created by the DSL plugin from <i>Infrastructure_jobs.groovy</i> script.<p>
 '''
 
