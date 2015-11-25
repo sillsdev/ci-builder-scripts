@@ -414,7 +414,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 
 	static Closure DockerBuildStep_CreateContainer(imageName, nameOfContainer) {
 		return { project ->
-			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder' {
+			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.32') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.CreateContainerCommand') {
 					image imageName
 					containerName nameOfContainer
@@ -425,7 +425,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 
 	static Closure DockerBuildStep_StartContainer(nameOfContainer, ports) {
 		return { project ->
-			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder' {
+			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.32') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.StartCommand') {
 					containerIds nameOfContainer
 					portBindings ports
