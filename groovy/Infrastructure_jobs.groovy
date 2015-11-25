@@ -45,8 +45,8 @@ freeStyleJob('Infrastructure/image-factory-bootstrap') {
 [localhost]
 localhost''', "localhost", "-c local")
 
-		groovyScriptFile('jenkins/slaves/groovy/src/addDockerCloud.groovy') {
-			prop("workdir", "\${WORKSPACE}")
+		systemGroovyScriptFile('jenkins/slaves/groovy/src/addDockerCloud.groovy') {
+			binding("workdir", "\${WORKSPACE}")
 		}
 	}
 }
@@ -133,7 +133,7 @@ and reported back to Gerrit.</p>
 		git {
 			remote {
 				name("gerrit")
-				url("https://github.com/docker/docker.git")
+				url('git://gerrit.lsdev.sil.org/ci-builder-scripts.git')
 				refspec("\$GERRIT_REFSPEC")
 			}
 			branch("\$GERRIT_BRANCH")
@@ -158,9 +158,14 @@ and reported back to Gerrit.</p>
 	}
 
 	steps {
-		shell('''
+		// It's necessary to use configure here instead of directly shell because otherwise the order gets messed up
+		configure { project ->
+			project / builders / 'hudson.tasks.Shell' {
+				command '''
 docker kill testjenkins 2> /dev/null || true
-docker rm testjenkins 2> /dev/null || true''')
+docker rm testjenkins 2> /dev/null || true'''
+			}
+		}
 
 		configure common.DockerBuildStep_CreateContainer('slave-testjenkins', 'testjenkins')
 
