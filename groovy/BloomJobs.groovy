@@ -64,7 +64,7 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 		common.addGetDependenciesBuildStep(delegate);
 
 		// Build
-		common.addXbuildBuildStep(delegate, 'Bloom\\ VS2010.sln');
+		common.addXbuildBuildStep(delegate, 'BloomLinux.sln');
 	}
 }
 
@@ -81,7 +81,7 @@ freeStyleJob('Bloom-Win32-master-debug') {
 		common.addGetDependenciesWindowsBuildStep(delegate)
 	}
 
-	configure common.MsBuildBuilder('Bloom VS2010.sln')
+	configure common.MsBuildBuilder('Bloom.sln')
 }
 
 
