@@ -60,9 +60,9 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     "The architectures to build packages for");
                 choiceParam("PackageBuildKind",
                     ["Nightly", "Release"],
-                    "What kind of build is this? A nightly build will have the prefix +nightly2014... appended, a release will just have the version number.");
+                    "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.");
                 stringParam("BranchOrTagToBuild", "refs/heads/$branch",
-                    "What branch/tag to build? (example: refs/heads/master, refs/tags/bloom-3.1)");
+                    "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, refs/pr/9/head)");
             }
 
             wrappers {
