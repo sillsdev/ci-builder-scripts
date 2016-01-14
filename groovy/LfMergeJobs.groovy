@@ -45,9 +45,19 @@ freeStyleJob('GitHub-LfMerge-Linux-any-master-debug') {
 			"What pull request to build, e.g. origin/pr/9/head")
 	}
 
+	triggers {
+		pullRequest {
+			admin('ermshiperete')
+			useGitHubHooks(true)
+			orgWhitelist('sillsdev')
+			cron('H/5 * * * *')
+			allowMembersOfWhitelistedOrgsAsAdmin()
+
+		}
+	}
+
 	configure { project ->
 		project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'displayBuildErrorsOnDownstreamBuilds'(true)
-		project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'allowMembersOfWhitelistedOrgsAsAdmin'(true)
 		project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'whiteListTargetBranches' {
 			'org.jenkinsci.plugins.ghprb.GhprbBranch' { 'branch'('master') }
 		}
