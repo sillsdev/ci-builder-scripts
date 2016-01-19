@@ -31,7 +31,7 @@ class LfMerge {
 			scm {
 				git {
 					remote {
-						github("sillsdev/LfMerge", "git")
+						github("sillsdev/LfMerge", "https")
 						refspec(spec)
 					}
 					branch(sha1)
@@ -61,6 +61,7 @@ class LfMerge {
 
 				// Compile mercurial
 				shell('''#!/bin/bash
+set -e
 . environ
 echo "Compiling Mercurial"
 mkdir -p tmp_hg

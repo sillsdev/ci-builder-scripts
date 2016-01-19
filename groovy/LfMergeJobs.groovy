@@ -83,6 +83,7 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-debug') {
 	steps {
 		// Install packages
 		shell('''#!/bin/bash
+set -e
 . environ
 cd build
 mozroots --import --sync
