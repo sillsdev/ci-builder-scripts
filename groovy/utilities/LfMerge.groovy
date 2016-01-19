@@ -13,7 +13,7 @@ class LfMerge {
 	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true) {
 		jobContext.with {
 			priority(100)
-			label 'trusty && linux64'
+			label 'lfmerge'
 
 			logRotator(365, 100)
 
