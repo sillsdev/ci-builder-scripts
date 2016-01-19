@@ -82,7 +82,11 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-debug') {
 
 	steps {
 		// Install packages
-		common.addInstallPackagesBuildStep(delegate)
+		shell('''#!/bin/bash
+. environ
+cd build
+mozroots --import --sync
+./install-deps''');
 	}
 }
 

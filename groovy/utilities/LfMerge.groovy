@@ -61,6 +61,7 @@ class LfMerge {
 
 				// Compile mercurial
 				shell('''#!/bin/bash
+. environ
 echo "Compiling Mercurial"
 mkdir -p tmp_hg
 cd tmp_hg
