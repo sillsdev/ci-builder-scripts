@@ -107,6 +107,6 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 
 	// will be triggered by other jobs
 
-	common.gitScm(delegate, 'git://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
+	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
 		false, 'lfmerge', false, true);
 }
