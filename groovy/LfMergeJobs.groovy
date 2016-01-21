@@ -5,7 +5,7 @@
 /*
  * DSL script for Jenkins LfMerge jobs
  */
-import utilities.common;
+import utilities.common
 import utilities.LfMerge
 
 /*
@@ -87,7 +87,7 @@ set -e
 . environ
 cd build
 mozroots --import --sync
-./install-deps''');
+./install-deps''')
 	}
 }
 
@@ -98,15 +98,15 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 	def distro = 'trusty'
 
 	common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
-		distro, 'eb1@sil.org', 'master', 'amd64', distro);
+		distro, 'eb1@sil.org', 'master', 'amd64', distro, false)
 
 	description '''
 <p>Nightly builds of the LfMerge master branch.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
-''';
+'''
 
 	// will be triggered by other jobs
 
 	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
-		false, 'lfmerge', false, true);
+		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*")
 }

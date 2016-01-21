@@ -12,7 +12,8 @@ class common {
         email = "eb1@sil.org",
         branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic vivid wheezy jessie") {
+        supported_distros = "precise trusty utopic vivid wheezy jessie",
+        blockDownstream = true) {
         /*
          * Definition of build step scripts
          */
@@ -62,7 +63,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     ["Nightly", "Release"],
                     "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.");
                 stringParam("BranchOrTagToBuild", "refs/heads/$branch",
-                    "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, refs/pr/9/head)");
+                    "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)");
             }
 
             wrappers {
@@ -111,10 +112,12 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     step {
                         downstreamParameterized {
                             trigger(jobContext.name) {
-                                block {
-                                    buildStepFailure('FAILURE')
-                                    failure('FAILURE')
-                                    unstable('UNSTABLE')
+                                if (blockDownstream) {
+                                    block {
+                                        buildStepFailure('FAILURE')
+                                        failure('FAILURE')
+                                        unstable('UNSTABLE')
+                                    }
                                 }
                                 parameters {
                                     predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
@@ -217,7 +220,9 @@ fi
 
     static void addInstallPackagesBuildStep(stepContext) {
         stepContext.with {
-            shell('''cd build
+            shell('''#!/bin/bash
+set -e
+cd build
 mozroots --import --sync
 ./install-deps''');
         }
@@ -225,14 +230,17 @@ mozroots --import --sync
 
     static void addXbuildBuildStep(stepContext, projFile) {
         stepContext.with {
-            shell('''. ./environ
+            shell('''#!/bin/bash
+set -e
+. ./environ
 xbuild ''' + projFile);
         }
     }
 
     static void addGetDependenciesBuildStep(stepContext) {
         stepContext.with {
-            shell('''
+            shell('''#!/bin/bash
+set -e
 echo "Fetching dependencies"
 cd build
 ./getDependencies-Linux.sh
@@ -254,7 +262,8 @@ echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
 
     static void addRunJsTestsBuildStep(stepContext, workDir) {
         // Remember: this is a dash, not a bash, script!
-        def build_script = '''
+        def build_script = '''#!/bin/bash
+set -e
 echo "Running unit tests"
 cd "@@{workDir}"
 PATH="$HOME/bin:$PATH"
@@ -273,7 +282,9 @@ export NODE_PATH
 
     static void addRunUnitTestsLinuxBuildStep(stepContext, testDll) {
         stepContext.with {
-            shell('''. ./environ
+            shell('''#!/bin/bash
+set -e
+. ./environ
 dbus-launch --exit-with-session
 cd output/Debug
 mono --debug ../../packages/NUnit.Runners.Net4.2.6.4/tools/nunit-console.exe -apartment=STA -nothread \
