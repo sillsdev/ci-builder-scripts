@@ -77,9 +77,9 @@ elif [ -n "$DEBSIGNKEY" ]; then
 	signing_opt="-k$DEBSIGNKEY"
 	echo "Setting signing opts to ^$signing_opt^"
 fi
-debuild -S -sa $signing_opt
+debuild -S -sa -Zxz $signing_opt
 
 stderr "Source package files exist with the following sha256sums:"
 cd "$repo_base_dir"
-sha256sum ${source_package_name}_*.{dsc,build,changes,tar.gz}
+sha256sum ${source_package_name}_*.{dsc,build,changes,tar.?z}
 
