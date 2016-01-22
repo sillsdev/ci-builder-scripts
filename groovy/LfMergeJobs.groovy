@@ -101,6 +101,7 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 		shell('''#!/bin/bash
 set -e
 echo "Downloading packages and dependencies"
+cd lfmerge
 . environ
 mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
