@@ -84,7 +84,7 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-debug') {
 		// Install packages
 		shell('''#!/bin/bash
 set -e
-. environ
+PATH=/opt/mono-sil/bin:$PATH
 cd build
 mozroots --import --sync
 ./install-deps''')

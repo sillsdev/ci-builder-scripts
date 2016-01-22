@@ -77,6 +77,10 @@ cp -r mercurial ../../Mercurial/''')
 set -e
 echo "Compiling LfMerge and running unit tests"
 . environ
+mozroots --import --sync
+yes | certmgr -ssl https://go.microsoft.com
+yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
+yes | certmgr -ssl https://nuget.org
 xbuild /t:Test /property:Configuration=Release build/LfMerge.proj
 exit $?''')
 
