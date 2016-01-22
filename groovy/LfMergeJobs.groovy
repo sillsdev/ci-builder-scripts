@@ -97,6 +97,18 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 	def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 	def distro = 'trusty'
 
+	steps {
+		shell('''#!/bin/bash
+set -e
+echo "Downloading packages and dependencies"
+. environ
+mozroots --import --sync
+yes | certmgr -ssl https://go.microsoft.com
+yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
+yes | certmgr -ssl https://nuget.org
+xbuild /t:PrepareSource build/LfMerge.proj''')
+	}
+
 	common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
 		distro, 'eb1@sil.org', 'master', 'amd64', distro, false)
 
@@ -108,5 +120,6 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 	// will be triggered by other jobs
 
 	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
-		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*")
+		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
+		true)
 }

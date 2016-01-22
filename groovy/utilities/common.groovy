@@ -132,7 +132,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
     static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",
         disableSubmodules_ = false, commitAuthorInChangelog_ = false, scmName_ = "",
-        refspec_ = "") {
+        refspec_ = "", clean_ = false) {
         jobContext.with {
             scm {
                 git {
@@ -146,6 +146,9 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     createTag(createTag_);
                     if (subdir != "") {
                         relativeTargetDir(subdir);
+                    }
+                    if (clean_) {
+                        clean(clean_)
                     }
 
                     if (disableSubmodules_ || scmName_ != "" | commitAuthorInChangelog_) {
