@@ -102,7 +102,7 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 set -e
 echo "Downloading packages and dependencies"
 cd lfmerge
-PATH=/opt/mono-sil/bin:$PATH
+RUNMODE="PACKAGEBUILD" . environ
 mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
