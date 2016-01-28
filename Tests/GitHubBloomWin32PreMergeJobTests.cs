@@ -54,7 +54,7 @@ namespace Tests
 				"//select[@name='msBuildBuilder.msBuildName']/option[@selected]"),
 				Is.EqualTo(".NET 4.0"));
 			Assert.That(_jenkins.GetValueByName("msBuildBuilder.msBuildFile"),
-				Is.EqualTo("Bloom VS2010.sln"));
+				Is.EqualTo("Bloom.sln"));
 		}
 	}
 }

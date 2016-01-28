@@ -139,7 +139,7 @@ collects the results and reports them back to GitHub.</p>
 			common.addGetDependenciesBuildStep(delegate);
 
 			// Build
-			common.addXbuildBuildStep(delegate, 'Bloom\\ VS2010.sln');
+			common.addXbuildBuildStep(delegate, 'BloomLinux.sln');
 		}
 	}
 
@@ -187,7 +187,7 @@ collects the results and reports them back to GitHub.</p>
 			common.addGetDependenciesWindowsBuildStep(delegate)
 		}
 
-		configure common.MsBuildBuilder('Bloom VS2010.sln')
+		configure common.MsBuildBuilder('Bloom.sln')
 	}
 
 	// *********************************************************************************************
