@@ -104,23 +104,25 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 mailer(email);
 
                 flexiblePublish {
-                    condition {
-                        not {
-                            stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
+                    conditionalAction {
+                        condition {
+                            not {
+                                stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
+                            }
                         }
-                    }
-                    step {
-                        downstreamParameterized {
-                            trigger(jobContext.name) {
-                                if (blockDownstream) {
-                                    block {
-                                        buildStepFailure('FAILURE')
-                                        failure('FAILURE')
-                                        unstable('UNSTABLE')
+                        steps {
+                            downstreamParameterized {
+                                trigger(jobContext.name) {
+                                    if (blockDownstream) {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
                                     }
-                                }
-                                parameters {
-                                    predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                    parameters {
+                                        predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                    }
                                 }
                             }
                         }
