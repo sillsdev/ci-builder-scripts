@@ -104,20 +104,21 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 mailer(email);
 
                 flexiblePublish {
+                    conditionalAction {
                     condition {
                         not {
                             stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
                         }
                     }
-                    step {
+                        steps {
                         downstreamParameterized {
                             trigger(jobContext.name) {
                                 if (blockDownstream) {
-                                block {
-                                    buildStepFailure('FAILURE')
-                                    failure('FAILURE')
-                                    unstable('UNSTABLE')
-                                }
+                                    block {
+                                        buildStepFailure('FAILURE')
+                                        failure('FAILURE')
+                                        unstable('UNSTABLE')
+                                    }
                                 }
                                 parameters {
                                     predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
@@ -128,6 +129,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 }
             }
         }
+    }
     }
 
     static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",

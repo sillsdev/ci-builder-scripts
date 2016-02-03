@@ -62,7 +62,7 @@ class LfMerge {
 				// Compile mercurial
 				shell('''#!/bin/bash
 set -e
-. environ
+BUILD=Release . environ
 echo "Compiling Mercurial"
 mkdir -p tmp_hg
 cd tmp_hg
@@ -76,7 +76,7 @@ cp -r mercurial ../../Mercurial/''')
 				shell('''#!/bin/bash
 set -e
 echo "Compiling LfMerge and running unit tests"
-. environ
+BUILD=Release . environ
 mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net

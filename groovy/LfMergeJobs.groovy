@@ -102,7 +102,9 @@ freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 set -e
 echo "Downloading packages and dependencies"
 cd lfmerge
-RUNMODE="PACKAGEBUILD" . environ
+# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
+export MONO_PREFIX=/opt/mono-sil
+RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
