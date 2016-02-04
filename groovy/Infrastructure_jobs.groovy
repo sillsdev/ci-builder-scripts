@@ -209,8 +209,7 @@ and reported back to Gerrit.</p>
 				command '''
 docker kill testjenkins 2> /dev/null || true
 docker rm testjenkins 2> /dev/null || true
-# It's strange - without the following line the build step that tries to create the container fails
-docker images | grep slave-testjenkins'''
+'''
 			}
 		}
 

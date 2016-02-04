@@ -431,7 +431,9 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 
 	static Closure DockerBuildStep_CreateContainer(imageName, nameOfContainer) {
 		return { project ->
-			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.32') {
+			// TODO: can we automate updating the version number of the dockerbuildstep plugin?
+			// If we have the wrong version number the job will fail to start the container.
+			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.33') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.CreateContainerCommand') {
 					image imageName
 					containerName nameOfContainer
@@ -442,7 +444,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 
 	static Closure DockerBuildStep_StartContainer(nameOfContainer, ports) {
 		return { project ->
-			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.32') {
+			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.33') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.StartCommand') {
 					containerIds nameOfContainer
 					portBindings ports
