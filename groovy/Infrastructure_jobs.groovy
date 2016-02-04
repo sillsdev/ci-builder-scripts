@@ -25,14 +25,14 @@ freeStyleJob('Infrastructure/image-factory-bootstrap') {
 		numToKeep(30)
 	}
 
-	label 'master';
+	label 'master'
 
 	scm {
 		git {
 			remote {
-				url("git://git.lsdev.sil.org/cd-infrastructure.git");
+				url("git://git.lsdev.sil.org/cd-infrastructure.git")
 			}
-			branch("master");
+			branch("master")
 		}
 	}
 
@@ -70,14 +70,15 @@ freeStyleJob('Infrastructure/image-factory-slaves') {
 		numToKeep(30)
 	}
 
-	label 'master';
+	label 'imagebuilder'
+
 
 	scm {
 		git {
 			remote {
-				url("git://git.lsdev.sil.org/cd-infrastructure.git");
+				url("git://git.lsdev.sil.org/cd-infrastructure.git")
 			}
-			branch("master");
+			branch("master")
 		}
 	}
 
@@ -108,7 +109,7 @@ freeStyleJob('Infrastructure/image-factory-nextgen') {
 		numToKeep(30)
 	}
 
-	label 'imagebuilder';
+	label 'imagebuilder'
 
 	parameters {
 		stringParam("DISTROS", distros,
@@ -118,9 +119,9 @@ e.g. ubuntu:xenial. Multiple values are separated by spaces.''')
 	scm {
 		git {
 			remote {
-				url("https://github.com/docker/docker.git");
+				url("https://github.com/docker/docker.git")
 			}
-			branch("master");
+			branch("master")
 		}
 	}
 
@@ -165,7 +166,7 @@ and reported back to Gerrit.</p>
 		numToKeep(30)
 	}
 
-	label 'master';
+	label 'master'
 
 	parameters {
 		stringParam("GERRIT_BRANCH", "master",
