@@ -45,6 +45,49 @@ freeStyleJob('Infrastructure/image-factory-bootstrap') {
 [localhost]
 localhost''', "localhost", "-c local")
 
+		downstreamParameterized {
+			trigger('Infrastructure/image-factory-nextgen') {
+				parameters {
+					predefinedProp('DISTROS', distros)
+				}
+			}
+			trigger('Infrastructure/image-factory-slaves')
+		}
+	}
+}
+
+freeStyleJob('Infrastructure/image-factory-slaves') {
+
+	description '''
+<p>Creates or updates docker images for the docker based build agents. Scripts come <i>from cd-infrastructure</i>.</p>
+<p>The job is created by the DSL plugin from <i>Infrastructure_jobs.groovy</i> script.<p>
+'''
+
+	logRotator {
+		daysToKeep(365)
+		numToKeep(30)
+	}
+
+	label 'master';
+
+	scm {
+		git {
+			remote {
+				url("git://git.lsdev.sil.org/cd-infrastructure.git");
+			}
+			branch("master");
+		}
+	}
+
+	wrappers {
+		timestamps()
+	}
+
+	steps {
+		configure common.AnsibleBuildStep("jenkins/slaves/master.yml", '''
+[localhost]
+localhost''', "localhost", "-c local")
+
 		systemGroovyScriptFile('jenkins/slaves/groovy/src/addDockerCloud.groovy') {
 			binding("workdir", "\${WORKSPACE}")
 		}
@@ -67,7 +110,8 @@ freeStyleJob('Infrastructure/image-factory-nextgen') {
 
 	parameters {
 		stringParam("DISTROS", distros,
-				"List of distros to build. The values are in the form <distro>:<version>, e.g. ubuntu:xenial")
+				'''List of distros to build. The values are in the form <distro>:<version>,
+e.g. ubuntu:xenial. Multiple values are separated by spaces.''')
 	}
 	scm {
 		git {
@@ -169,8 +213,7 @@ docker rm testjenkins 2> /dev/null || true'''
 
 		configure common.DockerBuildStep_CreateContainer('slave-testjenkins', 'testjenkins')
 
-		configure common.DockerBuildStep_StartContainer('testjenkins', '''
-8081:8080
+		configure common.DockerBuildStep_StartContainer('testjenkins', '''8081:8080
 50001:50000''')
 
 		shell('''

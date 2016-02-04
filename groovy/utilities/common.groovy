@@ -424,6 +424,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 					dynamic false
 				}
 				additionalParameters additionalParams
+				forks 1
 			}
 		}
 	}
