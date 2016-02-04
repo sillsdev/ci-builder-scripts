@@ -439,6 +439,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 					command ""
 					hostName ""
 					containerName nameOfContainer
+					envVars ""
 					links ""
 					exposedPorts ""
 					cpuShares ""
