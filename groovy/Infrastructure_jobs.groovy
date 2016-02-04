@@ -16,7 +16,7 @@ folder('Infrastructure')
 freeStyleJob('Infrastructure/image-factory-bootstrap') {
 
 	description '''
-<p>Create the docker image for the image builder and testjenkins slaves. Scripts come <i>from cd-infrastructure</i>.</p>
+<p>Create the docker image for the image builder and testjenkins slaves. Scripts come from <i>cd-infrastructure</i>.</p>
 <p>The job is created by the DSL plugin from <i>Infrastructure_jobs.groovy</i> script.<p>
 '''
 
@@ -50,6 +50,8 @@ localhost''', "localhost", "-c local")
 				parameters {
 					predefinedProp('DISTROS', distros)
 				}
+				block {
+				}
 			}
 			trigger('Infrastructure/image-factory-slaves')
 		}
@@ -59,7 +61,7 @@ localhost''', "localhost", "-c local")
 freeStyleJob('Infrastructure/image-factory-slaves') {
 
 	description '''
-<p>Creates or updates docker images for the docker based build agents. Scripts come <i>from cd-infrastructure</i>.</p>
+<p>Creates or updates docker images for the docker based build agents. Scripts come from <i>cd-infrastructure</i>.</p>
 <p>The job is created by the DSL plugin from <i>Infrastructure_jobs.groovy</i> script.<p>
 '''
 
@@ -127,8 +129,7 @@ e.g. ubuntu:xenial. Multiple values are separated by spaces.''')
 	}
 
 	steps {
-		shell('''
-#!/bin/bash
+		shell('''#!/bin/bash
 for pair in $DISTROS; do
     parts=(${pair//:/ })
     distro=${parts[0]}
@@ -207,7 +208,9 @@ and reported back to Gerrit.</p>
 			project / builders / 'hudson.tasks.Shell' {
 				command '''
 docker kill testjenkins 2> /dev/null || true
-docker rm testjenkins 2> /dev/null || true'''
+docker rm testjenkins 2> /dev/null || true
+# It's strange - without the following line the build step that tries to create the container fails
+docker images | grep slave-testjenkins'''
 			}
 		}
 
@@ -216,8 +219,7 @@ docker rm testjenkins 2> /dev/null || true'''
 		configure common.DockerBuildStep_StartContainer('testjenkins', '''8081:8080
 50001:50000''')
 
-		shell('''
-#!/bin/bash
+		shell('''#!/bin/bash
 # Start build job
 echo "Waiting for jenkins testserver to become ready..."
 IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' testjenkins)
