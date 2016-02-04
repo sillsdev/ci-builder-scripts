@@ -436,7 +436,13 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.33') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.CreateContainerCommand') {
 					image imageName
+					command
+					hostName
 					containerName nameOfContainer
+					links
+					exposedPorts
+					cpuShares
+					memoryLimit
 				}
 			}
 		}
@@ -447,7 +453,13 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 			project / 'builders' << 'org.jenkinsci.plugins.dockerbuildstep.DockerBuilder'(plugin: 'docker-build-step@1.33') {
 				dockerCmd(class: 'org.jenkinsci.plugins.dockerbuildstep.cmd.StartCommand') {
 					containerIds nameOfContainer
+					publishAllPorts false
 					portBindings ports
+					waitPorts
+					links
+					bindMounts
+					privileged false
+					containerIdsLogging
 				}
 			}
 		}
