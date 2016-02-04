@@ -147,6 +147,7 @@ for pair in $DISTROS; do
         exit 1
     fi
     sudo contrib/mkimage.sh -t $distro:$version debootstrap $params $version
+done
 ''')
 	}
 }
