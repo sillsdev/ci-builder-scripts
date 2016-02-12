@@ -41,9 +41,13 @@ freeStyleJob('Infrastructure/image-factory-bootstrap') {
 	}
 
 	steps {
-		configure common.AnsibleBuildStep("jenkins/slaves/bootstrap.yml", '''
-[localhost]
+		configure common.AnsibleBuildStep("jenkins/slaves/bootstrap.yml",
+'''[localhost]
 localhost''', "localhost", "-c local")
+
+		systemGroovyScriptFile('jenkins/slaves/groovy/src/addDockerCloud.groovy') {
+			binding("workdir", "\${WORKSPACE}")
+		}
 
 		downstreamParameterized {
 			trigger('Infrastructure/image-factory-nextgen') {
