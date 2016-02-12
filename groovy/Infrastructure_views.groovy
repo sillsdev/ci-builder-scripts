@@ -12,6 +12,7 @@ listView('Infrastructure') {
 	description 'Infrastructure jobs'
 	filterBuildQueue false
 	filterExecutors true
+	recurse true
 
 	jobs {
 		regex('^Infrastructure|Infrastructure/.*')
