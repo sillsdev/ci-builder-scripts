@@ -46,20 +46,14 @@ freeStyleJob('GitHub-LfMerge-Linux-any-master-debug') {
 	}
 
 	triggers {
-		pullRequest {
+		githubPullRequest {
 			admin('ermshiperete')
 			useGitHubHooks(true)
 			orgWhitelist('sillsdev')
 			cron('H/5 * * * *')
 			allowMembersOfWhitelistedOrgsAsAdmin()
-
-		}
-	}
-
-	configure { project ->
-		project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'displayBuildErrorsOnDownstreamBuilds'(true)
-		project / 'triggers' / 'org.jenkinsci.plugins.ghprb.GhprbTrigger' / 'whiteListTargetBranches' {
-			'org.jenkinsci.plugins.ghprb.GhprbBranch' { 'branch'('master') }
+			displayBuildErrorsOnDownstreamBuilds(true)
+			whiteListTargetBranches([ 'master' ])
 		}
 	}
 }
