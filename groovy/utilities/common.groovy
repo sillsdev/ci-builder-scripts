@@ -12,8 +12,10 @@ class common {
         email = "eb1@sil.org",
         branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic vivid wheezy jessie",
-        blockDownstream = true) {
+        supported_distros = "precise trusty utopic vivid wily xenial wheezy jessie",
+        blockDownstream = true,
+        mainRepoDir = '.',
+        buildMasterBranch = true) {
         /*
          * Definition of build step scripts
          */
@@ -33,6 +35,7 @@ $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
     --main-package-name "@@{packagename}" \
     --supported-distros "@@{supported_distros}" \
     --debkeyid $DEBSIGNKEY \
+    --main-repo-dir @@{mainRepoDir} \
     @@{package_version} \
     $MAKE_SOURCE_ARGS
 
@@ -75,7 +78,8 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     'supported_distros' : supported_distros,
                     'subdir_name' : subdir_name,
                     'package_version' : package_version,
-                    'revision' : revision ];
+                    'revision' : revision,
+                    'mainRepoDir': mainRepoDir ];
 
                 shell(Helper.prepareScript(build_script, values));
             }
@@ -103,25 +107,27 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
                 mailer(email);
 
-                flexiblePublish {
-                    conditionalAction {
-                        condition {
-                            not {
-                                stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
+                if (buildMasterBranch) {
+                    flexiblePublish {
+                        conditionalAction {
+                            condition {
+                                not {
+                                    stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
+                                }
                             }
-                        }
-                        steps {
-                            downstreamParameterized {
-                                trigger(jobContext.name) {
-                                    if (blockDownstream) {
-                                        block {
-                                            buildStepFailure('FAILURE')
-                                            failure('FAILURE')
-                                            unstable('UNSTABLE')
+                            steps {
+                                downstreamParameterized {
+                                    trigger(jobContext.name) {
+                                        if (blockDownstream) {
+                                            block {
+                                                buildStepFailure('FAILURE')
+                                                failure('FAILURE')
+                                                unstable('UNSTABLE')
+                                            }
                                         }
-                                    }
-                                    parameters {
-                                        predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                        parameters {
+                                            predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                        }
                                     }
                                 }
                             }

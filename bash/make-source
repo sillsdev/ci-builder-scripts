@@ -18,9 +18,9 @@ rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*}
 
 # Add entry to debian/changelog
 if [ "$VCS" = "hg" ]; then
-    hash_of_current_commit=$(hg id -i 2>/dev/null |cut -c -12)
+    hash_of_current_commit=$(cd ${main_repo_dir:-.} && hg id -i 2>/dev/null |cut -c -12)
 else
-    hash_of_current_commit=$(git rev-parse --short HEAD)
+    hash_of_current_commit=$(cd ${main_repo_dir:-.} && git rev-parse --short HEAD)
 fi
 
 timestamp=$(date -u +"%Y%m%dT%H%M%SZ")

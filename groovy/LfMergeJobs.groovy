@@ -15,6 +15,8 @@ import utilities.LfMerge
  * and commit and push the changes.
  */
 
+def distro = 'trusty'
+
 // *********************************************************************************************
 freeStyleJob('LfMerge-Linux-any-master-debug') {
 	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/master:refs/remotes/origin/master', '*/master')
@@ -89,7 +91,6 @@ mozroots --import --sync
 freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
 	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 	def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
-	def distro = 'trusty'
 
 	steps {
 		shell('''#!/bin/bash
@@ -119,4 +120,63 @@ xbuild /t:PrepareSource build/LfMerge.proj''')
 	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
 		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
 		true)
+}
+
+// *********************************************************************************************
+freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
+	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
+	def package_version = '--package-version "0.0.0.\${BUILD_NUMBER}" '
+	def fwBranch = 'feature/lfmerge'
+	def debianBranch = 'feature/lfmerge'
+	def libcomBranch = 'develop'
+
+	description '''
+<p>Package builds of the <b>lfmerge-fdo</b> package.</p>
+<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
+'''
+
+	multiscm {
+		git {
+			remote {
+				github('sillsdev/libcom')
+			}
+			branch libcomBranch
+			relativeTargetDir('lfmerge-fdo/libcom')
+			recursiveSubmodules true
+			strategy { gerritTrigger() }
+		}
+		git {
+			remote {
+				github('sillsdev/FwDebian')
+			}
+			branch debianBranch
+			relativeTargetDir('lfmerge-fdo/debian')
+			recursiveSubmodules true
+			strategy { gerritTrigger() }
+		}
+		git {
+			remote {
+				github('sillsdev/FieldWorks')
+			}
+			branch fwBranch
+			relativeTargetDir('lfmerge-fdo/fw')
+			recursiveSubmodules true
+			strategy { gerritTrigger() }
+		}
+	}
+
+	triggers {
+		gerrit {
+			events {
+				refUpdated()
+			}
+			project('FieldWorks', "plain:origin/refs/${fwBranch}")
+			project('FwDebian', "plain:origin/refs/${debianBranch}")
+			project('libcom', "plain:origin/refs/${libcomBranch}")
+		}
+	}
+
+	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
+		distro, 'eb1@sil.org', 'master', 'amd64', distro, false, 'fw', false)
+
 }
