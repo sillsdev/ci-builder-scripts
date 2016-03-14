@@ -15,7 +15,8 @@ class common {
         supported_distros = "precise trusty utopic vivid wily xenial wheezy jessie",
         blockDownstream = true,
         mainRepoDir = '.',
-        buildMasterBranch = true) {
+        buildMasterBranch = true,
+        addParameters = true) {
         /*
          * Definition of build step scripts
          */
@@ -53,24 +54,26 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
         jobContext.with {
 
-            label('packager');
+            label('packager')
 
-            logRotator(365, 20, 10, 10);
+            logRotator(365, 20, 10, 10)
 
-            parameters {
-                stringParam("DistributionsToPackage", distros_tobuild,
-                    "The distributions to build packages for");
-                stringParam("ArchesToPackage", arches_tobuild,
-                    "The architectures to build packages for");
-                choiceParam("PackageBuildKind",
-                    ["Nightly", "Release"],
-                    "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.");
-                stringParam("BranchOrTagToBuild", "refs/heads/$branch",
-                    "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)");
+            if (addParameters) {
+                parameters {
+                    stringParam("DistributionsToPackage", distros_tobuild,
+                        "The distributions to build packages for")
+                    stringParam("ArchesToPackage", arches_tobuild,
+                        "The architectures to build packages for")
+                    choiceParam("PackageBuildKind",
+                        ["Nightly", "Release"],
+                        "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.")
+                    stringParam("BranchOrTagToBuild", "refs/heads/$branch",
+                        "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)")
+                }
             }
 
             wrappers {
-                timestamps();
+                timestamps()
             }
 
             steps {
@@ -79,31 +82,24 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     'subdir_name' : subdir_name,
                     'package_version' : package_version,
                     'revision' : revision,
-                    'mainRepoDir': mainRepoDir ];
+                    'mainRepoDir': mainRepoDir ]
 
-                shell(Helper.prepareScript(build_script, values));
+                shell(Helper.prepareScript(build_script, values))
             }
 
             publishers {
                 archiveArtifacts {
-                    pattern("results/*, ${subdir_name}_*");
-                    allowEmpty(true);
+                    pattern("results/*, ${subdir_name}_*")
+                    allowEmpty(true)
                 }
 
-                configure { project ->
-                    project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
-                        publishUnstableBuilds(true);
-                        publishFailedBuilds(true);
-                        logRotator {
-                            daysToKeep 365
-                            numToKeep 20
-                            artifactDaysToKeep 10
-                            artifactNumToKeep 20
-                        }
-                    }
+                publishBuild {
+                    publishFailed(true)
+                    publishUnstable(true)
+                    discardOldBuilds(365, 20, 10, 20)
                 }
 
-                allowBrokenBuildClaiming();
+                allowBrokenBuildClaiming()
 
                 mailer(email);
 

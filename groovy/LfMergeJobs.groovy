@@ -139,6 +139,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/libcom')
+				refspec("refs/heads/${libcomBranch}")
 			}
 			branch libcomBranch
 			relativeTargetDir('lfmerge-fdo/libcom')
@@ -150,6 +151,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/FwDebian')
+				refspec("refs/heads/${debianBranch}")
 			}
 			branch debianBranch
 			relativeTargetDir('lfmerge-fdo/debian')
@@ -161,6 +163,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/FieldWorks')
+				refspec("refs/heads/${fwBranch}")
 			}
 			branch fwBranch
 			relativeTargetDir('lfmerge-fdo/fw')
@@ -176,13 +179,15 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 			events {
 				refUpdated()
 			}
-			project('FieldWorks', "plain:origin/refs/${fwBranch}")
-			project('FwDebian', "plain:origin/refs/${debianBranch}")
-			project('libcom', "plain:origin/refs/${libcomBranch}")
+			project('FieldWorks', "path:*/${fwBranch}")
+			project('FwDebian', "path:*/${debianBranch}")
+			project('libcom', "path:*/${libcomBranch}")
 		}
 	}
 
+	environmentVariables(DistributionsToPackage: distro, ArchesToPackage: 'amd64')
+
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
-		distro, 'eb1@sil.org', 'master', 'amd64', distro, false, 'fw', false)
+		distro, 'eb1@sil.org', 'master', '', '', false, 'fw', false, false)
 
 }
