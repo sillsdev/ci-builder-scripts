@@ -138,30 +138,36 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	multiscm {
 		git {
 			remote {
-				github('sillsdev/libcom')
+				url('git://gerrit.lsdev.sil.org/libcom')
 			}
 			branch libcomBranch
 			relativeTargetDir('lfmerge-fdo/libcom')
 			recursiveSubmodules true
 			strategy { gerritTrigger() }
+			cloneTimeout(30)
+			shallowClone(true)
 		}
 		git {
 			remote {
-				github('sillsdev/FwDebian')
+				url('git://gerrit.lsdev.sil.org/FwDebian')
 			}
 			branch debianBranch
 			relativeTargetDir('lfmerge-fdo/debian')
 			recursiveSubmodules true
 			strategy { gerritTrigger() }
+			cloneTimeout(30)
+			shallowClone(true)
 		}
 		git {
 			remote {
-				github('sillsdev/FieldWorks')
+				url('git://gerrit.lsdev.sil.org/FieldWorks')
 			}
 			branch fwBranch
 			relativeTargetDir('lfmerge-fdo/fw')
 			recursiveSubmodules true
 			strategy { gerritTrigger() }
+			cloneTimeout(30)
+			shallowClone(true)
 		}
 	}
 
