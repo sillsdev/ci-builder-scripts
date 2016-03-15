@@ -142,11 +142,19 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				refspec("refs/heads/${libcomBranch}")
 			}
 			branch libcomBranch
-			relativeTargetDir('lfmerge-fdo/libcom')
-			recursiveSubmodules true
-			strategy { gerritTrigger() }
-			cloneTimeout(30)
-			shallowClone(true)
+			extensions {
+				relativeTargetDirectory('lfmerge-fdo/libcom')
+				submoduleOptions {
+					recursive(true)
+				}
+				choosingStrategy {
+					gerritTrigger()
+				}
+				cloneOptions {
+					shallow(true)
+					timeout(30)
+				}
+			}
 		}
 		git {
 			remote {
@@ -154,11 +162,19 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				refspec("refs/heads/${debianBranch}")
 			}
 			branch debianBranch
-			relativeTargetDir('lfmerge-fdo/debian')
-			recursiveSubmodules true
-			strategy { gerritTrigger() }
-			cloneTimeout(30)
-			shallowClone(true)
+			extensions {
+				relativeTargetDirectory('lfmerge-fdo/debian')
+				submoduleOptions {
+					recursive(true)
+				}
+				choosingStrategy {
+					gerritTrigger()
+				}
+				cloneOptions {
+					shallow(true)
+					timeout(30)
+				}
+			}
 		}
 		git {
 			remote {
@@ -166,11 +182,19 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				refspec("refs/heads/${fwBranch}")
 			}
 			branch fwBranch
-			relativeTargetDir('lfmerge-fdo/fw')
-			recursiveSubmodules true
-			strategy { gerritTrigger() }
-			cloneTimeout(30)
-			shallowClone(true)
+			extensions {
+				relativeTargetDirectory('lfmerge-fdo/fw')
+				submoduleOptions {
+					recursive(true)
+				}
+				choosingStrategy {
+					gerritTrigger()
+				}
+				cloneOptions {
+					shallow(true)
+					timeout(30)
+				}
+			}
 		}
 	}
 

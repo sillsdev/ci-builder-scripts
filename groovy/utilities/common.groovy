@@ -141,36 +141,38 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
             scm {
                 git {
                     remote {
-                        url(url_);
+                        if (scmName_ != "") {
+                            name(scmName_)
+                        }
+                        url(url_)
                         if (refspec_ != "") {
-                            refspec(refspec_);
+                            refspec(refspec_)
                         }
                     }
-                    branch(branch_);
-                    createTag(createTag_);
-                    if (subdir != "") {
-                        relativeTargetDir(subdir);
-                    }
-                    if (clean_) {
-                        clean(clean_)
+                    branch(branch_)
+                    extensions {
+                        if (createTag_) {
+                            perBuildTag()
+                        }
+                        if (subdir != "") {
+                            relativeTargetDirectory(subdir)
+                        }
+                        if (clean_) {
+                            cleanAfterCheckout()
+                        }
+                        if (disableSubmodules_) {
+                            submoduleOptions {
+                                disable(disableSubmodules_)
+                                /*recursive(false)
+                                tracking(false) */
+                            }
+                        }
                     }
 
-                    if (disableSubmodules_ || scmName_ != "" | commitAuthorInChangelog_) {
+                    if (commitAuthorInChangelog_) {
                         configure { node ->
-                            if (disableSubmodules_) {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
-                                    disableSubmodules(disableSubmodules_);
-                                    /* recursiveSubmodules(false);
-                                    trackingSubmodules(false); */
-                                }
-                            }
-                            if (scmName_ != "") {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.ScmName' {
-                                    name(scmName_);
-                                }
-                            }
                             if (commitAuthorInChangelog_) {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog';
+                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog'
                             }
                         }
                     }
