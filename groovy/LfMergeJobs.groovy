@@ -18,7 +18,7 @@ import utilities.LfMerge
 def distro = 'trusty'
 
 // *********************************************************************************************
-freeStyleJob('LfMerge-Linux-any-master-debug') {
+freeStyleJob('LfMerge-Linux-any-master-release') {
 	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/master:refs/remotes/origin/master', '*/master')
 
 	description '''<p>Linux builds of master branch.<p>
@@ -36,7 +36,7 @@ freeStyleJob('LfMerge-Linux-any-master-debug') {
 }
 
 // *********************************************************************************************
-freeStyleJob('GitHub-LfMerge-Linux-any-master-debug') {
+freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
 	LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}')
 
 	description '''<p>Pre-merge Linux builds of master branch. Triggered by creating a PR on GitHub.<p>
