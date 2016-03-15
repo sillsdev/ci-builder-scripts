@@ -43,7 +43,7 @@ freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
 
 	parameters {
-		stringParam("sha1", "",
+		stringParam("sha1", "refs/heads/master",
 			"What pull request to build, e.g. origin/pr/9/head")
 	}
 
@@ -61,7 +61,7 @@ freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
 }
 
 // *********************************************************************************************
-freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-debug') {
+freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false)
 
 	description '''<p>Install dependency packages for LfMerge builds.<p>
@@ -70,7 +70,7 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-debug') {
 	parameters {
 		stringParam("branch", "master",
 			"What to build, e.g. master or origin/pr/9/head")
-		stringParam("refspec", "+refs/heads/master:refs/remotes/origin/master",
+		stringParam("refspec", "refs/heads/master",
 			"Refspec to build")
 	}
 
