@@ -46,7 +46,7 @@ class LfMerge {
 			steps {
 				// Install dependencies
 				downstreamParameterized {
-					trigger('LfMerge_InstallDependencies-Linux-any-master-debug') {
+					trigger('LfMerge_InstallDependencies-Linux-any-master-release') {
 						block {
 							buildStepFailure('FAILURE')
 							failure('FAILURE')
