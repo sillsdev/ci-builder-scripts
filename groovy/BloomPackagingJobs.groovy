@@ -21,12 +21,12 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
  * and commit and push the changes.
  */
 
-freeStyleJob('Bloom_Packaging-Linux-all-3.3-release') {
+freeStyleJob('Bloom_Packaging-Linux-all-3.6-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-        distros_tobuild, email_recipients, 'Version3.3');
+        distros_tobuild, email_recipients, 'Version3.6');
 
     description '''
-<p>Nightly builds of the Version3.3 branch.</p>
+<p>Nightly builds of the Version3.6 branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 ''';
 

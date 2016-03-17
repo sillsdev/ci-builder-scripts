@@ -105,8 +105,8 @@ nestedView('Bloom') {
 		bloomViews.BloomViewAll(delegate)
 		bloomViews.BloomViewBuildPipeline(delegate, "Build Pipeline master branch",
 			"master", 'Bloom-Wrapper-Trigger-debug', false)
-		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.3",
-			"Version3.3", 'GitHub-Bloom-Wrapper-Version3.3-debug', true)
+		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.6",
+			"Version3.6", 'GitHub-Bloom-Wrapper-Version3.6-debug', true)
 		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline master branch",
 			"master", 'GitHub-Bloom-Wrapper-master-debug', true)
 		bloomViews.BloomViewPackageBuilds(delegate)
