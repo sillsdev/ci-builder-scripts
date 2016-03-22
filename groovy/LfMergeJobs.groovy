@@ -202,10 +202,11 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		gerrit {
 			events {
 				refUpdated()
+				changeMerged()
 			}
-			project('FieldWorks', "path:*/${fwBranch}")
-			project('FwDebian', "path:*/${debianBranch}")
-			project('libcom', "path:*/${libcomBranch}")
+			project('FieldWorks', "ant:*/${fwBranch}")
+			project('FwDebian', "ant:*/${debianBranch}")
+			project('libcom', "ant:*/${libcomBranch}")
 		}
 	}
 
