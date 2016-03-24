@@ -204,9 +204,9 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				refUpdated()
 				changeMerged()
 			}
-			project('FieldWorks', "ant:*/${fwBranch}")
-			project('FwDebian', "ant:*/${debianBranch}")
-			project('libcom', "ant:*/${libcomBranch}")
+			project('FieldWorks', "ant:*${fwBranch}")
+			project('FwDebian', "ant:*${debianBranch}")
+			project('libcom', "ant:*${libcomBranch}")
 		}
 	}
 
