@@ -17,7 +17,7 @@ class lfMergeViews {
 				filterExecutors false
 
 				jobs {
-					regex('(^LfMerge.*|^GitHub-LfMerge.*)')
+					regex('(^LfMerge.*|^GitHub-(LfMerge|Chorus|FlexBridge).*)')
 				}
 
 				columns {
@@ -34,6 +34,7 @@ class lfMergeViews {
 					regexGroupingRule('^LfMerge.*-any-(default|master)-release$', 'master branch jobs')
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
+					regexGroupingRule('^GitHub.*-lfmerge-.*', 'Pre-merge builds of GitHub pull requests for libraries (lfmerge branch)')
 				}
 			}
 		}

@@ -36,31 +36,6 @@ freeStyleJob('LfMerge-Linux-any-master-release') {
 }
 
 // *********************************************************************************************
-freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}')
-
-	description '''<p>Pre-merge Linux builds of master branch. Triggered by creating a PR on GitHub.<p>
-<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
-
-	parameters {
-		stringParam("sha1", "refs/heads/master",
-			"What pull request to build, e.g. origin/pr/9/head")
-	}
-
-	triggers {
-		githubPullRequest {
-			admin('ermshiperete')
-			useGitHubHooks(true)
-			orgWhitelist('sillsdev')
-			cron('H/5 * * * *')
-			allowMembersOfWhitelistedOrgsAsAdmin()
-			displayBuildErrorsOnDownstreamBuilds(true)
-			whiteListTargetBranches([ 'master' ])
-		}
-	}
-}
-
-// *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false)
 

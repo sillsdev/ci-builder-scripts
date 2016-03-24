@@ -10,7 +10,7 @@ import utilities.Helper
 import utilities.common
 
 class LfMerge {
-	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true) {
+	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, githubRepo = "sillsdev/LfMerge") {
 		jobContext.with {
 			priority(100)
 			label 'lfmerge'
@@ -31,7 +31,7 @@ class LfMerge {
 			scm {
 				git {
 					remote {
-						github("sillsdev/LfMerge", "https")
+						github(githubRepo, "https")
 						refspec(spec)
 					}
 					branch(sha1)
@@ -93,4 +93,26 @@ exit $?''')
 			}
 		}
 	}
+
+	static void addGitHubParamAndTrigger(jobContext, branch) {
+		jobContext.with {
+			parameters {
+				stringParam("sha1", "refs/heads/master",
+					"What pull request to build, e.g. origin/pr/9/merge")
+			}
+
+			triggers {
+				githubPullRequest {
+					admin('ermshiperete')
+					useGitHubHooks(true)
+					orgWhitelist('sillsdev')
+					cron('H/5 * * * *')
+					allowMembersOfWhitelistedOrgsAsAdmin()
+					displayBuildErrorsOnDownstreamBuilds(true)
+					whiteListTargetBranches([ branch ])
+				}
+			}
+		}
+	}
+
 }
