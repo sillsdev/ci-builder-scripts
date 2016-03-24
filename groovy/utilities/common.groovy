@@ -260,8 +260,10 @@ cd build
     static void addGetDependenciesWindowsBuildStep(stepContext, scriptName = './getDependencies-windows.sh') {
         def build_script = '''cd build
 SET TEMP=%HOME%\\\\tmp
+SET TMP=%TEMP%
 IF NOT EXIST %TEMP% mkdir %TEMP%
-echo which mkdir > %TEMP%\\\\%BUILD_TAG%.txt
+echo mkdir /tmp > %TEMP%\\\\%BUILD_TAG%.txt
+echo which mkdir >> %TEMP%\\\\%BUILD_TAG%.txt
 echo @@{scriptName} >> %TEMP%\\\\%BUILD_TAG%.txt
 "c:\\\\Program Files (x86)\\\\Git\\\\bin\\\\bash.exe" --login -i < %TEMP%\\\\%BUILD_TAG%.txt
 '''
