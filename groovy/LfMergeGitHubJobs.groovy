@@ -31,6 +31,7 @@ freeStyleJob('GitHub-Chorus-Linux-any-lfmerge-release') {
 	steps {
 		shell('''#!/bin/bash
 . environ
+unset LD_PRELOAD
 
 build/buildupdate.mono.sh
 
