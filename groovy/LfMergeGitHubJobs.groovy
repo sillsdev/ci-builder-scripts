@@ -55,7 +55,7 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	label 'windows'
 
 	steps {
-		common.addGetDependenciesWindowsBuildStep(delegate, 'build\\buildupdate.win.sh')
+		common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
 	}
 
 	configure common.MsBuildBuilder('build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
@@ -100,7 +100,7 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 	label 'windows'
 
 	steps {
-		common.addGetDependenciesWindowsBuildStep(delegate, 'download_dependencies_windows.sh')
+		common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')
 	}
 
 	configure common.MsBuildBuilder('build/FLExBridge.build.mono.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=ReleaseMono')
