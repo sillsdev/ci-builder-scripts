@@ -26,7 +26,7 @@ freeStyleJob('GitHub-Chorus-Linux-any-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus")
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'linux&&supported')
 
 	steps {
 		shell('''#!/bin/bash
@@ -50,9 +50,7 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus")
-
-	label 'windows'
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'windows')
 
 	steps {
 		common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
@@ -72,7 +70,7 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge")
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'linux&&supported')
 
 	steps {
 		shell('''#!/bin/bash
@@ -95,9 +93,7 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge")
-
-	label 'windows'
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'windows')
 
 	steps {
 		common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')

@@ -10,10 +10,10 @@ import utilities.Helper
 import utilities.common
 
 class LfMerge {
-	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, githubRepo = "sillsdev/LfMerge") {
+	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
 		jobContext.with {
 			priority(100)
-			label 'lfmerge'
+			label whereToRun
 
 			logRotator(365, 100)
 
