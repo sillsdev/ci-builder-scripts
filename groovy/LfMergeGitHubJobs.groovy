@@ -49,7 +49,7 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	description '''<p>Pre-merge Windows builds of lfmerge branch of Chorus. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
+	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'windows')
 
 	steps {
@@ -92,7 +92,7 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 	description '''<p>Pre-merge Windows builds of lfmerge branch of FLExBridge. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
+	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'windows')
 
 	steps {

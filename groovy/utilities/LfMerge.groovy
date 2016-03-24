@@ -94,7 +94,7 @@ exit $?''')
 		}
 	}
 
-	static void addGitHubParamAndTrigger(jobContext, branch) {
+	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
 		jobContext.with {
 			parameters {
 				stringParam("sha1", "refs/heads/master",
@@ -110,6 +110,11 @@ exit $?''')
 					allowMembersOfWhitelistedOrgsAsAdmin()
 					displayBuildErrorsOnDownstreamBuilds(true)
 					whiteListTargetBranches([ branch ])
+					extensions {
+						commitStatus {
+							context("continuous-integration/jenkins-$os")
+						}
+					}
 				}
 			}
 		}
