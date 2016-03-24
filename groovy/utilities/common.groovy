@@ -356,12 +356,12 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
     }
 
     // usage: configure MsBuildBuilder('my.sln')
-    static Closure MsBuildBuilder(projFile) {
+    static Closure MsBuildBuilder(projFile, cmdArgs = "") {
         return { project ->
             project / 'builders' << 'hudson.plugins.msbuild.MsBuildBuilder' {
                 msBuildName '.NET 4.0'
                 msBuildFile projFile
-                cmdLineArgs ''
+                cmdLineArgs cmdArgs
                 buildVariablesAsProperties false
                 continueOnBuildFailure false
                 unstableIfWarnings false

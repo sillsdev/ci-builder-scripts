@@ -55,9 +55,9 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	label 'windows'
 
 	steps {
-		batchFile('''build\\buildupdate.win.sh
+		batchFile('''build\\buildupdate.win.sh''')
 
-msbuild /t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release build\\Chorus.proj''')
+		configure common.MsBuildBuilder('build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
 	}
 
 	publishers {
