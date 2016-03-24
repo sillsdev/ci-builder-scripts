@@ -55,10 +55,10 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	label 'windows'
 
 	steps {
-		batchFile('''build\\buildupdate.win.sh''')
-
-		configure common.MsBuildBuilder('build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
+		common.addGetDependenciesWindowsBuildStep(delegate, 'build\\buildupdate.win.sh')
 	}
+
+	configure common.MsBuildBuilder('build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
 
 	publishers {
 		configure common.NUnitPublisher('**/TestResults.xml')
@@ -100,10 +100,10 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 	label 'windows'
 
 	steps {
-		batchFile('''download_dependencies_windows.sh
-
-msbuild /t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=ReleaseMono build/FLExBridge.build.mono.proj''')
+		common.addGetDependenciesWindowsBuildStep(delegate, 'download_dependencies_windows.sh')
 	}
+
+	configure common.MsBuildBuilder('build/FLExBridge.build.mono.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=ReleaseMono')
 
 	publishers {
 		configure common.NUnitPublisher('**/TestResults.xml')

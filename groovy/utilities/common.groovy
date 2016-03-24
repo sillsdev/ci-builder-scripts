@@ -257,15 +257,19 @@ cd build
         }
     }
 
-    static void addGetDependenciesWindowsBuildStep(stepContext) {
+    static void addGetDependenciesWindowsBuildStep(stepContext, scriptName = './getDependencies-windows.sh') {
+        def build_script = '''cd build
+SET TEMP=%HOME%\\\\tmp
+IF NOT EXIST %TEMP% mkdir %TEMP%
+echo which mkdir > %TEMP%\\\\%BUILD_TAG%.txt
+echo @@{scriptName} >> %TEMP%\\\\%BUILD_TAG%.txt
+"c:\\\\Program Files (x86)\\\\Git\\\\bin\\\\bash.exe" --login -i < %TEMP%\\\\%BUILD_TAG%.txt
+'''
+
         stepContext.with {
-            batchFile('''CD build
-SET TEMP=%HOME%\\tmp
-IF NOT EXIST %TEMP% MKDIR %TEMP%
-echo which mkdir > %TEMP%\\%BUILD_TAG%.txt
-echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
-"c:\\Program Files (x86)\\Git\\bin\\bash.exe" --login -i < %TEMP%\\%BUILD_TAG%.txt
-''');
+            def values = [ 'scriptName' : scriptName ]
+
+            batchFile(Helper.prepareScript(build_script, values))
         }
     }
 
