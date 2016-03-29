@@ -87,7 +87,7 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 
 ./download_dependencies_linux.sh
 
-xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$GIT_COMMIT /property:Configuration=ReleaseMono build/FLExBridge.build.mono.proj''')
+xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$GIT_COMMIT /property:Configuration=ReleaseMono build/FLExBridge.proj''')
 	}
 
 	publishers {
@@ -108,7 +108,7 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 		common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')
 	}
 
-	configure common.MsBuildBuilder('build/FLExBridge.build.win.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=Release')
+	configure common.MsBuildBuilder('build/FLExBridge.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=Release')
 
 	publishers {
 		configure common.NUnitPublisher('**/TestResults.xml')
