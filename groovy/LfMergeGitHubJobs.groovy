@@ -83,11 +83,12 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 
 	steps {
 		shell('''#!/bin/bash
+BUILD=ReleaseMono
 . environ
 
 ./download_dependencies_linux.sh
 
-xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$GIT_COMMIT /property:Configuration=ReleaseMono build/FLExBridge.proj''')
+xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$GIT_COMMIT /property:Configuration=$BUILD build/FLExBridge.proj''')
 	}
 
 	publishers {
