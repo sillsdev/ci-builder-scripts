@@ -40,7 +40,7 @@ unset LD_PRELOAD
 
 build/buildupdate.mono.sh
 
-xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:Configuration=ReleaseMono build/Chorus.proj''')
+xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:Configuration=ReleaseMono /property:excludedCategories=SkipOnBuildServer build/Chorus.proj''')
 	}
 
 	publishers {
