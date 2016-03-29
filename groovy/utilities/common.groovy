@@ -1,8 +1,9 @@
 /*
  * some common definitions that can be imported in other scripts
  */
-package utilities;
-import utilities.Helper;
+package utilities
+
+import utilities.Helper
 
 class common {
     static void defaultPackagingJob(jobContext, packagename, subdir_name,
@@ -393,6 +394,15 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
                 installationName 'default'
                 screen '1024x768x24'
                 displayNameOffset 1
+            }
+        }
+    }
+
+    static void addXvfbBuildWrapper(wrapperContext) {
+        wrapperContext.with {
+            xvfb('default') {
+                screen('1024x768x24')
+                displayNameOffset(1)
             }
         }
     }

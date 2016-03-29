@@ -28,6 +28,11 @@ freeStyleJob('GitHub-Chorus-Linux-any-lfmerge-release') {
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'linux&&supported')
 
+	wrappers {
+		common.addXvfbBuildWrapper(delegate)
+	}
+
+
 	steps {
 		shell('''#!/bin/bash
 . environ
@@ -71,6 +76,10 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'linux&&supported')
+
+	wrappers {
+		common.addXvfbBuildWrapper(delegate)
+	}
 
 	steps {
 		shell('''#!/bin/bash
