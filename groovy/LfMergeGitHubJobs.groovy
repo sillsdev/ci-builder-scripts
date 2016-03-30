@@ -55,7 +55,7 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'windows')
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/chorus", 'windows&&timeInSync')
 
 	steps {
 		common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
@@ -103,7 +103,7 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	LfMerge.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'windows')
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, "sillsdev/flexbridge", 'windows&&timeInSync')
 
 	steps {
 		common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')
