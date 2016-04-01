@@ -6,6 +6,7 @@ import utilities.common
 // Variables
 def packagename = 'Bloom';
 def subdir_name = 'bloom-desktop';
+def subdir_name_beta = 'bloom-desktop-beta';
 def subdir_name_unstable = 'bloom-desktop-unstable';
 def distros_tobuild = 'precise trusty';
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git';
@@ -21,8 +22,14 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" ';
  * and commit and push the changes.
  */
 
+/*
+ * we're really building beta packages at the moment.  Someday, we may want three jobs on three different branches...
+ *freeStyleJob('Bloom_Packaging-Linux-all-3.6-release') {
+ *    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
+ *        distros_tobuild, email_recipients, 'Version3.6');
+ */
 freeStyleJob('Bloom_Packaging-Linux-all-3.6-release') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
+    common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
         distros_tobuild, email_recipients, 'Version3.6');
 
     description '''
