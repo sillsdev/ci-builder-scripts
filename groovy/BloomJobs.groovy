@@ -1,8 +1,8 @@
 /*
  * DSL script for Jenkins Bloom jobs
  */
-import utilities.common;
-import utilities.Bloom;
+import utilities.common
+import utilities.Bloom
 
 /*
  * Definition of jobs
@@ -16,7 +16,7 @@ freeStyleJob('Bloom-Wrapper-Trigger-debug') {
 <p>Wrapper job for Bloom builds. This job kicks off several other builds after a new
 change got merged and collects the results.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
-''';
+'''
 
 	priority(100);
 
@@ -25,7 +25,7 @@ change got merged and collects the results.</p>
 	scm {
 		git {
 			remote {
-				github("BloomBooks/BloomDesktop");
+				github("BloomBooks/BloomDesktop")
 			}
 			branch('*/master')
 		}
@@ -45,26 +45,26 @@ change got merged and collects the results.</p>
 
 	}
 
-	common.buildPublishers(delegate, 365, 100);
+	common.buildPublishers(delegate, 365, 100)
 }
 
 // *********************************************************************************************
 freeStyleJob('Bloom-Linux-any-master-debug') {
 	previousNames 'Bloom-Linux-any-default-debug'
 
-	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch');
+	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch')
 
 	label 'ubuntu && supported'
 
 	steps {
 		// Install certificates
-		common.addInstallPackagesBuildStep(delegate);
+		common.addInstallPackagesBuildStep(delegate)
 
 		// Get dependencies
-		common.addGetDependenciesBuildStep(delegate);
+		common.addGetDependenciesBuildStep(delegate)
 
 		// Build
-		common.addXbuildBuildStep(delegate, 'BloomLinux.sln');
+		common.addXbuildBuildStep(delegate, 'BloomLinux.sln')
 	}
 }
 
@@ -72,9 +72,9 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 freeStyleJob('Bloom-Win32-master-debug') {
 	previousNames 'Bloom-Win32-default-debug'
 
-	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch');
+	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch')
 
-	label 'windows';
+	label 'windows'
 
 	steps {
 		// Get dependencies
@@ -89,14 +89,14 @@ freeStyleJob('Bloom-Win32-master-debug') {
 freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 	previousNames 'Bloom-Linux-any-default-debug-Tests'
 
-	Bloom.defaultBuildJob(delegate, 'Run unit tests.');
+	Bloom.defaultBuildJob(delegate, 'Run unit tests.')
 
-	label 'linux';
+	label 'linux'
 
-	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-debug';
+	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-debug'
 
-	configure common.XvfbBuildWrapper();
-	configure common.RunOnSameNodeAs('Bloom-Linux-any-master-debug', true);
+	configure common.XvfbBuildWrapper()
+	configure common.RunOnSameNodeAs('Bloom-Linux-any-master-debug', true)
 
 	steps {
 		// Run unit tests
@@ -112,23 +112,23 @@ freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 freeStyleJob('Bloom-Win32-master-debug-Tests') {
 	previousNames 'Bloom-Win32-default-debug-Tests'
 
-	Bloom.defaultBuildJob(delegate, 'Run Bloom unit tests.');
+	Bloom.defaultBuildJob(delegate, 'Run Bloom unit tests.')
 
 	parameters {
-		stringParam("ARTIFACTS_TAG", "", "The artifact tag");
-		stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.");
+		stringParam("ARTIFACTS_TAG", "", "The artifact tag")
+		stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.")
 	}
 
-	label 'windows';
+	label 'windows'
 
-	configure common.RunOnSameNodeAs('Bloom-Win32-master-debug', true);
+	configure common.RunOnSameNodeAs('Bloom-Win32-master-debug', true)
 
 	steps {
 		// Run unit tests
 		common.addRunUnitTestsWindowsBuildStep(delegate, 'BloomTests.dll')
 
 		// this is needed so that upstream aggregation of unit tests works
-		common.addMagicAggregationFileWindows(delegate);
+		common.addMagicAggregationFileWindows(delegate)
 	}
 
 	publishers {
@@ -143,14 +143,14 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 	description '''
 <p>This job runs JS unit tests for Bloom.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
-''';
+'''
 
-	label 'linux && !wheezy';
+	label 'linux && !wheezy'
 
 	scm {
 		git {
 			remote {
-				github("BloomBooks/BloomDesktop", "git");
+				github("BloomBooks/BloomDesktop", "git")
 				refspec('+refs/pull/*:refs/remotes/origin/pr/*')
 			}
 			branch('master')
@@ -174,18 +174,18 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 
 	steps {
 		// Install nodejs dependencies
-		common.addInstallKarmaBuildStep(delegate);
+		common.addInstallKarmaBuildStep(delegate)
 
 		// Get dependencies
-		common.addGetDependenciesBuildStep(delegate);
+		common.addGetDependenciesBuildStep(delegate)
 
 		// run unit tests
-		common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI');
+		common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI')
 	}
 
 	publishers {
-		archiveJunit('src/BloomBrowserUI/test-results.xml');
+		archiveJunit('src/BloomBrowserUI/test-results.xml')
 	}
 
-	common.buildPublishers(delegate, 365, 100);
+	common.buildPublishers(delegate, 365, 100)
 }
