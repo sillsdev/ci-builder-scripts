@@ -8,7 +8,10 @@ import utilities.common
 class Bloom {
 	static void generalBloomBuildJob(jobContext, useTimeout = true) {
 		jobContext.with {
-			priority(100);
+			properties {
+				priority(100)
+			}
+
 			logRotator(365, 100)
 
 			wrappers {

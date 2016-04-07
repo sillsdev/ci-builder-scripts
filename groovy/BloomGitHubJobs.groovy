@@ -32,7 +32,9 @@ collects the results and reports them back to GitHub.</p>
 
 		label 'linux'
 
-		priority(100);
+		properties {
+			priority(100)
+		}
 
 		scm {
 			git {

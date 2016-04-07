@@ -18,7 +18,9 @@ change got merged and collects the results.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 '''
 
-	priority(100);
+	properties {
+		priority(100)
+	}
 
 	label 'linux'
 

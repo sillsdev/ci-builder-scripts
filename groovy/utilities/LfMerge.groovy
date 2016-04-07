@@ -12,7 +12,10 @@ import utilities.common
 class LfMerge {
 	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
 		jobContext.with {
-			priority(100)
+			properties {
+				priority(100)
+			}
+
 			label whereToRun
 
 			logRotator(365, 100)
