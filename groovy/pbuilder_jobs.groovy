@@ -13,7 +13,7 @@ freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
 	logRotator(365, 100, 10, 10);
 
 	parameters {
-		stringParam("Distributions", "precise trusty utopic wheezy jessie",
+		stringParam("Distributions", "precise trusty wily xenial wheezy jessie",
 			"The distributions to update");
 	}
 
