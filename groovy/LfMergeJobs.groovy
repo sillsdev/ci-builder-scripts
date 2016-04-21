@@ -122,9 +122,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				submoduleOptions {
 					recursive(true)
 				}
-				choosingStrategy {
-					gerritTrigger()
-				}
 				cloneOptions {
 					shallow(true)
 					timeout(30)
@@ -142,9 +139,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				submoduleOptions {
 					recursive(true)
 				}
-				choosingStrategy {
-					gerritTrigger()
-				}
 				cloneOptions {
 					shallow(true)
 					timeout(30)
@@ -161,9 +155,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				relativeTargetDirectory('lfmerge-fdo/fw')
 				submoduleOptions {
 					recursive(true)
-				}
-				choosingStrategy {
-					gerritTrigger()
 				}
 				cloneOptions {
 					shallow(true)
