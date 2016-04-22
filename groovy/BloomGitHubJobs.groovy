@@ -11,7 +11,7 @@ import utilities.Bloom
  * and commit and push the changes.
  */
 
- for (branchName in ['master', 'Version3.6']) {
+for (branchName in ['master', 'Version3.6']) {
 
 	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-debug") {
 
