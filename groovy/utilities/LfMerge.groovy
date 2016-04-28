@@ -31,13 +31,23 @@ class LfMerge {
 				}
 			}
 
-			scm {
+			multiscm {
 				git {
 					remote {
 						github(githubRepo, "https")
 						refspec(spec)
 					}
 					branch(sha1)
+				}
+				git {
+					remote {
+						github("sillsdev/web-languageforge", "https")
+						refspec('+refs/heads/master:refs/remotes/origin/master')
+					}
+					branch('*/master')
+					extensions {
+						relativeTargetDirectory('data/php')
+					}
 				}
 			}
 		}
