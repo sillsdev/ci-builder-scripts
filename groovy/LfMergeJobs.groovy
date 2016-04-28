@@ -37,7 +37,7 @@ freeStyleJob('LfMerge-Linux-any-master-release') {
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
-	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false)
+	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
 
 	description '''<p>Install dependency packages for LfMerge builds.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''

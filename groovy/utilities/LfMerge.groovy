@@ -10,7 +10,7 @@ import utilities.Helper
 import utilities.common
 
 class LfMerge {
-	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
+	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLf = true, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
 		jobContext.with {
 			properties {
 				priority(100)
@@ -39,21 +39,23 @@ class LfMerge {
 					}
 					branch(sha1)
 				}
-				git {
-					remote {
-						github("sillsdev/web-languageforge", "https")
-						refspec('+refs/heads/master:refs/remotes/origin/master')
-					}
-					branch('*/master')
-					extensions {
-						relativeTargetDirectory('data/php')
+				if (addLf) {
+					git {
+						remote {
+							github("sillsdev/web-languageforge", "https")
+							refspec('+refs/heads/master:refs/remotes/origin/master')
+						}
+						branch('*/master')
+						extensions {
+							relativeTargetDirectory('data/php')
+						}
 					}
 				}
 			}
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true) {
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLf = true) {
 		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout)
 		jobContext.with {
 			steps {
