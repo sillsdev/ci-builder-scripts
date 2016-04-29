@@ -19,7 +19,7 @@ def distro = 'trusty'
 
 // *********************************************************************************************
 freeStyleJob('LfMerge-Linux-any-master-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/master:refs/remotes/origin/master', '*/master')
+	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/master:refs/remotes/origin/master', '*/master', true, true)
 
 	description '''<p>Linux builds of master branch.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''

@@ -10,7 +10,7 @@ import utilities.Helper
 import utilities.common
 
 class LfMerge {
-	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLf = true, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
+	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
 		jobContext.with {
 			properties {
 				priority(100)
@@ -39,7 +39,7 @@ class LfMerge {
 					}
 					branch(sha1)
 				}
-				if (addLf) {
+				if (addLanguageForge) {
 					git {
 						remote {
 							github("sillsdev/web-languageforge", "https")
@@ -55,8 +55,8 @@ class LfMerge {
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLf = true) {
-		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout)
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false) {
+		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge)
 		jobContext.with {
 			steps {
 				// Install dependencies
