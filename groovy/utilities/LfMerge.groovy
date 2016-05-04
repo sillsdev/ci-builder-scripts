@@ -104,6 +104,10 @@ if [ ! -f mongo-1.4.1.installed ]; then
 	sudo pecl install mongo-1.4.1
 	touch mongo-1.4.1.installed
 fi
+if ! grep -q mongo.so /etc/php5/cli/php.ini; then
+	echo "Setting mongo.so in php.ini"
+	sudo sh -c 'echo "extension=mongo.so" >> /etc/php5/cli/php.ini'
+fi
 ''')
 				// Compile and run tests
 				shell('''#!/bin/bash
