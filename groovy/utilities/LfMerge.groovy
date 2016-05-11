@@ -91,22 +91,40 @@ cp -r mercurial ../../Mercurial/''')
 				shell('''#!/bin/bash
 set -e
 cd data/php/src
-if [ ! -f vendor/autoload.php ]; then
-	echo "Installing composer and PHP dependencies"
+if [ -f mongo-1.4.1.installed ]; then
+	echo "Removing PECL mongo extension"
+	sudo pecl uninstall mongo-1.4.1
+	sudo sh -c 'sed 's/extension=mongo.so//' -i /etc/php5/cli/php.ini'
+	sudo rm /etc/php5/cli/conf.d/20-mongo.ini || true
+	sudo rm /etc/php5/conf.d/20-mongo.ini || true
+	rm mongo-1.4.1.installed
+fi
+if [ ! -f mongodb.installed ]; then
+	echo "Installing PECL mongodb extension"
+	DEBIAN_FRONTEND=noninteractive
+	sudo apt-get -y install libpcre3-dev
+	sudo pecl install mongodb
+	if [ ! -f /etc/php5/mods-available/mongodb.ini ]; then
+		sudo sh -c 'echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini'
+	fi
+	sudo ln -s /etc/php5/mods-available/mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
+	touch mongodb.installed
+fi
+
+COMPOSERJSON=$(git log --format=%H -1 composer.json)
+COMPOSERJSON_PREV=$(cat composer.json.sha 2>/dev/null || true)
+
+if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
+	git clean -dxf
+	echo "Installing composer"
 	php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-	php -r "if (hash_file('SHA384', 'composer-setup.php') === 'a52be7b8724e47499b039d53415953cc3d5b459b9d9c0308301f867921c19efc623b81dfef8fc2be194a5cf56945d223') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 	php composer-setup.php
 	php -r "unlink('composer-setup.php');"
+	echo "Running composer install"
 	php composer.phar install
-fi
-if [ ! -f mongo-1.4.1.installed ]; then
-	echo "Installing PECL mongo extension"
-	sudo pecl install mongo-1.4.1
-	touch mongo-1.4.1.installed
-fi
-if ! grep -q mongo.so /etc/php5/cli/php.ini; then
-	echo "Setting mongo.so in php.ini"
-	sudo sh -c 'echo "extension=mongo.so" >> /etc/php5/cli/php.ini'
+	echo $COMPOSERJSON > composer.json.sha
+	# git clean got rid of this, so create it again
+	touch mongodb.installed
 fi
 ''')
 				// Compile and run tests
