@@ -103,11 +103,13 @@ if [ ! -f mongodb.installed ]; then
 	echo "Installing PECL mongodb extension"
 	DEBIAN_FRONTEND=noninteractive
 	sudo apt-get -y install libpcre3-dev
-	sudo pecl install mongodb
+	sudo pecl install mongodb || true
 	if [ ! -f /etc/php5/mods-available/mongodb.ini ]; then
 		sudo sh -c 'echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini'
 	fi
-	sudo ln -s /etc/php5/mods-available/mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
+	if [ ! -f /etc/php5/cli/conf.d/20-mongodb.ini ]; then
+		sudo ln -s /etc/php5/mods-available/mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
+	fi
 	touch mongodb.installed
 fi
 
