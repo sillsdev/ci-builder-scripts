@@ -95,6 +95,13 @@ xbuild /t:PrepareSource build/LfMerge.proj''')
 	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
 		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
 		true)
+
+	// Last step: deploy lfmerge package to TeamCity build agent. 2016-05 RM
+	steps {
+		shell('''#!/bin/bash
+ssh ba-trusty64weba sudo apt-get update
+ssh ba-trusty64weba sudo apt-get install lfmerge -y''')
+	}
 }
 
 // *********************************************************************************************
