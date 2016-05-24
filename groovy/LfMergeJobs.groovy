@@ -99,8 +99,10 @@ xbuild /t:PrepareSource build/LfMerge.proj''')
 	// Last step: deploy lfmerge package to TeamCity build agent. 2016-05 RM
 	steps {
 		shell('''#!/bin/bash
-ssh ba-trusty64weba sudo apt-get update
-ssh ba-trusty64weba sudo apt-get install lfmerge -y''')
+echo Waiting 5 minutes for package to show up on LLSO
+sleep 300
+ssh ba-trusty64weba sudo apt-get update || true
+ssh ba-trusty64weba sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install lfmerge -y || true''')
 	}
 }
 
