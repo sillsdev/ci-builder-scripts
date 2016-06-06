@@ -32,13 +32,6 @@ class LfMerge {
 			}
 
 			multiscm {
-				git {
-					remote {
-						github(githubRepo, "https")
-						refspec(spec)
-					}
-					branch(sha1)
-				}
 				if (addLanguageForge) {
 					git {
 						remote {
@@ -50,6 +43,13 @@ class LfMerge {
 							relativeTargetDirectory('data/php')
 						}
 					}
+				}
+				git {
+					remote {
+						github(githubRepo, "https")
+						refspec(spec)
+					}
+					branch(sha1)
 				}
 			}
 		}
@@ -154,8 +154,8 @@ exit $?''')
 	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
 		jobContext.with {
 			parameters {
-				stringParam("sha1", "refs/heads/master",
-					"What pull request to build, e.g. origin/pr/9/merge")
+				stringParam("ghprbPullId", "",
+					"What pull request to build")
 			}
 
 			triggers {
