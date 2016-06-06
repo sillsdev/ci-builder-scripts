@@ -36,6 +36,24 @@ freeStyleJob('LfMerge-Linux-any-master-release') {
 }
 
 // *********************************************************************************************
+freeStyleJob('LfMerge-Linux-any-live-release') {
+	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/live:refs/remotes/origin/live', '*/live', true, true)
+
+	description '''<p>Linux builds of live branch.<p>
+<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
+
+	triggers {
+		githubPush()
+	}
+
+	steps {
+		downstreamParameterized {
+			trigger('LfMerge_Packaging-Linux-all-live-release')
+		}
+	}
+}
+
+// *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
 
@@ -104,6 +122,41 @@ sleep 300
 ssh ba-trusty64weba sudo apt-get update || true
 ssh ba-trusty64weba sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install lfmerge -y || true''')
 	}
+}
+
+// *********************************************************************************************
+freeStyleJob('LfMerge_Packaging-Linux-all-live-release') {
+	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
+	def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
+
+	steps {
+		shell('''#!/bin/bash
+set -e
+echo "Downloading packages and dependencies"
+cd lfmerge
+# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
+export MONO_PREFIX=/opt/mono-sil
+RUNMODE="PACKAGEBUILD" BUILD=Release . environ
+mozroots --import --sync
+yes | certmgr -ssl https://go.microsoft.com
+yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
+yes | certmgr -ssl https://nuget.org
+xbuild /t:PrepareSource build/LfMerge.proj''')
+	}
+
+	common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
+		distro, 'eb1@sil.org', 'live', 'amd64', distro, false, '.', false)
+
+	description '''
+<p>Release builds of the LfMerge live branch.</p>
+<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
+'''
+
+	// will be triggered by other jobs
+
+	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
+		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
+		true)
 }
 
 // *********************************************************************************************
