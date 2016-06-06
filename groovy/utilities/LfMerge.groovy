@@ -153,10 +153,15 @@ exit $?''')
 
 	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
 		jobContext.with {
+			/*
+			* Disabled because of a bug in ghprb-plugin. If we define a variable with the same
+			* name as one that ghprb-plugin defines we overwrite the other one which causes
+			* triggered builds to fail. See https://issues.jenkins-ci.org/browse/JENKINS-35170.
 			parameters {
-				stringParam("ghprbPullId", "",
-					"What pull request to build")
+				stringParam("sha1", "refs/heads/master",
+					"What pull request to build, e.g. origin/pr/9/merge")
 			}
+			*/
 
 			triggers {
 				githubPullRequest {
