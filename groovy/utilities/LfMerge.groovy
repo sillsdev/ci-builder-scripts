@@ -32,6 +32,13 @@ class LfMerge {
 			}
 
 			multiscm {
+				git {
+					remote {
+						github(githubRepo, "https")
+						refspec(spec)
+					}
+					branch(sha1)
+				}
 				if (addLanguageForge) {
 					git {
 						remote {
@@ -43,13 +50,6 @@ class LfMerge {
 							relativeTargetDirectory('data/php')
 						}
 					}
-				}
-				git {
-					remote {
-						github(githubRepo, "https")
-						refspec(spec)
-					}
-					branch(sha1)
 				}
 			}
 		}
