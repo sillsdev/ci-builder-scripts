@@ -48,7 +48,9 @@ freeStyleJob('LfMerge-Linux-any-live-release') {
 
 	steps {
 		downstreamParameterized {
-			trigger('LfMerge_Packaging-Linux-all-live-release')
+			trigger('LfMerge_Packaging-Linux-all-live-release') {
+				predefinedProp("PackageBuildKind", "Release")
+			}
 		}
 	}
 }
