@@ -59,6 +59,11 @@ class LfMerge {
 		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge)
 		jobContext.with {
 			steps {
+				throttleConcurrentBuilds {
+					categories(['lfmerge-build-one-per-node'])
+					maxPerNode(1)
+				}
+
 				// Install dependencies
 				downstreamParameterized {
 					trigger('LfMerge_InstallDependencies-Linux-any-master-release') {
