@@ -180,7 +180,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/libcom')
-				refspec("refs/heads/${libcomBranch}")
+				refspec("+refs/heads/${libcomBranch}:refs/remotes/origin/${libcomBranch}")
 			}
 			branch libcomBranch
 			extensions {
@@ -197,7 +197,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/FwDebian')
-				refspec("refs/heads/${debianBranch}")
+				refspec("+refs/heads/${debianBranch}:refs/remotes/origin/${debianBranch}")
 			}
 			branch debianBranch
 			extensions {
@@ -214,7 +214,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/FieldWorks')
-				refspec("refs/heads/${fwBranch}")
+				refspec("+refs/heads/${fwBranch}:refs/remotes/origin/${fwBranch}")
 			}
 			branch fwBranch
 			extensions {
