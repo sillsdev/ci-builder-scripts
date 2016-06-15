@@ -42,7 +42,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
     }
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name, false, true)
+        false, subdir_name_beta, false, true)
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
