@@ -234,7 +234,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		gerrit {
 			events {
 				refUpdated()
-				changeMerged()
 			}
 			project('FieldWorks', "ant:*${fwBranch}")
 			project('FwDebian', "ant:*${debianBranch}")
