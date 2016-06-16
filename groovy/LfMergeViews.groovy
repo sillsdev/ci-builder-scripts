@@ -17,7 +17,7 @@ class lfMergeViews {
 				filterExecutors false
 
 				jobs {
-					regex('(^LfMerge.*|^GitHub-(LfMerge|Chorus|FlexBridge).*|^Gerrit-FieldWorks.*LfMerge.*)')
+					regex('(^LfMerge.*|^GitHub-(LfMerge|Chorus|FlexBridge).*|^(Gerrit-)?FieldWorks.*LfMerge.*)')
 				}
 
 				columns {
@@ -31,12 +31,11 @@ class lfMergeViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^LfMerge.*-any-(default|master)-release$', 'master branch jobs')
+					regexGroupingRule('^LfMerge.*-any-(default|master)-release$|^FieldWorks.*', 'master branch jobs')
 					regexGroupingRule('^LfMerge.*-any-live-release$', 'live branch jobs')
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
-					regexGroupingRule('^GitHub.*-lfmerge-.*', 'Pre-merge builds of GitHub pull requests for libraries (lfmerge branch)')
-					regexGroupingRule('^Gerrit.*', 'Pre-merge builds of FieldWorks changes (feature/lfmerge branch)')
+					regexGroupingRule('^GitHub.*-lfmerge-.*|^Gerrit.*', 'Pre-merge builds for libraries (lfmerge branch)')
 				}
 			}
 		}
