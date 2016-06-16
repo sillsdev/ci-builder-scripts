@@ -62,9 +62,7 @@ class lfMergeViews {
 					buildButton()
 					lastBuildNode()
 					lastBuildConsole()
-				}
-				configure { view ->
-					view / columns / 'hudson.plugins.nodenamecolumn.NodeNameColumn'
+					slaveOrLabel()
 				}
 			}
 		}
