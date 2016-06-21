@@ -94,7 +94,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 [ "$AppendNightlyToVersion" = "false" ] && PreserveChangelog=--preserve-changelog
 
 exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + packageName + ''' \\
-    --repository-committishes "''' + "mono-calgary=$branchName,$repo=$branchName" + '''" \\
+    --repository-committishes "''' + "mono-calgary=origin/$branchName,$repo=origin/$branchName" + '''" \\
     --dists "$DistsToBuild" \\
     --arches "$ArchesToBuild" \\
     --suite-name "$Suite" \\
