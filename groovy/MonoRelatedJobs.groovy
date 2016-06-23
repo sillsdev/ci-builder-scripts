@@ -37,9 +37,9 @@ for (type in ['', 'Gerrit']) {
 
 				if (!isGerritBuild) {
 					parameters {
-						stringParam('$GERRIT_REFSPEC', "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
+						stringParam('GERRIT_REFSPEC', "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
 							"The refspec")
-						stringParam('$GERRIT_BRANCH', "${branchName}",
+						stringParam('GERRIT_BRANCH', "${branchName}",
 							"What branch to build")
 					}
 				}
