@@ -244,6 +244,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	environmentVariables(DistributionsToPackage: distro, ArchesToPackage: 'amd64')
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
-		distro, 'eb1@sil.org', 'master', '', '', false, 'fw', false, false)
+		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true)
 
 }
