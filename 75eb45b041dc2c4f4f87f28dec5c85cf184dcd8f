@@ -1,0 +1,7 @@
+Verified+1: Jenkins Test Installation
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Submitted-by: Eberhard Beilharz <eb1@sil.org>
+Submitted-at: Mon, 27 Jun 2016 08:52:55 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/4344
+Project: ci-builder-scripts
+Branch: refs/heads/master
