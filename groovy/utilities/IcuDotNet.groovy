@@ -43,6 +43,7 @@ class IcuDotNet {
 				configure common.NUnitPublisher('**/TestResults.xml')
 			}
 		}
+		common.buildPublishers(jobContext, 365, 100)
 	}
 
 	static void addGitHubPushTrigger(jobContext) {
