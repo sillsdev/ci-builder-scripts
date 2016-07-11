@@ -55,7 +55,7 @@ class IcuDotNet {
 	}
 
 	static void commonLinuxBuildJob(jobContext) {
-		commonBuildJob(jobContext, 'linux')
+		commonBuildJob(jobContext, 'linux&&!packager')
 
 		jobContext.with {
 			steps {
