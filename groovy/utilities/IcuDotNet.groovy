@@ -61,6 +61,17 @@ class IcuDotNet {
 			steps {
 				shell('''#!/bin/bash
 ICUVER=$(icu-config --version|tr -d .|cut -c -2)
+
+echo "Building for ICU $icu_ver"
+
+MONO_PREFIX=/opt/mono-sil
+PATH="$MONO_PREFIX/bin:$PATH"
+LD_LIBRARY_PATH="$MONO_PREFIX/lib:$LD_LIBRARY_PATH"
+PKG_CONFIG_PATH="$MONO_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+MONO_GAC_PREFIX="$MONO_PREFIX:/usr"
+
+export LD_LIBRARY_PATH PKG_CONFIG_PATH MONO_GAC_PREFIX
+
 xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:icu_ver=$ICUVER /property:Configuration=ReleaseMono build/icu-dotnet.proj
 ''')
 			}
