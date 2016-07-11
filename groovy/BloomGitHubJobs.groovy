@@ -150,8 +150,10 @@ collects the results and reports them back to GitHub.</p>
 
 		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-debug"
 
-		configure common.XvfbBuildWrapper()
-		configure common.RunOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-debug", true)
+		wrappers {
+			common.addXvfbBuildWrapper(delegate)
+			runOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-debug", true)
+		}
 
 		steps {
 			// Run unit tests
@@ -178,9 +180,9 @@ collects the results and reports them back to GitHub.</p>
 		steps {
 			// Get dependencies
 			common.addGetDependenciesWindowsBuildStep(delegate)
-		}
 
-		configure common.MsBuildBuilder('Bloom.sln')
+			common.addMsBuildStep(delegate, 'Bloom.sln')
+		}
 	}
 
 	// *********************************************************************************************
@@ -195,7 +197,9 @@ collects the results and reports them back to GitHub.</p>
 
 		label 'windows'
 
-		configure common.RunOnSameNodeAs("GitHub-Bloom-Win32-$branchName-debug", true)
+		wrappers {
+			runOnSameNodeAs("GitHub-Bloom-Win32-$branchName-debug", true)
+		}
 
 		steps {
 			// Run unit tests

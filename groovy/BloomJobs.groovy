@@ -81,9 +81,9 @@ freeStyleJob('Bloom-Win32-master-debug') {
 	steps {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
-	}
 
-	configure common.MsBuildBuilder('Bloom.sln')
+		common.addMsBuildStep(delegate, 'Bloom.sln')
+	}
 }
 
 
@@ -97,8 +97,10 @@ freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 
 	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-debug'
 
-	configure common.XvfbBuildWrapper()
-	configure common.RunOnSameNodeAs('Bloom-Linux-any-master-debug', true)
+	wrappers {
+		common.addXvfbBuildWrapper(delegate)
+		runOnSameNodeAs('Bloom-Linux-any-master-debug', true)
+	}
 
 	steps {
 		// Run unit tests
@@ -123,7 +125,9 @@ freeStyleJob('Bloom-Win32-master-debug-Tests') {
 
 	label 'windows'
 
-	configure common.RunOnSameNodeAs('Bloom-Win32-master-debug', true)
+	wrappers {
+		runOnSameNodeAs('Bloom-Win32-master-debug', true)
+	}
 
 	steps {
 		// Run unit tests

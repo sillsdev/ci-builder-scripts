@@ -166,30 +166,4 @@ exit $?''')
 		}
 	}
 
-	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
-		jobContext.with {
-			parameters {
-				stringParam("sha1", "refs/heads/master",
-					"What pull request to build, e.g. origin/pr/9/merge")
-			}
-
-			triggers {
-				githubPullRequest {
-					admin('ermshiperete')
-					useGitHubHooks(true)
-					orgWhitelist('sillsdev')
-					cron('H/5 * * * *')
-					allowMembersOfWhitelistedOrgsAsAdmin()
-					displayBuildErrorsOnDownstreamBuilds(true)
-					whiteListTargetBranches([ branch ])
-					extensions {
-						commitStatus {
-							context("continuous-integration/jenkins-$os")
-						}
-					}
-				}
-			}
-		}
-	}
-
 }

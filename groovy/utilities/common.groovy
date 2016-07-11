@@ -360,40 +360,15 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         }
     }
 
-    // usage: configure MsBuildBuilder('my.sln')
-    static Closure MsBuildBuilder(projFile, cmdArgs = "") {
-        return { project ->
-            project / 'builders' << 'hudson.plugins.msbuild.MsBuildBuilder' {
-                msBuildName '.NET 4.0'
-                msBuildFile projFile
-                cmdLineArgs cmdArgs
-                buildVariablesAsProperties false
-                continueOnBuildFailure false
-                unstableIfWarnings false
-            }
-        }
-    }
-
-    static Closure ArtifactDeployerPublisher(includedFiles, destination) {
-        return { project ->
-            project / 'publishers' << 'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher' {
-                entries {
-                    'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry' {
-                        includes includedFiles
-                        remote destination
-                        deleteRemoteArtifacts false
-                    }
-                }
-            }
-        }
-    }
-
-    static Closure XvfbBuildWrapper() {
-        return { project ->
-            project / 'buildWrappers' << 'org.jenkinsci.plugins.xvfb.XvfbBuildWrapper' {
-                installationName 'default'
-                screen '1024x768x24'
-                displayNameOffset 1
+    static void addMsBuildStep(stepContext, projFile, cmdArgs = "") {
+        stepContext.with {
+            msBuild {
+                msBuildInstallation('.NET 4.0')
+                buildFile(projFile)
+                args(cmdArgs)
+                passBuildVariables(false)
+                continueOnBuildFailure(false)
+                unstableIfWarnings(false)
             }
         }
     }
@@ -403,16 +378,6 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
             xvfb('default') {
                 screen('1024x768x24')
                 displayNameOffset(1)
-            }
-        }
-    }
-
-    static Closure RunOnSameNodeAs(nodeName, doShareWorkspace) {
-        return { project ->
-            project / 'buildWrappers' << 'com.datalex.jenkins.plugins.nodestalker.wrapper.NodeStalkerBuildWrapper' {
-                job nodeName
-                shareWorkspace doShareWorkspace
-                firstTimeFlag true
             }
         }
     }
@@ -431,4 +396,30 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
             }
         }
     }
+
+	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
+		jobContext.with {
+			parameters {
+				stringParam("sha1", "refs/heads/master",
+					"What pull request to build, e.g. origin/pr/9/merge")
+			}
+
+			triggers {
+				githubPullRequest {
+					admin('ermshiperete')
+					useGitHubHooks(true)
+					orgWhitelist('sillsdev')
+					cron('H/5 * * * *')
+					allowMembersOfWhitelistedOrgsAsAdmin()
+					displayBuildErrorsOnDownstreamBuilds(true)
+					whiteListTargetBranches([ branch ])
+					extensions {
+						commitStatus {
+							context("continuous-integration/jenkins-$os")
+						}
+					}
+				}
+			}
+		}
+	}
 }
