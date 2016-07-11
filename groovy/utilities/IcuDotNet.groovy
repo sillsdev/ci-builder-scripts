@@ -32,7 +32,7 @@ class IcuDotNet {
 			scm {
 				git {
 					remote {
-						github("sillsdev/icu-dotnet", "git")
+						github("sillsdev/icu-dotnet", "https")
 						refspec('+refs/heads/master:refs/remotes/origin/master')
 					}
 					branch('*/master')
