@@ -243,6 +243,15 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 
 	environmentVariables(DistributionsToPackage: distro, ArchesToPackage: 'amd64')
 
+	steps {
+		shell('''#!/bin/bash
+cd lfmerge-fdo
+mkdir cmakebuild
+cd cmakebuild
+cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
+''')
+	}
+
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true)
 
