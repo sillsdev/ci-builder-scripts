@@ -18,33 +18,33 @@ rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*}
 
 # Add entry to debian/changelog
 if [ "$VCS" = "hg" ]; then
-    hash_of_current_commit=$(cd ${main_repo_dir:-.} && hg id -i 2>/dev/null |cut -c -12)
+	hash_of_current_commit=$(cd ${main_repo_dir:-.} && hg id -i 2>/dev/null |cut -c -12)
 else
-    hash_of_current_commit=$(cd ${main_repo_dir:-.} && git rev-parse --short HEAD)
+	hash_of_current_commit=$(cd ${main_repo_dir:-.} && git rev-parse --short HEAD)
 fi
 
 timestamp=$(date -u +"%Y%m%dT%H%M%SZ")
 latest_version_in_debian_changelog=$(dpkg-parsechangelog |grep ^Version:|cut -d' ' -f2)
 if [ -z "$package_version" ]; then
-    base_version=${code_version:-$latest_version_in_debian_changelog}
+	base_version=${code_version:-$latest_version_in_debian_changelog}
 else
-    # Merge version from changelog with passed in version. Any zeros in package_version
-    # will be replaced by corresponding number from changelog version.
-    base_version_parts=(${latest_version_in_debian_changelog//./ })
-    result_version=""
-    i=0
-    for part in $(echo $package_version | tr "." "\n"); do
+	# Merge version from changelog with passed in version. Any zeros in package_version
+	# will be replaced by corresponding number from changelog version.
+	base_version_parts=(${latest_version_in_debian_changelog//./ })
+	result_version=""
+	i=0
+	for part in $(echo $package_version | tr "." "\n"); do
 	if [ ${#result_version} -gt 0 ]; then
-	    result_version="${result_version}."
+		result_version="${result_version}."
 	fi
 	if [ "$part" = "0" ]; then
-	    result_version="${result_version}${base_version_parts[$i]}"
+		result_version="${result_version}${base_version_parts[$i]}"
 	else
-	    result_version="${result_version}$part"
+		result_version="${result_version}$part"
 	fi
 	i=$[i+1]
-    done
-    base_version=$result_version
+	done
+	base_version=$result_version
 fi
 nightlydelimeter=${nightlydelimeter:-"."}
 nightlyversion="${base_version}${nightlydelimeter}nightly${timestamp}.${hash_of_current_commit}${package_version_extension}"
@@ -52,20 +52,20 @@ nightlyversion="${base_version}${nightlydelimeter}nightly${timestamp}.${hash_of_
 distribution_of_last_change=$(dpkg-parsechangelog |grep ^Distribution:|cut -d' ' -f2)
 
 if [[ "$DISTS_TO_PROCESS" != *$distribution_of_last_change* ]]; then
-    distribution_of_last_change=$(echo "$DISTRIBUTIONS_TO_PACKAGE" | cut -d' ' -f1)
+	distribution_of_last_change=$(echo "$DISTRIBUTIONS_TO_PACKAGE" | cut -d' ' -f1)
 fi
 changelog_message="Built from commit $hash_of_current_commit"
 if [ -n "$most_recent_tag" ]; then
-    changelog_message="See git log $most_recent_tag..$hash_of_current_commit"
+	changelog_message="See git log $most_recent_tag..$hash_of_current_commit"
 fi
 if [ -z "$preserve_changelog_arg" ]; then
-    stderr "Using package version: $nightlyversion for $distribution_of_last_change"
-    dch --distribution $distribution_of_last_change --force-distribution --upstream --newversion "$nightlyversion" --force-bad-version "$changelog_message"
+	stderr "Using package version: $nightlyversion for $distribution_of_last_change"
+	dch --distribution $distribution_of_last_change --force-distribution --upstream --newversion "$nightlyversion" --force-bad-version "$changelog_message"
 elif [ -n "${package_version}" ]; then
-    stderr "Using package version: $base_version for $distribution_of_last_change"
-    dch --distribution $distribution_of_last_change --force-distribution --upstream --newversion "$base_version" --force-bad-version "$changelog_message"
+	stderr "Using package version: $base_version for $distribution_of_last_change"
+	dch --distribution $distribution_of_last_change --force-distribution --upstream --newversion "$base_version" --force-bad-version "$changelog_message"
 else
-    stderr "Using package version: $latest_version_in_debian_changelog"
+	stderr "Using package version: $latest_version_in_debian_changelog"
 fi
 
 stderr "Building source package:"
