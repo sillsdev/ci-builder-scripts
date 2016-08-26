@@ -79,7 +79,7 @@ xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:icu_ver=$ICU
 	}
 
 	static void commonWindowsBuildJob(jobContext) {
-		commonBuildJob(jobContext, 'dallas-windows-slave-2')
+		commonBuildJob(jobContext, 'windows && supported && timeInSync')
 
 		jobContext.with {
 			steps {
