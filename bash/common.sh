@@ -43,6 +43,8 @@ init()
 			# changelog, e.g. passing 0.0.123.456 with a version from changelog of 3.1.2.3
 			# will result in 3.1.123.456.
 			--package-version) shift; package_version=$1 ;;
+			# The subdirectory of the main repo, e.g. fw. Default is the current directory.
+			--main-repo-dir) shift; main_repo_dir=$1 ;;
 			--no-package) no_package=true ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac

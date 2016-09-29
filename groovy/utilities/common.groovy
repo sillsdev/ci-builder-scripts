@@ -1,8 +1,9 @@
 /*
  * some common definitions that can be imported in other scripts
  */
-package utilities;
-import utilities.Helper;
+package utilities
+
+import utilities.Helper
 
 class common {
     static void defaultPackagingJob(jobContext, packagename, subdir_name,
@@ -12,8 +13,11 @@ class common {
         email = "eb1@sil.org",
         branch = "master",
         arches_tobuild = "amd64 i386",
-        supported_distros = "precise trusty utopic vivid wheezy jessie",
-        blockDownstream = true) {
+        supported_distros = "precise trusty utopic vivid wily xenial wheezy jessie",
+        blockDownstream = true,
+        mainRepoDir = '.',
+        buildMasterBranch = true,
+        addParameters = true) {
         /*
          * Definition of build step scripts
          */
@@ -33,6 +37,7 @@ $HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
     --main-package-name "@@{packagename}" \
     --supported-distros "@@{supported_distros}" \
     --debkeyid $DEBSIGNKEY \
+    --main-repo-dir @@{mainRepoDir} \
     @@{package_version} \
     $MAKE_SOURCE_ARGS
 
@@ -50,24 +55,26 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
         jobContext.with {
 
-            label('packager');
+            label('packager')
 
-            logRotator(365, 20, 10, 10);
+            logRotator(365, 20, 10, 10)
 
-            parameters {
-                stringParam("DistributionsToPackage", distros_tobuild,
-                    "The distributions to build packages for");
-                stringParam("ArchesToPackage", arches_tobuild,
-                    "The architectures to build packages for");
-                choiceParam("PackageBuildKind",
-                    ["Nightly", "Release"],
-                    "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.");
-                stringParam("BranchOrTagToBuild", "refs/heads/$branch",
-                    "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)");
+            if (addParameters) {
+                parameters {
+                    stringParam("DistributionsToPackage", distros_tobuild,
+                        "The distributions to build packages for")
+                    stringParam("ArchesToPackage", arches_tobuild,
+                        "The architectures to build packages for")
+                    choiceParam("PackageBuildKind",
+                        ["Nightly", "Release"],
+                        "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.")
+                    stringParam("BranchOrTagToBuild", "refs/heads/$branch",
+                        "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)")
+                }
             }
 
             wrappers {
-                timestamps();
+                timestamps()
             }
 
             steps {
@@ -75,53 +82,50 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                     'supported_distros' : supported_distros,
                     'subdir_name' : subdir_name,
                     'package_version' : package_version,
-                    'revision' : revision ];
+                    'revision' : revision,
+                    'mainRepoDir': mainRepoDir ]
 
-                shell(Helper.prepareScript(build_script, values));
+                shell(Helper.prepareScript(build_script, values))
             }
 
             publishers {
                 archiveArtifacts {
-                    pattern("results/*, ${subdir_name}_*");
-                    allowEmpty(true);
+                    pattern("results/*, ${subdir_name}*")
+                    allowEmpty(true)
                 }
 
-                configure { project ->
-                    project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
-                        publishUnstableBuilds(true);
-                        publishFailedBuilds(true);
-                        logRotator {
-                            daysToKeep 365
-                            numToKeep 20
-                            artifactDaysToKeep 10
-                            artifactNumToKeep 20
-                        }
-                    }
+                publishBuild {
+                    publishFailed(true)
+                    publishUnstable(true)
+                    discardOldBuilds(365, 20, 10, 20)
                 }
 
-                allowBrokenBuildClaiming();
+                allowBrokenBuildClaiming()
 
                 mailer(email);
 
-                flexiblePublish {
-                    conditionalAction {
-                    condition {
-                        not {
-                            stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
-                        }
-                    }
-                        steps {
-                        downstreamParameterized {
-                            trigger(jobContext.name) {
-                                if (blockDownstream) {
-                                    block {
-                                        buildStepFailure('FAILURE')
-                                        failure('FAILURE')
-                                        unstable('UNSTABLE')
-                                    }
+                if (buildMasterBranch) {
+                    flexiblePublish {
+                        conditionalAction {
+                            condition {
+                                not {
+                                    stringsMatch("\$BranchOrTagToBuild", "refs/heads/$branch", false)
                                 }
-                                parameters {
-                                    predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                            }
+                            steps {
+                                downstreamParameterized {
+                                    trigger(jobContext.name) {
+                                        if (blockDownstream) {
+                                            block {
+                                                buildStepFailure('FAILURE')
+                                                failure('FAILURE')
+                                                unstable('UNSTABLE')
+                                            }
+                                        }
+                                        parameters {
+                                            predefinedProp("BranchOrTagToBuild", "refs/heads/$branch")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -139,36 +143,38 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
             scm {
                 git {
                     remote {
-                        url(url_);
+                        if (scmName_ != "") {
+                            name(scmName_)
+                        }
+                        url(url_)
                         if (refspec_ != "") {
-                            refspec(refspec_);
+                            refspec(refspec_)
                         }
                     }
-                    branch(branch_);
-                    createTag(createTag_);
-                    if (subdir != "") {
-                        relativeTargetDir(subdir);
-                    }
-                    if (clean_) {
-                        clean(clean_)
+                    branch(branch_)
+                    extensions {
+                        if (createTag_) {
+                            perBuildTag()
+                        }
+                        if (subdir != "") {
+                            relativeTargetDirectory(subdir)
+                        }
+                        if (clean_) {
+                            cleanAfterCheckout()
+                        }
+                        if (disableSubmodules_) {
+                            submoduleOptions {
+                                disable(disableSubmodules_)
+                                /*recursive(false)
+                                tracking(false) */
+                            }
+                        }
                     }
 
-                    if (disableSubmodules_ || scmName_ != "" | commitAuthorInChangelog_) {
+                    if (commitAuthorInChangelog_) {
                         configure { node ->
-                            if (disableSubmodules_) {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.SubmoduleOption' {
-                                    disableSubmodules(disableSubmodules_);
-                                    /* recursiveSubmodules(false);
-                                    trackingSubmodules(false); */
-                                }
-                            }
-                            if (scmName_ != "") {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.ScmName' {
-                                    name(scmName_);
-                                }
-                            }
                             if (commitAuthorInChangelog_) {
-                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog';
+                                node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog'
                             }
                         }
                     }
@@ -253,15 +259,19 @@ cd build
         }
     }
 
-    static void addGetDependenciesWindowsBuildStep(stepContext) {
+    static void addGetDependenciesWindowsBuildStep(stepContext, scriptName = 'build/getDependencies-windows.sh') {
+        def build_script = '''SET TEMP=%HOME%\\\\tmp
+SET TMP=%TEMP%
+IF NOT EXIST %TEMP% mkdir %TEMP%
+echo which mkdir > %TEMP%\\\\%BUILD_TAG%.txt
+echo @@{scriptName} >> %TEMP%\\\\%BUILD_TAG%.txt
+"c:\\\\Program Files (x86)\\\\Git\\\\bin\\\\bash.exe" --login -i < %TEMP%\\\\%BUILD_TAG%.txt
+'''
+
         stepContext.with {
-            batchFile('''CD build
-SET TEMP=%HOME%\\tmp
-IF NOT EXIST %TEMP% MKDIR %TEMP%
-echo which mkdir > %TEMP%\\%BUILD_TAG%.txt
-echo ./getDependencies-windows.sh >> %TEMP%\\%BUILD_TAG%.txt
-"c:\\Program Files (x86)\\Git\\bin\\bash.exe" --login -i < %TEMP%\\%BUILD_TAG%.txt
-''');
+            def values = [ 'scriptName' : scriptName ]
+
+            batchFile(Helper.prepareScript(build_script, values))
         }
     }
 
@@ -351,50 +361,24 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         }
     }
 
-    // usage: configure MsBuildBuilder('my.sln')
-    static Closure MsBuildBuilder(projFile) {
-        return { project ->
-            project / 'builders' << 'hudson.plugins.msbuild.MsBuildBuilder' {
-                msBuildName '.NET 4.0'
-                msBuildFile projFile
-                cmdLineArgs ''
-                buildVariablesAsProperties false
-                continueOnBuildFailure false
-                unstableIfWarnings false
+    static void addMsBuildStep(stepContext, projFile, cmdArgs = "") {
+        stepContext.with {
+            msBuild {
+                msBuildInstallation('.NET 4.0')
+                buildFile(projFile)
+                args(cmdArgs)
+                passBuildVariables(false)
+                continueOnBuildFailure(false)
+                unstableIfWarnings(false)
             }
         }
     }
 
-    static Closure ArtifactDeployerPublisher(includedFiles, destination) {
-        return { project ->
-            project / 'publishers' << 'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher' {
-                entries {
-                    'org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry' {
-                        includes includedFiles
-                        remote destination
-                        deleteRemoteArtifacts false
-                    }
-                }
-            }
-        }
-    }
-
-    static Closure XvfbBuildWrapper() {
-        return { project ->
-            project / 'buildWrappers' << 'org.jenkinsci.plugins.xvfb.XvfbBuildWrapper' {
-                installationName 'default'
-                screen '1024x768x24'
-                displayNameOffset 1
-            }
-        }
-    }
-
-    static Closure RunOnSameNodeAs(nodeName, doShareWorkspace) {
-        return { project ->
-            project / 'buildWrappers' << 'com.datalex.jenkins.plugins.nodestalker.wrapper.NodeStalkerBuildWrapper' {
-                job nodeName
-                shareWorkspace doShareWorkspace
-                firstTimeFlag true
+    static void addXvfbBuildWrapper(wrapperContext) {
+        wrapperContext.with {
+            xvfb('default') {
+                screen('1024x768x24')
+                displayNameOffset(1)
             }
         }
     }
@@ -461,6 +445,31 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 					bindMounts ""
 					privileged false
 					containerIdsLogging ""
+				}
+			}
+		}
+	}
+	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
+		jobContext.with {
+			parameters {
+				stringParam("sha1", "refs/heads/master",
+					"What pull request to build, e.g. origin/pr/9/merge")
+			}
+
+			triggers {
+				githubPullRequest {
+					admin('ermshiperete')
+					useGitHubHooks(true)
+					orgWhitelist('sillsdev')
+					cron('H/5 * * * *')
+					allowMembersOfWhitelistedOrgsAsAdmin()
+					displayBuildErrorsOnDownstreamBuilds(true)
+					whiteListTargetBranches([ branch ])
+					extensions {
+						commitStatus {
+							context("continuous-integration/jenkins-$os")
+						}
+					}
 				}
 			}
 		}

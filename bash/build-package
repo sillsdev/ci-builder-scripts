@@ -19,7 +19,7 @@ stderr "Removing old packages"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes || true
-		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.deb || true
+		rm $pbuilder_path/$dist/$arch/result/${source_package_name}*.deb || true
 		rm $WORKSPACE/results/* || true
 	done
 done
@@ -67,12 +67,12 @@ done
 
 stderr "Binary package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-    for arch in $ARCHES_TO_PACKAGE; do
-        cd $pbuilder_path/$dist/$arch/result
-        sha256sum ${source_package_name}_*.changes ${source_package_name}_*.deb || true
+	for arch in $ARCHES_TO_PACKAGE; do
+		cd $pbuilder_path/$dist/$arch/result
 		mkdir -p "$WORKSPACE/results"
-        cp -a ${source_package_name}_*.changes ${source_package_name}_*.deb $WORKSPACE/results/
-    done
+		dcmd --deb --changes sha256sum ${source_package_name}_*.changes || true
+		dcmd --deb --changes cp ${source_package_name}_*.changes $WORKSPACE/results/
+	done
 done
 
 stderr "Results:"

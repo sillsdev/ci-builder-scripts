@@ -17,7 +17,7 @@ class lfMergeViews {
 				filterExecutors false
 
 				jobs {
-					regex('(^LfMerge(-|_).*|^GitHub-LfMerge-.*)')
+					regex('(^LfMerge.*|^GitHub-(LfMerge|Chorus|FlexBridge).*|^(Gerrit-)?FieldWorks.*LfMerge.*)')
 				}
 
 				columns {
@@ -31,9 +31,11 @@ class lfMergeViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^LfMerge(-|_).*-(default|master)-debug$', 'master branch jobs')
+					regexGroupingRule('^LfMerge.*-any-(default|master)-release$|^FieldWorks.*', 'master branch jobs')
+					regexGroupingRule('^LfMerge.*-any-live-release$', 'live branch jobs')
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
+					regexGroupingRule('^GitHub.*-lfmerge-.*|^Gerrit.*', 'Pre-merge builds for libraries (lfmerge branch)')
 				}
 			}
 		}
@@ -47,7 +49,7 @@ class lfMergeViews {
 				filterExecutors false
 
 				jobs {
-					regex('^LfMerge_Packaging-.*')
+					regex('^LfMerge.*_Packaging-.*')
 				}
 
 				columns {
@@ -60,9 +62,7 @@ class lfMergeViews {
 					buildButton()
 					lastBuildNode()
 					lastBuildConsole()
-				}
-				configure { view ->
-					view / columns / 'hudson.plugins.nodenamecolumn.NodeNameColumn'
+					slaveOrLabel()
 				}
 			}
 		}

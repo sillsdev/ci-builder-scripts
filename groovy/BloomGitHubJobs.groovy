@@ -1,8 +1,8 @@
 /*
  * DSL script for Jenkins Bloom GitHub jobs
  */
-import utilities.common;
-import utilities.Bloom;
+import utilities.common
+import utilities.Bloom
 
 /*
  * Definition of jobs
@@ -11,7 +11,7 @@ import utilities.Bloom;
  * and commit and push the changes.
  */
 
- for (branchName in ['master', 'Version3.3']) {
+for (branchName in ['master', 'Version3.6']) {
 
 	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-debug") {
 
@@ -20,24 +20,26 @@ import utilities.Bloom;
 several other builds when a new pull request gets created or an existing one updated,
 collects the results and reports them back to GitHub.</p>
 <p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>
-""";
+"""
 
 		// Bloom team decided that they don't want pre-merge builds
-		disabled(true);
+		disabled(true)
 
 		parameters {
 			stringParam("sha1", "",
-				"What pull request to build, e.g. origin/pr/9/head");
+				"What pull request to build, e.g. origin/pr/9/head")
 		}
 
-		label 'linux';
+		label 'linux'
 
-		priority(100);
+		properties {
+			priority(100)
+		}
 
 		scm {
 			git {
 				remote {
-					github("BloomBooks/BloomDesktop");
+					github("BloomBooks/BloomDesktop")
 					refspec('+refs/pull/*:refs/remotes/origin/pr/*')
 				}
 				branch('${sha1}')
@@ -108,55 +110,57 @@ collects the results and reports them back to GitHub.</p>
 
 		publishers {
 			fingerprint('magic.txt')
-			archiveJunit("GitHub-Bloom-Linux-any-$branchName--JSTests-results/test-results.xml");
+			archiveJunit("GitHub-Bloom-Linux-any-$branchName--JSTests-results/test-results.xml")
 			configure common.NUnitPublisher('**/BloomTests.dll.results.xml')
 		}
 
-		common.buildPublishers(delegate, 365, 100);
+		common.buildPublishers(delegate, 365, 100)
 	}
 
 	// *********************************************************************************************
 	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
-			"Pre-merge builds of GitHub pull requests of $branchName branch");
+			"Pre-merge builds of GitHub pull requests of $branchName branch")
 
-		label 'ubuntu && supported';
+		label 'ubuntu && supported'
 
 		steps {
 			// Install certificates
-			common.addInstallPackagesBuildStep(delegate);
+			common.addInstallPackagesBuildStep(delegate)
 
 			// Get dependencies
-			common.addGetDependenciesBuildStep(delegate);
+			common.addGetDependenciesBuildStep(delegate)
 
 			// Build
-			common.addXbuildBuildStep(delegate, 'BloomLinux.sln');
+			common.addXbuildBuildStep(delegate, 'BloomLinux.sln')
 		}
 	}
 
 	// *********************************************************************************************
 	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
-			"Run unit tests for pull request of $branchName branch");
+			"Run unit tests for pull request of $branchName branch")
 
 		parameters {
 			stringParam("UPSTREAM_BUILD_TAG", "",
-				"The upstream build tag.");
+				"The upstream build tag.")
 		}
 
-		label 'linux';
+		label 'linux'
 
-		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-debug";
+		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-debug"
 
-		configure common.XvfbBuildWrapper();
-		configure common.RunOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-debug", true);
+		wrappers {
+			common.addXvfbBuildWrapper(delegate)
+			runOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-debug", true)
+		}
 
 		steps {
 			// Run unit tests
 			common.addRunUnitTestsLinuxBuildStep(delegate, 'BloomTests.dll')
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFile(delegate);
+			common.addMagicAggregationFile(delegate)
 		}
 
 		publishers {
@@ -169,38 +173,40 @@ collects the results and reports them back to GitHub.</p>
 	// *********************************************************************************************
 	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
-			"Pre-merge builds of GitHub pull requests of $branchName branch");
+			"Pre-merge builds of GitHub pull requests of $branchName branch")
 
-		label 'windows';
+		label 'windows'
 
 		steps {
 			// Get dependencies
 			common.addGetDependenciesWindowsBuildStep(delegate)
-		}
 
-		configure common.MsBuildBuilder('Bloom.sln')
+			common.addMsBuildStep(delegate, 'Bloom.sln')
+		}
 	}
 
 	// *********************************************************************************************
 	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug-Tests") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
-			"Run unit tests for pull requests of $branchName branch.");
+			"Run unit tests for pull requests of $branchName branch.")
 
 		parameters {
-			stringParam("ARTIFACTS_TAG", "", "The artifact tag");
-			stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.");
+			stringParam("ARTIFACTS_TAG", "", "The artifact tag")
+			stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.")
 		}
 
-		label 'windows';
+		label 'windows'
 
-		configure common.RunOnSameNodeAs("GitHub-Bloom-Win32-$branchName-debug", true);
+		wrappers {
+			runOnSameNodeAs("GitHub-Bloom-Win32-$branchName-debug", true)
+		}
 
 		steps {
 			// Run unit tests
 			common.addRunUnitTestsWindowsBuildStep(delegate, 'BloomTests.dll')
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFileWindows(delegate);
+			common.addMagicAggregationFileWindows(delegate)
 		}
 
 		publishers {
@@ -213,32 +219,32 @@ collects the results and reports them back to GitHub.</p>
 	// *********************************************************************************************
 	freeStyleJob("GitHub-Bloom-Linux-any-$branchName--JSTests") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
-			"Run JS unit tests for pull requests of $branchName branch");
+			"Run JS unit tests for pull requests of $branchName branch")
 
 		parameters {
 			stringParam("UPSTREAM_BUILD_TAG", "",
-				"The upstream build tag.");
+				"The upstream build tag.")
 		}
 
-		label 'jstests';
+		label 'jstests'
 
 		steps {
 			// Install nodejs dependencies
-			common.addInstallKarmaBuildStep(delegate);
+			common.addInstallKarmaBuildStep(delegate)
 
 			// Get dependencies
-			common.addGetDependenciesBuildStep(delegate);
+			common.addGetDependenciesBuildStep(delegate)
 
 			// run unit tests
-			common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI');
+			common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI')
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFile(delegate);
+			common.addMagicAggregationFile(delegate)
 		}
 
 		publishers {
 			fingerprint('magic.txt')
-			archiveJunit('src/BloomBrowserUI/test-results.xml');
+			archiveJunit('src/BloomBrowserUI/test-results.xml')
 			archiveArtifacts('src/BloomBrowserUI/test-results.xml')
 		}
 	}
