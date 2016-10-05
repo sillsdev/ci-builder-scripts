@@ -91,10 +91,16 @@ for (type in ['', 'Gerrit']) {
 				}
 
 				steps {
+					if (branchName == 'develop')
+						MONO_PREFIX="/opt/mono4-sil"
+					else
+						MONO_PREFIX="/opt/mono-sil"
+
 					shell('''#!/bin/bash
 set -e
+export MONO_PREFIX=''' + MONO_PREFIX + '''
 # use ccache
-export PATH=/usr/lib/ccache:$WORKSPACE/bin:$PATH
+export PATH=/usr/lib/ccache:$WORKSPACE/bin:$MONO_PREFIX/bin:$PATH
 
 [ -e configure ] || NOCONFIGURE=1 ./autogen.sh
 ./configure --prefix=$WORKSPACE
