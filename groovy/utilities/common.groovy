@@ -9,7 +9,7 @@ class common {
     static void defaultPackagingJob(jobContext, packagename, subdir_name,
         package_version = "",
         revision = "",
-        distros_tobuild = "precise trusty",
+        distros_tobuild = "precise trusty xenial",
         email = "eb1@sil.org",
         branch = "master",
         arches_tobuild = "amd64 i386",
@@ -62,9 +62,9 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
             if (addParameters) {
                 parameters {
                     stringParam("DistributionsToPackage", distros_tobuild,
-                        "The distributions to build packages for")
+                        "The distributions to build packages for (separated by space)")
                     stringParam("ArchesToPackage", arches_tobuild,
-                        "The architectures to build packages for")
+                        "The architectures to build packages for (separated by space)")
                     choiceParam("PackageBuildKind",
                         ["Nightly", "Release"],
                         "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.")

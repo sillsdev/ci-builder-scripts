@@ -15,7 +15,7 @@ import utilities.LfMerge
  * and commit and push the changes.
  */
 
-def distro = 'trusty'
+def distro = 'trusty xenial'
 
 // *********************************************************************************************
 freeStyleJob('LfMerge-Linux-any-master-release') {
