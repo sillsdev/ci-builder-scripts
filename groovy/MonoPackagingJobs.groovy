@@ -80,7 +80,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 			wrappers {
 				timestamps()
 				timeout {
-					noActivity(180)
+					noActivity(600)
 					abortBuild()
 					writeDescription("Build timed out after {0} minutes")
 				}
