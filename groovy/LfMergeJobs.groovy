@@ -18,46 +18,6 @@ import utilities.LfMerge
 def distro = 'trusty xenial'
 
 // *********************************************************************************************
-freeStyleJob('LfMerge-Linux-any-master-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/master:refs/remotes/origin/master', '*/master', true, true)
-
-	description '''<p>Linux builds of master branch.<p>
-<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
-
-	triggers {
-		githubPush()
-	}
-
-	steps {
-		downstreamParameterized {
-			trigger('LfMerge_Packaging-Linux-all-master-release')
-		}
-	}
-}
-
-// *********************************************************************************************
-freeStyleJob('LfMerge-Linux-any-live-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/heads/live:refs/remotes/origin/live', '*/live', true, true)
-
-	description '''<p>Linux builds of live branch.<p>
-<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
-
-	triggers {
-		githubPush()
-	}
-
-	steps {
-		downstreamParameterized {
-			trigger('LfMerge_Packaging-Linux-all-live-release') {
-				parameters {
-					predefinedProp("PackageBuildKind", "Release")
-				}
-			}
-		}
-	}
-}
-
-// *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
 
@@ -85,12 +45,36 @@ mozroots --import --sync
 }
 
 // *********************************************************************************************
-freeStyleJob('LfMerge_Packaging-Linux-all-master-release') {
-	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
-	def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
+for (branchName in ['master', 'live']) {
+	freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
+		LfMerge.commonLfMergeBuildJob(delegate, "+refs/heads/${branchName}:refs/remotes/origin/${branchName}", "*/${branchName}", true, true)
 
-	steps {
-		shell('''#!/bin/bash
+		description """<p>Linux builds of live ${branchName}.<p>
+<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
+
+		triggers {
+			githubPush()
+		}
+
+		steps {
+			downstreamParameterized {
+				trigger("LfMerge_Packaging-Linux-all-${branchName}-release") {
+					if (branchName != "master") {
+						parameters {
+							predefinedProp("PackageBuildKind", "Release")
+						}
+					}
+				}
+			}
+		}
+	}
+
+	freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
+		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
+		def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
+
+		steps {
+			shell('''#!/bin/bash
 set -e
 echo "Downloading packages and dependencies"
 cd lfmerge
@@ -102,65 +86,33 @@ yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
 yes | certmgr -ssl https://nuget.org
 xbuild /t:PrepareSource build/LfMerge.proj''')
-	}
+		}
 
-	common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
-		distro, 'eb1@sil.org', 'master', 'amd64', distro, false)
+		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
+			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"))
 
-	description '''
-<p>Nightly builds of the LfMerge master branch.</p>
+		description """
+<p>Continuous package builds of the LfMerge ${branchName} branch.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
-'''
+"""
 
-	// will be triggered by other jobs
+		// will be triggered by other jobs
 
-	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
-		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
-		true)
+		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
+			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
+			true)
 
-	// Last step: deploy lfmerge package to TeamCity build agent. 2016-05 RM
-	steps {
-		shell('''#!/bin/bash
+		if (branchName == "master") {
+			// Last step: deploy lfmerge package to TeamCity build agent. 2016-05 RM
+			steps {
+				shell('''#!/bin/bash
 echo Waiting 5 minutes for package to show up on LLSO
 sleep 300
 ssh ba-trusty64weba sudo apt-get update || true
 ssh ba-trusty64weba sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install lfmerge -y || true''')
+			}
+		}
 	}
-}
-
-// *********************************************************************************************
-freeStyleJob('LfMerge_Packaging-Linux-all-live-release') {
-	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
-	def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
-
-	steps {
-		shell('''#!/bin/bash
-set -e
-echo "Downloading packages and dependencies"
-cd lfmerge
-# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
-export MONO_PREFIX=/opt/mono-sil
-RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-mozroots --import --sync
-yes | certmgr -ssl https://go.microsoft.com
-yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
-yes | certmgr -ssl https://nuget.org
-xbuild /t:PrepareSource build/LfMerge.proj''')
-	}
-
-	common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
-		distro, 'eb1@sil.org', 'live', 'amd64', distro, false, '.', false)
-
-	description '''
-<p>Release builds of the LfMerge live branch.</p>
-<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
-'''
-
-	// will be triggered by other jobs
-
-	common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
-		false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
-		true)
 }
 
 // *********************************************************************************************
