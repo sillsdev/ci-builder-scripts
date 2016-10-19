@@ -165,6 +165,7 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 	}
 
 	wrappers {
+		colorizeOutput()
 		timestamps()
 		timeout {
 			noActivity 180

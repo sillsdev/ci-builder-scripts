@@ -15,6 +15,7 @@ class Bloom {
 			logRotator(365, 100)
 
 			wrappers {
+				colorizeOutput()
 				timestamps()
 				if (useTimeout) {
 					timeout {
