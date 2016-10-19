@@ -67,7 +67,7 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 		common.addGetDependenciesBuildStep(delegate)
 
 		// Build
-		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build')
+		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 	}
 }
 
@@ -83,7 +83,7 @@ freeStyleJob('Bloom-Win32-master-debug') {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
 
-		common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:Build')
+		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 	}
 }
 
@@ -105,7 +105,7 @@ freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly')
+		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 	}
 
 	publishers {
@@ -132,7 +132,7 @@ freeStyleJob('Bloom-Win32-master-debug-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly')
+		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 
 		// this is needed so that upstream aggregation of unit tests works
 		common.addMagicAggregationFileWindows(delegate)
