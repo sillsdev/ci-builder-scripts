@@ -233,11 +233,11 @@ collects the results and reports them back to GitHub.</p>
 		}
 
 		steps {
-			// Install nodejs dependencies
-			Bloom.addInstallKarmaBuildStep(delegate)
-
 			// Get dependencies
 			common.addGetDependenciesBuildStep(delegate)
+
+			// Install nodejs dependencies
+			Bloom.addInstallKarmaBuildStep(delegate)
 
 			// run unit tests
 			Bloom.addRunJsTestsBuildStep(delegate)
@@ -248,8 +248,8 @@ collects the results and reports them back to GitHub.</p>
 
 		publishers {
 			fingerprint('magic.txt')
-			archiveJunit('src/BloomBrowserUI/test-results.xml')
-			archiveArtifacts('src/BloomBrowserUI/test-results.xml')
+			archiveJunit('output/browser/TESTS-*.xml')
+			archiveArtifacts('output/browser/TESTS-*.xml')
 		}
 	}
  } // end of for loop

@@ -175,18 +175,18 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 	}
 
 	steps {
-		// Install nodejs dependencies
-		Bloom.addInstallKarmaBuildStep(delegate)
-
 		// Get dependencies
 		common.addGetDependenciesBuildStep(delegate)
+
+		// Install nodejs dependencies
+		Bloom.addInstallKarmaBuildStep(delegate)
 
 		// run unit tests
 		Bloom.addRunJsTestsBuildStep(delegate)
 	}
 
 	publishers {
-		archiveJunit('src/BloomBrowserUI/test-results.xml')
+		archiveJunit('output/browser/TESTS-*.xml')
 	}
 
 	common.buildPublishers(delegate, 365, 100)
