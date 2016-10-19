@@ -40,10 +40,10 @@ change got merged and collects the results.</p>
 	steps {
 		// Trigger downstream build
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Win32-master-debug,Bloom-Linux-any-master-debug,Bloom-Linux-any-master--JSTests')
+			'Bloom-Win32-master-debug,Bloom-Linux-any-master-debug')
 
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Linux-any-master-debug-Tests, Bloom-Win32-master-debug-Tests')
+			'Bloom-Linux-any-master-debug-Tests, Bloom-Win32-master-debug-Tests,Bloom-Linux-any-master--JSTests')
 
 	}
 
