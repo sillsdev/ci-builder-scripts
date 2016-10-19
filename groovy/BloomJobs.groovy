@@ -11,7 +11,7 @@ import utilities.Bloom
  * and commit and push the changes.
  */
 
-freeStyleJob('Bloom-Wrapper-Trigger-debug') {
+freeStyleJob('Bloom-Wrapper-Trigger-release') {
 	description '''
 <p>Wrapper job for Bloom builds. This job kicks off several other builds after a new
 change got merged and collects the results.</p>
@@ -40,10 +40,10 @@ change got merged and collects the results.</p>
 	steps {
 		// Trigger downstream build
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Win32-master-debug,Bloom-Linux-any-master-debug')
+			'Bloom-Win32-master-release,Bloom-Linux-any-master-release')
 
 		common.addTriggerDownstreamBuildStep(delegate,
-			'Bloom-Linux-any-master-debug-Tests, Bloom-Win32-master-debug-Tests,Bloom-Linux-any-master--JSTests')
+			'Bloom-Linux-any-master-release-Tests, Bloom-Win32-master-release-Tests,Bloom-Linux-any-master--JSTests')
 
 	}
 
@@ -51,8 +51,8 @@ change got merged and collects the results.</p>
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Linux-any-master-debug') {
-	previousNames 'Bloom-Linux-any-default-debug'
+freeStyleJob('Bloom-Linux-any-master-release') {
+	previousNames 'Bloom-Linux-any-default-release'
 
 	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch')
 
@@ -72,8 +72,8 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Win32-master-debug') {
-	previousNames 'Bloom-Win32-default-debug'
+freeStyleJob('Bloom-Win32-master-release') {
+	previousNames 'Bloom-Win32-default-release'
 
 	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch')
 
@@ -89,18 +89,18 @@ freeStyleJob('Bloom-Win32-master-debug') {
 
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
-	previousNames 'Bloom-Linux-any-default-debug-Tests'
+freeStyleJob('Bloom-Linux-any-master-release-Tests') {
+	previousNames 'Bloom-Linux-any-default-release-Tests'
 
 	Bloom.defaultBuildJob(delegate, 'Run unit tests.')
 
 	label 'linux'
 
-	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-debug'
+	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-release'
 
 	wrappers {
 		common.addXvfbBuildWrapper(delegate)
-		runOnSameNodeAs('Bloom-Linux-any-master-debug', true)
+		runOnSameNodeAs('Bloom-Linux-any-master-release', true)
 	}
 
 	steps {
@@ -109,13 +109,13 @@ freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 	}
 
 	publishers {
-		configure common.NUnitPublisher('output/Debug/BloomTests.dll.results.xml')
+		configure common.NUnitPublisher('output/Release/TestResults.xml')
 	}
 }
 
 // *********************************************************************************************
-freeStyleJob('Bloom-Win32-master-debug-Tests') {
-	previousNames 'Bloom-Win32-default-debug-Tests'
+freeStyleJob('Bloom-Win32-master-release-Tests') {
+	previousNames 'Bloom-Win32-default-release-Tests'
 
 	Bloom.defaultBuildJob(delegate, 'Run Bloom unit tests.')
 
@@ -127,7 +127,7 @@ freeStyleJob('Bloom-Win32-master-debug-Tests') {
 	label 'windows'
 
 	wrappers {
-		runOnSameNodeAs('Bloom-Win32-master-debug', true)
+		runOnSameNodeAs('Bloom-Win32-master-release', true)
 	}
 
 	steps {
@@ -140,8 +140,8 @@ freeStyleJob('Bloom-Win32-master-debug-Tests') {
 
 	publishers {
 		fingerprint('magic.txt')
-		archiveArtifacts('output/Debug/BloomTests.dll.results.xml')
-		configure common.NUnitPublisher('output/Debug/BloomTests.dll.results.xml')
+		archiveArtifacts('output/Release/TestResults.xml')
+		configure common.NUnitPublisher('output/Release/TestResults.xml')
 	}
 }
 
@@ -187,6 +187,13 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 
 	publishers {
 		archiveJunit('output/browser/TESTS-*.xml')
+		flowdock('608a6152ead8516caa955b81cda7c2cc') {
+			aborted(true)
+			failure(true)
+			fixed(true)
+			unstable(true)
+			tags('jenkins')
+		}
 	}
 
 	common.buildPublishers(delegate, 365, 100)

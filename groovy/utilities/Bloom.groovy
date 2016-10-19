@@ -29,10 +29,10 @@ class Bloom {
 
 			publishers {
 				flowdock('608a6152ead8516caa955b81cda7c2cc') {
-					aborted()
-					failure()
-					fixed()
-					unstable()
+					aborted(true)
+					failure(true)
+					fixed(true)
+					unstable(true)
 					tags('jenkins')
 				}
 			}
@@ -43,7 +43,7 @@ class Bloom {
 		generalBloomBuildJob(jobContext, useTimeout)
 
 		jobContext.with {
-			description """<p>$descriptionVal This job gets triggered by Bloom-Wrapper-Trigger-debug.<p>
+			description """<p>$descriptionVal. This job gets triggered by Bloom-Wrapper-Trigger-release.<p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>"""
 
 			scm {
@@ -61,7 +61,7 @@ class Bloom {
 	static void defaultGitHubPRBuildJob(jobContext, descriptionVal, useTimeout = true) {
 		generalBloomBuildJob(jobContext, useTimeout)
 		jobContext.with {
-			description """<p>$descriptionVal This job gets triggered by GitHub-Bloom-Wrapper-*.<p>
+			description """<p>$descriptionVal. This job gets triggered by GitHub-Bloom-Wrapper-*.<p>
 <p>The job is created by the DSL plugin from <i>BloomGitHubJobs.groovy</i> script.</p>"""
 
 			parameters {
@@ -111,7 +111,7 @@ cd 'src/BloomBrowserUI'
 PATH="$HOME/bin:$PATH"
 NODE_PATH=/usr/lib/nodejs:/usr/lib/node_modules:/usr/share/javascript
 export NODE_PATH
-node_modules/.bin/karma start --reporters junit --single-run --browsers Firefox --capture-timeout 15000
+node_modules/.bin/karma start --reporters junit --single-run --browsers Firefox --capture-timeout 15000 || true
 ''')
 		}
 	}

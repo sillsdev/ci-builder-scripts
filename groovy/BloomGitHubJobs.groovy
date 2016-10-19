@@ -11,9 +11,9 @@ import utilities.Bloom
  * and commit and push the changes.
  */
 
-for (branchName in ['master', 'Version3.6']) {
+for (branchName in ['master', 'Version3.7']) {
 
-	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-debug") {
+	freeStyleJob("GitHub-Bloom-Wrapper-$branchName-release") {
 
 		description """
 <p>Wrapper job for GitHub pull requests of $branchName branch. This job kicks off
@@ -65,17 +65,17 @@ collects the results and reports them back to GitHub.</p>
 			shell('echo -n ${BUILD_TAG} > ${WORKSPACE}/magic.txt')
 
 			common.addTriggerDownstreamBuildStep(delegate,
-				"GitHub-Bloom-Linux-any-$branchName-debug,GitHub-Bloom-Win32-$branchName-debug,GitHub-Bloom-Linux-any-$branchName--JSTests")
+				"GitHub-Bloom-Linux-any-$branchName-release,GitHub-Bloom-Win32-$branchName-release,GitHub-Bloom-Linux-any-$branchName--JSTests")
 
 			common.addTriggerDownstreamBuildStep(delegate,
-				"GitHub-Bloom-Linux-any-$branchName-debug-Tests, GitHub-Bloom-Win32-$branchName-debug-Tests",
+				"GitHub-Bloom-Linux-any-$branchName-release-Tests, GitHub-Bloom-Win32-$branchName-release-Tests",
 				["ARTIFACTS_TAG":
-				"jenkins-GitHub-Bloom-Win32-$branchName-debug-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}",
+				"jenkins-GitHub-Bloom-Win32-$branchName-release-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}",
 				"UPSTREAM_BUILD_TAG": "\${BUILD_TAG}"])
 
-			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
-				includePatterns 'output/Debug/BloomTests.dll.results.xml'
-				targetDirectory "GitHub-Bloom-Linux-any-$branchName-debug-Tests-results/"
+			copyArtifacts("GitHub-Bloom-Linux-any-$branchName-release-Tests") {
+				includePatterns 'output/Release/TestResults.xml'
+				targetDirectory "GitHub-Bloom-Linux-any-$branchName-release-Tests-results/"
 				flatten true
 				optional true
 				fingerprintArtifacts true
@@ -84,9 +84,9 @@ collects the results and reports them back to GitHub.</p>
 				}
 			}
 
-			copyArtifacts("GitHub-Bloom-Win32-$branchName-debug-Tests") {
-				includePatterns 'output/Debug/BloomTests.dll.results.xml'
-				targetDirectory "GitHub-Bloom-Win32-$branchName-debug-Tests-results/"
+			copyArtifacts("GitHub-Bloom-Win32-$branchName-release-Tests") {
+				includePatterns 'output/Release/TestResults.xml'
+				targetDirectory "GitHub-Bloom-Win32-$branchName-release-Tests-results/"
 				flatten true
 				optional true
 				fingerprintArtifacts true
@@ -118,7 +118,7 @@ collects the results and reports them back to GitHub.</p>
 	}
 
 	// *********************************************************************************************
-	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug") {
+	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-release") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Pre-merge builds of GitHub pull requests of $branchName branch")
 
@@ -137,7 +137,7 @@ collects the results and reports them back to GitHub.</p>
 	}
 
 	// *********************************************************************************************
-	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-debug-Tests") {
+	freeStyleJob("GitHub-Bloom-Linux-any-$branchName-release-Tests") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Run unit tests for pull request of $branchName branch")
 
@@ -148,11 +148,11 @@ collects the results and reports them back to GitHub.</p>
 
 		label 'linux'
 
-		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-debug"
+		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-release"
 
 		wrappers {
 			common.addXvfbBuildWrapper(delegate)
-			runOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-debug", true)
+			runOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-release", true)
 		}
 
 		steps {
@@ -165,13 +165,13 @@ collects the results and reports them back to GitHub.</p>
 
 		publishers {
 			fingerprint('magic.txt')
-			archiveArtifacts('output/Debug/BloomTests.dll.results.xml')
-			configure common.NUnitPublisher('output/Debug/BloomTests.dll.results.xml')
+			archiveArtifacts('output/Release/TestResults.xml')
+			configure common.NUnitPublisher('output/Release/TestResults.xml')
 		}
 	}
 
 	// *********************************************************************************************
-	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug") {
+	freeStyleJob("GitHub-Bloom-Win32-$branchName-release") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Pre-merge builds of GitHub pull requests of $branchName branch")
 
@@ -186,7 +186,7 @@ collects the results and reports them back to GitHub.</p>
 	}
 
 	// *********************************************************************************************
-	freeStyleJob("GitHub-Bloom-Win32-$branchName-debug-Tests") {
+	freeStyleJob("GitHub-Bloom-Win32-$branchName-release-Tests") {
 		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Run unit tests for pull requests of $branchName branch.")
 
@@ -198,7 +198,7 @@ collects the results and reports them back to GitHub.</p>
 		label 'windows'
 
 		wrappers {
-			runOnSameNodeAs("GitHub-Bloom-Win32-$branchName-debug", true)
+			runOnSameNodeAs("GitHub-Bloom-Win32-$branchName-release", true)
 		}
 
 		steps {
@@ -211,8 +211,8 @@ collects the results and reports them back to GitHub.</p>
 
 		publishers {
 			fingerprint('magic.txt')
-			archiveArtifacts('output/Debug/BloomTests.dll.results.xml')
-			configure common.NUnitPublisher('output/Debug/BloomTests.dll.results.xml')
+			archiveArtifacts('output/Release/TestResults.xml')
+			configure common.NUnitPublisher('output/Release/TestResults.xml')
 		}
 	}
 
@@ -250,6 +250,13 @@ collects the results and reports them back to GitHub.</p>
 			fingerprint('magic.txt')
 			archiveJunit('output/browser/TESTS-*.xml')
 			archiveArtifacts('output/browser/TESTS-*.xml')
+			flowdock('608a6152ead8516caa955b81cda7c2cc') {
+				aborted(true)
+				failure(true)
+				fixed(true)
+				unstable(true)
+				tags('jenkins,PR')
+			}
 		}
 	}
  } // end of for loop

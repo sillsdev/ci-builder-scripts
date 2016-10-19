@@ -27,7 +27,7 @@ class bloomViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^Bloom-.*-(default|master)-debug$', 'master branch compile jobs')
+					regexGroupingRule('^Bloom-.*-(default|master)-release$', 'master branch compile jobs')
 					regexGroupingRule('^Bloom-.*-(default|master)-.*Tests$', 'master branch unit tests')
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('.*-Trigger-.*', 'master branch builds')
@@ -104,11 +104,11 @@ nestedView('Bloom') {
 	views {
 		bloomViews.BloomViewAll(delegate)
 		bloomViews.BloomViewBuildPipeline(delegate, "Build Pipeline master branch",
-			"master", 'Bloom-Wrapper-Trigger-debug', false)
+			"master", 'Bloom-Wrapper-Trigger-release', false)
 		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.6",
-			"Version3.6", 'GitHub-Bloom-Wrapper-Version3.6-debug', true)
+			"Version3.6", 'GitHub-Bloom-Wrapper-Version3.6-release', true)
 		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline master branch",
-			"master", 'GitHub-Bloom-Wrapper-master-debug', true)
+			"master", 'GitHub-Bloom-Wrapper-master-release', true)
 		bloomViews.BloomViewPackageBuilds(delegate)
 	}
 }
