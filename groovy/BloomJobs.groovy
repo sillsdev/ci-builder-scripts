@@ -83,6 +83,11 @@ freeStyleJob('Bloom-Win32-master-release') {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
 
+		shell('''cd src\\BloomBrowserUI
+npm install
+npm run build
+''')
+
 		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 	}
 }
