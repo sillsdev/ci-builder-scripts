@@ -220,12 +220,12 @@ mozroots --import --sync
         }
     }
 
-    static void addXbuildBuildStep(stepContext, projFile) {
+    static void addXbuildBuildStep(stepContext, projFile, cmdArgs = "") {
         stepContext.with {
-            shell('''#!/bin/bash
+            shell("""#!/bin/bash
 set -e
 . ./environ
-xbuild ''' + projFile);
+xbuild $cmdArgs $projFile""");
         }
     }
 

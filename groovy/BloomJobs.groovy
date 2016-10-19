@@ -67,7 +67,7 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 		common.addGetDependenciesBuildStep(delegate)
 
 		// Build
-		common.addXbuildBuildStep(delegate, 'BloomLinux.sln')
+		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build')
 	}
 }
 
@@ -83,7 +83,7 @@ freeStyleJob('Bloom-Win32-master-debug') {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
 
-		common.addMsBuildStep(delegate, 'Bloom.sln')
+		common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:Build')
 	}
 }
 
@@ -105,7 +105,7 @@ freeStyleJob('Bloom-Linux-any-master-debug-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addRunUnitTestsLinuxBuildStep(delegate, 'BloomTests.dll')
+		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly')
 	}
 
 	publishers {
@@ -132,7 +132,7 @@ freeStyleJob('Bloom-Win32-master-debug-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addRunUnitTestsWindowsBuildStep(delegate, 'BloomTests.dll')
+		common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly')
 
 		// this is needed so that upstream aggregation of unit tests works
 		common.addMagicAggregationFileWindows(delegate)
