@@ -56,7 +56,8 @@ freeStyleJob('Bloom-Linux-any-master-debug') {
 
 	Bloom.defaultBuildJob(delegate, 'Linux builds of master branch')
 
-	label 'ubuntu && supported'
+	// geckofx 45 doesn't work on Precise
+	label 'ubuntu && supported && !ubuntu12.04'
 
 	steps {
 		// Install certificates

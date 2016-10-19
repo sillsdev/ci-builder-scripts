@@ -8,7 +8,7 @@ def packagename = 'Bloom'
 def subdir_name = 'bloom-desktop'
 def subdir_name_beta = 'bloom-desktop-beta'
 def subdir_name_unstable = 'bloom-desktop-unstable'
-def distros_tobuild = 'precise trusty xenial'
+def distros_tobuild = 'trusty xenial'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'eb1@sil.org stephen_mcconnel@sil.org'
 
@@ -30,7 +30,7 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
-        distros_tobuild, email_recipients, 'Version3.7')
+        'precise trusty xenial', email_recipients, 'Version3.7')
 
     description '''
 <p>Automatic ("nightly") builds of the Version3.7 branch.</p>
