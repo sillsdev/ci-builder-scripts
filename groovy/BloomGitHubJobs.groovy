@@ -181,7 +181,7 @@ collects the results and reports them back to GitHub.</p>
 			// Get dependencies
 			common.addGetDependenciesWindowsBuildStep(delegate)
 
-			common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+			common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 		}
 	}
 
@@ -203,7 +203,7 @@ collects the results and reports them back to GitHub.</p>
 
 		steps {
 			// Run unit tests
-			common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+			common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 
 			// this is needed so that upstream aggregation of unit tests works
 			common.addMagicAggregationFileWindows(delegate)

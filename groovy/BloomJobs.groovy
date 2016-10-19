@@ -83,7 +83,7 @@ freeStyleJob('Bloom-Win32-master-release') {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
 
-		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 	}
 }
 
@@ -132,7 +132,7 @@ freeStyleJob('Bloom-Win32-master-release-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 
 		// this is needed so that upstream aggregation of unit tests works
 		common.addMagicAggregationFileWindows(delegate)

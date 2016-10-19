@@ -322,10 +322,10 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         }
     }
 
-    static void addMsBuildStep(stepContext, projFile, cmdArgs = "") {
+    static void addMsBuildStep(stepContext, projFile, cmdArgs = "", installation = '.NET 4.0') {
         stepContext.with {
             msBuild {
-                msBuildInstallation('.NET 4.0')
+                msBuildInstallation(installation)
                 buildFile(projFile)
                 args(cmdArgs)
                 passBuildVariables(false)
