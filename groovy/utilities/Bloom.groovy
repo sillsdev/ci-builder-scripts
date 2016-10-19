@@ -70,5 +70,40 @@ class Bloom {
 			}
 		}
 	}
+
+	static void addInstallKarmaBuildStep(stepContext) {
+		stepContext.with {
+			// NOTE: we create `node` as a symlink. Debian has renamed it to `nodejs` but karma etc
+			// expects it as `node`.
+			shell('''#!/bin/bash -e
+if [ ! -f node_modules/.bin/karma ]; then
+	sudo apt-get install -y npm
+	mkdir -p ~/bin
+	PATH="$HOME/bin:$PATH"
+	if [ -f /usr/bin/nodejs ]; then
+		ln -s /usr/bin/nodejs ~/bin/node
+	fi
+	cd 'src/BloomBrowserUI'
+	npm install
+	npm run build
+fi
+''')
+		}
+	}
+
+	static void addRunJsTestsBuildStep(stepContext) {
+		stepContext.with {
+			// Run unit tests
+			shell("""#!/bin/bash -e
+echo "Running unit tests"
+cd 'src/BloomBrowserUI'
+PATH="\$HOME/bin:\$PATH"
+NODE_PATH=/usr/lib/nodejs:/usr/lib/node_modules:/usr/share/javascript
+export NODE_PATH
+../../node_modules/.bin/karma start --reporters dots,junit --single-run --browsers Firefox --capture-timeout 15000
+""")
+		}
+	}
+
 }
 

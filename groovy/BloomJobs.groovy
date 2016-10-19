@@ -152,7 +152,7 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 '''
 
-	label 'linux && !wheezy'
+	label 'jstests'
 
 	scm {
 		git {
@@ -169,26 +169,20 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 		timestamps()
 		timeout {
 			noActivity 180
+			abortBuild()
 		}
-	}
-
-	// Job DSL currently doesn't support to abort the build in the case of a timeout.
-	// Therefore we have to use this clumsy way to add it.
-	configure { project ->
-		project / 'buildWrappers' / 'hudson.plugins.build__timeout.BuildTimeoutWrapper' / 'operationList' {
-			'hudson.plugins.build__timeout.operations.AbortOperation'()
-		}
+		common.addXvfbBuildWrapper(delegate)
 	}
 
 	steps {
 		// Install nodejs dependencies
-		common.addInstallKarmaBuildStep(delegate)
+		Bloom.addInstallKarmaBuildStep(delegate)
 
 		// Get dependencies
 		common.addGetDependenciesBuildStep(delegate)
 
 		// run unit tests
-		common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI')
+		Bloom.addRunJsTestsBuildStep(delegate)
 	}
 
 	publishers {

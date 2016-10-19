@@ -210,24 +210,6 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
         }
     }
 
-    static void addInstallKarmaBuildStep(stepContext) {
-        stepContext.with {
-            // NOTE: we create `node` as a symlink. Debian has renamed it to `nodejs` but karma etc
-            // expects it as `node`.
-            shell('''#!/bin/bash
-if [ ! -f node_modules/.bin/karma ]; then
-    sudo apt-get install -y npm
-    mkdir -p ~/bin
-    PATH="$HOME/bin:$PATH"
-    if [ -f /usr/bin/nodejs ]; then
-        ln -s /usr/bin/nodejs ~/bin/node
-    fi
-    npm install karma@~0.12 karma-cli@~0.0 karma-phantomjs-launcher phantomjs jasmine@~2.1 karma-jasmine@~0.3 karma-junit-reporter
-fi
-''');
-        }
-    }
-
     static void addInstallPackagesBuildStep(stepContext) {
         stepContext.with {
             shell('''#!/bin/bash
@@ -271,26 +253,6 @@ echo @@{scriptName} >> %TEMP%\\\\%BUILD_TAG%.txt
             def values = [ 'scriptName' : scriptName ]
 
             batchFile(Helper.prepareScript(build_script, values))
-        }
-    }
-
-    static void addRunJsTestsBuildStep(stepContext, workDir) {
-        // Remember: this is a dash, not a bash, script!
-        def build_script = '''#!/bin/bash
-set -e
-echo "Running unit tests"
-cd "@@{workDir}"
-PATH="$HOME/bin:$PATH"
-NODE_PATH=/usr/lib/nodejs:/usr/lib/node_modules:/usr/share/javascript
-export NODE_PATH
-../../node_modules/.bin/karma start karma.conf.js --browsers PhantomJS --reporters dots,junit --single-run
-''';
-
-        stepContext.with {
-            // Run unit tests
-            def values = [ 'workDir' : workDir ];
-
-            shell(Helper.prepareScript(build_script, values));
         }
     }
 

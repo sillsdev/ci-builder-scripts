@@ -228,15 +228,19 @@ collects the results and reports them back to GitHub.</p>
 
 		label 'jstests'
 
+		wrappers {
+			common.addXvfbBuildWrapper(delegate)
+		}
+
 		steps {
 			// Install nodejs dependencies
-			common.addInstallKarmaBuildStep(delegate)
+			Bloom.addInstallKarmaBuildStep(delegate)
 
 			// Get dependencies
 			common.addGetDependenciesBuildStep(delegate)
 
 			// run unit tests
-			common.addRunJsTestsBuildStep(delegate, 'src/BloomBrowserUI')
+			Bloom.addRunJsTestsBuildStep(delegate)
 
 			// this is needed so that upstream aggregation of unit tests works
 			common.addMagicAggregationFile(delegate)
