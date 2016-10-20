@@ -77,7 +77,7 @@ freeStyleJob('Bloom-Win32-master-release') {
 
 	Bloom.defaultBuildJob(delegate, 'Windows builds of master branch')
 
-	label 'windows'
+	label 'windows && nodejs'
 
 	steps {
 		// Get dependencies
@@ -129,7 +129,7 @@ freeStyleJob('Bloom-Win32-master-release-Tests') {
 		stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.")
 	}
 
-	label 'windows'
+	label 'windows && nodejs'
 
 	wrappers {
 		runOnSameNodeAs('Bloom-Win32-master-release', true)

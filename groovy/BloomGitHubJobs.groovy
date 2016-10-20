@@ -175,7 +175,7 @@ collects the results and reports them back to GitHub.</p>
 		Bloom.defaultGitHubPRBuildJob(delegate,
 			"Pre-merge builds of GitHub pull requests of $branchName branch")
 
-		label 'windows'
+		label 'windows && nodejs'
 
 		steps {
 			// Get dependencies
@@ -200,7 +200,7 @@ npm run build
 			stringParam("UPSTREAM_BUILD_TAG", "", "The upstream build tag.")
 		}
 
-		label 'windows'
+		label 'windows && nodejs'
 
 		wrappers {
 			runOnSameNodeAs("GitHub-Bloom-Win32-$branchName-release", true)
