@@ -83,7 +83,7 @@ freeStyleJob('Bloom-Win32-master-release') {
 		// Get dependencies
 		common.addGetDependenciesWindowsBuildStep(delegate)
 
-		shell('''cd src\\BloomBrowserUI
+		batchFile('''cd src\\BloomBrowserUI
 npm install
 npm run build
 ''')
