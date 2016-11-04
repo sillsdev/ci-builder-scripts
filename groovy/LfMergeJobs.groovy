@@ -42,6 +42,7 @@ set -e
 PATH=/opt/mono-sil/bin:$PATH
 cd build
 mozroots --import --sync
+debian/PrepareSource
 ./install-deps''')
 	}
 }
