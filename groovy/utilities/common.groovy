@@ -17,7 +17,8 @@ class common {
         blockDownstream = true,
         mainRepoDir = '.',
         buildMasterBranch = true,
-        addParameters = true) {
+        addParameters = true,
+        addSteps = true) {
         /*
          * Definition of build step scripts
          */
@@ -77,15 +78,17 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
                 timestamps()
             }
 
-            steps {
-                def values = [ 'packagename' : packagename,
-                    'supported_distros' : supported_distros,
-                    'subdir_name' : subdir_name,
-                    'package_version' : package_version,
-                    'revision' : revision,
-                    'mainRepoDir': mainRepoDir ]
+            if (addSteps) {
+                steps {
+                    def values = ['packagename'      : packagename,
+                                  'supported_distros': supported_distros,
+                                  'subdir_name'      : subdir_name,
+                                  'package_version'  : package_version,
+                                  'revision'         : revision,
+                                  'mainRepoDir'      : mainRepoDir]
 
-                shell(Helper.prepareScript(build_script, values))
+                    shell(Helper.prepareScript(build_script, values))
+                }
             }
 
             publishers {

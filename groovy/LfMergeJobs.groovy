@@ -16,6 +16,8 @@ import utilities.LfMerge
  */
 
 def distro = 'trusty xenial'
+def MinDbVersion = 7000068
+def MaxDbVersion = 7000069
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
@@ -73,28 +75,13 @@ for (branchName in ['master', 'live']) {
 		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 		def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 
-		steps {
-			shell('''#!/bin/bash
-set -e
-echo "Downloading packages and dependencies"
-cd lfmerge
-# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
-export MONO_PREFIX=/opt/mono-sil
-RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-mozroots --import --sync
-yes | certmgr -ssl https://go.microsoft.com
-yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
-yes | certmgr -ssl https://nuget.org
-xbuild /t:PrepareSource build/LfMerge.proj''')
-		}
-
-		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
-			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"))
-
-		description """
-<p>Continuous package builds of the LfMerge ${branchName} branch.</p>
+		description """<p>Continuous package builds of the LfMerge ${branchName} branch.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
 """
+
+		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
+			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"),
+			true, false)
 
 		// will be triggered by other jobs
 
@@ -102,9 +89,45 @@ xbuild /t:PrepareSource build/LfMerge.proj''')
 			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
 			true)
 
-		if (branchName == "master") {
-			// Last step: deploy lfmerge package to TeamCity build agent. 2016-05 RM
-			steps {
+		steps {
+			shell("""#!/bin/bash
+set -e
+export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+fi
+
+cd "lfmerge"
+# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
+export MONO_PREFIX=/opt/mono-sil
+RUNMODE="PACKAGEBUILD" BUILD=Release . environ
+mozroots --import --sync
+yes | certmgr -ssl https://go.microsoft.com
+yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
+yes | certmgr -ssl https://nuget.org
+
+for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
+	git clean -dxf --exclude=results
+
+	xbuild /t:PrepareSource build/LfMerge.proj
+
+	debian/PrepareSource \$curDbVersion
+
+	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
+		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
+		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
+		--main-repo-dir "." ${package_version} \$MAKE_SOURCE_ARGS
+
+	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
+		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
+		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \$BUILD_PACKAGE_ARGS
+done
+""")
+
+			if (branchName == "master") {
+				// Last step: update lfmerge package on TeamCity build agent. 2016-05 RM
 				shell('''#!/bin/bash
 echo Waiting 5 minutes for package to show up on LLSO
 sleep 300
