@@ -40,9 +40,9 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 		shell('''#!/bin/bash
 set -e
 PATH=/opt/mono-sil/bin:$PATH
+debian/PrepareSource
 cd build
 mozroots --import --sync
-debian/PrepareSource
 ./install-deps''')
 	}
 }
