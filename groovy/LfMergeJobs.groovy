@@ -82,7 +82,7 @@ for (branchName in ['master', 'live']) {
 
 		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
 			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"),
-			true, false)
+			true, false, "finalresults")
 
 		// will be triggered by other jobs
 
@@ -109,6 +109,8 @@ yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
 yes | certmgr -ssl https://nuget.org
 
+mkdir -p finalresults
+
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
 	git clean -dxf --exclude=results
 
@@ -124,6 +126,8 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \$BUILD_PACKAGE_ARGS
+
+	mv results/* finalresults/
 done
 """)
 

@@ -18,7 +18,8 @@ class common {
         mainRepoDir = '.',
         buildMasterBranch = true,
         addParameters = true,
-        addSteps = true) {
+        addSteps = true,
+        resultsDir = "results") {
         /*
          * Definition of build step scripts
          */
@@ -93,7 +94,7 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             publishers {
                 archiveArtifacts {
-                    pattern("results/*, ${subdir_name}*")
+                    pattern("${resultsDir}/*, ${subdir_name}*")
                     allowEmpty(true)
                 }
 
