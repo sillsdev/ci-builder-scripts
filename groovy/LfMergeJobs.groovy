@@ -136,8 +136,8 @@ done
 				shell('''#!/bin/bash
 echo Waiting 5 minutes for package to show up on LLSO
 sleep 300
-ssh ba-trusty64weba sudo apt-get update || true
-ssh ba-trusty64weba sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install lfmerge -y || true''')
+ssh ba-trusty64weba sudo apt update || true
+ssh ba-trusty64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f lfmerge|| true''')
 			}
 		}
 	}
