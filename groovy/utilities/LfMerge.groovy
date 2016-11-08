@@ -22,6 +22,7 @@ class LfMerge {
 
 			wrappers {
 				timestamps()
+				colorizeOutput()
 				if (useTimeout) {
 					timeout {
 						likelyStuck()

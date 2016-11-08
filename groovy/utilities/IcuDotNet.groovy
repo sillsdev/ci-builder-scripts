@@ -22,6 +22,7 @@ class IcuDotNet {
 
 			wrappers {
 				timestamps()
+				colorizeOutput()
 				timeout {
 					likelyStuck()
 					abortBuild()

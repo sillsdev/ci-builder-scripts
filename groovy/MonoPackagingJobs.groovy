@@ -79,6 +79,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 
 			wrappers {
 				timestamps()
+				colorizeOutput()
 				timeout {
 					noActivity(600)
 					abortBuild()

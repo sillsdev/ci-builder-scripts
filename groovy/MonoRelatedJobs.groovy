@@ -83,6 +83,7 @@ for (type in ['', 'Gerrit']) {
 
 				wrappers {
 					timestamps()
+					colorizeOutput()
 					timeout {
 						noActivity(180)
 						abortBuild()
