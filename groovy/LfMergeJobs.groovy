@@ -91,8 +91,7 @@ for (branchName in ['master', 'live']) {
 			true)
 
 		steps {
-			shell("""#!/bin/bash
-set -e
+			shell("""#!/bin/bash -e
 export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
@@ -100,19 +99,18 @@ if [ "\$PackageBuildKind" = "Release" ]; then
 	BUILD_PACKAGE_ARGS="--no-upload"
 fi
 
-cd "lfmerge"
+mkdir -p finalresults
+
+cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
 export MONO_PREFIX=/opt/mono-sil
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-mozroots --import --sync
-yes | certmgr -ssl https://go.microsoft.com
-yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
-yes | certmgr -ssl https://nuget.org
 
-mkdir -p finalresults
+cd -
 
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
-	git clean -dxf --exclude=results
+	cd lfmerge
+	git clean -dxf
 
 	xbuild /t:PrepareSource build/LfMerge.proj
 
@@ -127,6 +125,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \$BUILD_PACKAGE_ARGS
 
+	cd -
 	mv results/* finalresults/
 done
 """)
