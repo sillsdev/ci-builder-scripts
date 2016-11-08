@@ -20,40 +20,6 @@ class common {
         addParameters = true,
         addSteps = true,
         resultsDir = "results") {
-        /*
-         * Definition of build step scripts
-         */
-
-        // Remember: this is a dash, not a bash, script!
-        def build_script = '''
-export FULL_BUILD_NUMBER=0.0.$BUILD_NUMBER.@@{revision}
-
-if [ "$PackageBuildKind" = "Release" ]; then
-    MAKE_SOURCE_ARGS="--preserve-changelog"
-    BUILD_PACKAGE_ARGS="--no-upload"
-fi
-
-cd "@@{subdir_name}"
-$HOME/ci-builder-scripts/bash/make-source --dists "$DistributionsToPackage" \
-    --arches "$ArchesToPackage" \
-    --main-package-name "@@{packagename}" \
-    --supported-distros "@@{supported_distros}" \
-    --debkeyid $DEBSIGNKEY \
-    --main-repo-dir @@{mainRepoDir} \
-    @@{package_version} \
-    $MAKE_SOURCE_ARGS
-
-$HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
-    --arches "$ArchesToPackage" \
-    --main-package-name "@@{packagename}" \
-    --supported-distros "@@{supported_distros}" \
-    --debkeyid $DEBSIGNKEY \
-    $BUILD_PACKAGE_ARGS
-        '''
-
-        /*
-         * Definition of jobs
-         */
 
         jobContext.with {
 
@@ -77,18 +43,35 @@ $HOME/ci-builder-scripts/bash/build-package --dists "$DistributionsToPackage" \
 
             wrappers {
                 timestamps()
+                colorizeOutput()
             }
 
             if (addSteps) {
                 steps {
-                    def values = ['packagename'      : packagename,
-                                  'supported_distros': supported_distros,
-                                  'subdir_name'      : subdir_name,
-                                  'package_version'  : package_version,
-                                  'revision'         : revision,
-                                  'mainRepoDir'      : mainRepoDir]
+                    shell("""#!/bin/bash
+export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
 
-                    shell(Helper.prepareScript(build_script, values))
+if [ "\$PackageBuildKind" = "Release" ]; then
+    MAKE_SOURCE_ARGS="--preserve-changelog"
+    BUILD_PACKAGE_ARGS="--no-upload"
+fi
+
+cd "${subdir_name}"
+\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
+    --arches "\$ArchesToPackage" \
+    --main-package-name "${packagename}" \
+    --supported-distros "${supported_distros}" \
+    --debkeyid \$DEBSIGNKEY \
+    --main-repo-dir ${mainRepoDir} \
+    ${package_version} \
+    \$MAKE_SOURCE_ARGS
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+    --arches "\$ArchesToPackage" \
+    --main-package-name "${packagename}" \
+    --supported-distros "${supported_distros}" \
+    --debkeyid \$DEBSIGNKEY \
+    \$BUILD_PACKAGE_ARGS""")
                 }
             }
 
