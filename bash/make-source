@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 # Create source package
 # set supported distros and architectures
-
-set -e
 
 PROGRAM_NAME="$(basename "$0")"
 
@@ -69,7 +67,7 @@ else
 fi
 
 stderr "Building source package:"
-cd $repo_base_dir/${main_repo_dir:-$source_package_name}
+cd $repo_base_dir/${source_package_dir:-$source_package_name}
 if [ -n "$debkeyid" ]; then
 	signing_opt="-k$debkeyid"
 	echo "Setting signing opts to ^$signing_opt^"

@@ -120,7 +120,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
-		--main-repo-dir "." ${package_version} \$MAKE_SOURCE_ARGS
+		--source-code-subdir "lfmerge" ${package_version} \$MAKE_SOURCE_ARGS
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\

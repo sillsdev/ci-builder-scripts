@@ -45,14 +45,17 @@ init()
 			--package-version) shift; package_version=$1 ;;
 			# The subdirectory of the main repo, e.g. fw. Default is the current directory.
 			--main-repo-dir) shift; main_repo_dir=$1 ;;
+			# The name of the directory where the source code resides. Default is the name of the source package.
+			# This directory is relative to $repo_base_dir.
+			--source-code-subdir) shift; source_package_dir=$1 ;;
 			--no-package) no_package=true ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2
 	done
 
-	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-precise}"
-	DISTS_TO_PROCESS="${supported_distros_arg:-precise trusty wheezy saucy}"
+	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-trusty}"
+	DISTS_TO_PROCESS="${supported_distros_arg:-precise trusty xenial wheezy jessie}"
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
