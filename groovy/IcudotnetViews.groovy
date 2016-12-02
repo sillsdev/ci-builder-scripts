@@ -13,12 +13,12 @@ class icuDotNetViews {
 	static void IcuDotNetViewAll(viewContext) {
 		viewContext.with {
 			categorizedJobsView('All') {
-				description 'All <b>icu-dotnet</b> jobs'
+				description 'All <b>ICU</b> related jobs'
 				filterBuildQueue false
 				filterExecutors false
 
 				jobs {
-					regex('(^IcuDotNet.*|^GitHub-IcuDotNet.*)')
+					regex('(^IcuDotNet.*|^GitHub-IcuDotNet.*|icu4c)')
 				}
 
 				columns {
@@ -34,13 +34,14 @@ class icuDotNetViews {
 				categorizationCriteria {
 					regexGroupingRule('^IcuDotNet.*-any-master-release$', 'master branch jobs')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
+					regexGroupingRule('icu4c', 'Builds of icu4c')
 				}
 			}
 		}
 	}
 }
 
-nestedView('IcuDotNet') {
+nestedView('Icu') {
 	configure { view ->
 		view / defaultView('All')
 	}
