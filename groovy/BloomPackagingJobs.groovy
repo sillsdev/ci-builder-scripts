@@ -23,13 +23,14 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 
 /*
- * we're really building beta packages at the moment.  Someday, we may want three jobs on three different branches...
+ * we're building release packages now.  When the Version3.8 branch is created, we will want three jobs on
+ * three different branches...
  *freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
  *    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
  *        distros_tobuild, email_recipients, 'Version3.7');
  */
 freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
+    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
         'precise trusty xenial', email_recipients, 'Version3.7')
 
     description '''
@@ -42,7 +43,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
     }
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name_beta, false, true)
+        false, subdir_name, false, true)
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
