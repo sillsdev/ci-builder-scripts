@@ -87,7 +87,7 @@ xbuild /t:Test /property:Configuration=Release build/icu-dotnet.proj
 				common.addMsBuildStep(delegate, 'build\\icu-dotnet.proj', '/t:Test /property:Configuration=Release')
 
 				if (!isPr) {
-					batchFile("build\\NuGet.exe push source\\NuGetBuild\\*.nupkg -Source https://www.nuget.org/api/v2/package")
+					//batchFile("build\\NuGet.exe push source\\NuGetBuild\\*.nupkg -Source https://www.nuget.org/api/v2/package")
 				}
 			}
 
