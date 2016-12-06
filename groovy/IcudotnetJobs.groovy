@@ -53,7 +53,7 @@ freeStyleJob('GitHub-IcuDotNet-Win-any-master-release') {
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
 	common.addGitHubParamAndTrigger(delegate, 'master', 'windows')
-	IcuDotNet.commonWindowsBuildJob(delegate)
+	IcuDotNet.commonWindowsBuildJob(delegate, true)
 }
 
 // *********************************************************************************************

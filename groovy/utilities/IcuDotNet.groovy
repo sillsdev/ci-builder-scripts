@@ -73,18 +73,30 @@ MONO_GAC_PREFIX="$MONO_PREFIX:/usr"
 
 export LD_LIBRARY_PATH PKG_CONFIG_PATH MONO_GAC_PREFIX
 
-xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:icu_ver=$ICUVER /property:Configuration=ReleaseMono build/icu-dotnet.proj
+xbuild /t:Test /property:Configuration=Release build/icu-dotnet.proj
 ''')
 			}
 		}
 	}
 
-	static void commonWindowsBuildJob(jobContext) {
+	static void commonWindowsBuildJob(jobContext, isPr = false) {
 		commonBuildJob(jobContext, 'windows && supported && timeInSync')
 
 		jobContext.with {
 			steps {
-				common.addMsBuildStep(delegate, 'build\\icu-dotnet.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
+				common.addMsBuildStep(delegate, 'build\\icu-dotnet.proj', '/t:Test /property:Configuration=Release')
+
+				if (!isPr) {
+					batchFile("build\\NuGet.exe push output\\Release\\*.nuget -Source https://www.nuget.org/api/v2/package")
+				}
+			}
+
+			if (!isPr) {
+				publishers {
+					archiveArtifacts {
+						pattern("output\\Release\\*.nuget*")
+					}
+				}
 			}
 		}
 	}
