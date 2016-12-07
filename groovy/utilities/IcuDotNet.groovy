@@ -56,7 +56,8 @@ class IcuDotNet {
 	}
 
 	static void commonLinuxBuildJob(jobContext) {
-		commonBuildJob(jobContext, 'linux&&!packager')
+		// Wheezy has a too old version of ICU (48) that causes failing tests
+		commonBuildJob(jobContext, 'linux&&!packager&&!wheezy')
 
 		jobContext.with {
 			steps {
