@@ -343,7 +343,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 		jobContext.with {
 			parameters {
 				stringParam("sha1", "refs/heads/master",
-					"What pull request to build, e.g. origin/pr/9/merge")
+					"What pull request to build, e.g. pr/9/merge")
 			}
 
 			triggers {

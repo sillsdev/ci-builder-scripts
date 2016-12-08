@@ -237,3 +237,29 @@ cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true)
 
 }
+
+// *********************************************************************************************
+multibranchPipelineJob('lfmerge') {
+	description '''<p>Builds of LfMerge</p>
+<p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
+
+	branchSources {
+		git {
+			remote('https://github.com/sillsdev/LfMerge')
+			credentialsId('github-sillsdev')
+			excludes('tags/*')
+		}
+
+		orphanedItemStrategy {
+			discardOldItems {
+				numToKeep(10)
+			}
+		}
+
+		triggers {
+			// check once a day if not otherwise run
+			periodic(1440)
+		}
+	}
+}
+
