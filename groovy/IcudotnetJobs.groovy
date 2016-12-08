@@ -42,7 +42,7 @@ freeStyleJob('GitHub-IcuDotNet-Linux-any-master-release') {
 	description '''<p>Pre-merge Linux builds of master branch.</p>
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'master', 'linux')
+	common.addGitHubParamAndTrigger(delegate, 'master', 'linux', 'conniey')
 	IcuDotNet.commonLinuxBuildJob(delegate)
 }
 
@@ -52,7 +52,7 @@ freeStyleJob('GitHub-IcuDotNet-Win-any-master-release') {
 	description '''<p>Pre-merge Windows builds of master branch.</p>
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'master', 'windows')
+	common.addGitHubParamAndTrigger(delegate, 'master', 'windows', 'conniey')
 	IcuDotNet.commonWindowsBuildJob(delegate, true)
 }
 

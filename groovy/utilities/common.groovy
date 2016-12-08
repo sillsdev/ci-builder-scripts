@@ -346,7 +346,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         }
     }
 
-	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux') {
+	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux', whitelistArgs = '') {
 		jobContext.with {
 			parameters {
 				stringParam("sha1", "refs/heads/master",
@@ -358,6 +358,9 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 					admin('ermshiperete')
 					useGitHubHooks(true)
 					orgWhitelist('sillsdev')
+					if (whitelistArgs != '') {
+						userWhitelist(whitelistArgs)
+					}
 					cron('H/5 * * * *')
 					allowMembersOfWhitelistedOrgsAsAdmin()
 					displayBuildErrorsOnDownstreamBuilds(true)
