@@ -57,7 +57,9 @@ class IcuDotNet {
 
 	static void commonLinuxBuildJob(jobContext, refspec = '+refs/heads/master:refs/remotes/origin/master', branch = '*/master') {
 		// Wheezy has a too old version of ICU (48) that causes failing tests
-		commonBuildJob(jobContext, 'linux&&!packager&&!wheezy', refspec, branch)
+		// GitVersion includes LibGit2Sharp, but that includes only a 64-bit version LibGit2 so
+		// we can't build on 32-bit
+		commonBuildJob(jobContext, 'linux64&&!packager&&!wheezy', refspec, branch)
 
 		jobContext.with {
 			steps {
