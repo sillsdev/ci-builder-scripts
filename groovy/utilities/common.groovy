@@ -339,13 +339,6 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
         }
     }
 
-    static Closure JiraIssueUpdater(results) {
-        return { project ->
-            project / 'publishers' << 'hudson.plugins.jira.JiraIssueUpdater' {
-            }
-        }
-    }
-
 	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux', whitelistArgs = '') {
 		jobContext.with {
 			parameters {

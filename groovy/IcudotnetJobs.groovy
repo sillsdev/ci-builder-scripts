@@ -43,7 +43,7 @@ freeStyleJob('GitHub-IcuDotNet-Linux-any-master-release') {
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
 	common.addGitHubParamAndTrigger(delegate, 'master', 'linux', 'conniey')
-	IcuDotNet.commonLinuxBuildJob(delegate)
+	IcuDotNet.commonLinuxBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}')
 }
 
 // *********************************************************************************************
@@ -53,7 +53,7 @@ freeStyleJob('GitHub-IcuDotNet-Win-any-master-release') {
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
 	common.addGitHubParamAndTrigger(delegate, 'master', 'windows', 'conniey')
-	IcuDotNet.commonWindowsBuildJob(delegate, true)
+	IcuDotNet.commonWindowsBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', true)
 }
 
 // *********************************************************************************************

@@ -10,7 +10,7 @@ package utilities
 import utilities.common
 
 class IcuDotNet {
-	static void commonBuildJob(jobContext, _label) {
+	static void commonBuildJob(jobContext, _label, _refspec = '+refs/heads/master:refs/remotes/origin/master', _branch = '*/master') {
 		jobContext.with {
 			properties {
 				priority(100)
@@ -34,9 +34,9 @@ class IcuDotNet {
 				git {
 					remote {
 						github("sillsdev/icu-dotnet", "https")
-						refspec('+refs/heads/master:refs/remotes/origin/master')
+						refspec(_refspec)
 					}
-					branch('*/master')
+					branch(_branch)
 				}
 			}
 
@@ -55,9 +55,9 @@ class IcuDotNet {
 		}
 	}
 
-	static void commonLinuxBuildJob(jobContext) {
+	static void commonLinuxBuildJob(jobContext, refspec = '+refs/heads/master:refs/remotes/origin/master', branch = '*/master') {
 		// Wheezy has a too old version of ICU (48) that causes failing tests
-		commonBuildJob(jobContext, 'linux&&!packager&&!wheezy')
+		commonBuildJob(jobContext, 'linux&&!packager&&!wheezy', refspec, branch)
 
 		jobContext.with {
 			steps {
@@ -80,8 +80,8 @@ xbuild /t:Test /property:Configuration=Release build/icu-dotnet.proj
 		}
 	}
 
-	static void commonWindowsBuildJob(jobContext, isPr = false) {
-		commonBuildJob(jobContext, 'windows && supported && timeInSync')
+	static void commonWindowsBuildJob(jobContext, refspec = '+refs/heads/master:refs/remotes/origin/master', branch = '*/master', isPr = false) {
+		commonBuildJob(jobContext, 'windows && supported && timeInSync', refspec, branch)
 
 		jobContext.with {
 			steps {
