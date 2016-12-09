@@ -66,7 +66,7 @@ ICUVER=$(icu-config --version|tr -d .|cut -c -2)
 
 echo "Building for ICU $icu_ver"
 
-MONO_PREFIX=/opt/mono-sil
+MONO_PREFIX=/opt/mono4-sil
 PATH="$MONO_PREFIX/bin:$PATH"
 LD_LIBRARY_PATH="$MONO_PREFIX/lib:$LD_LIBRARY_PATH"
 PKG_CONFIG_PATH="$MONO_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
