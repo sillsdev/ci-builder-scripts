@@ -195,9 +195,9 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		git {
 			remote {
 				url('git://gerrit.lsdev.sil.org/FieldWorks')
-				refspec("+refs/heads/${fwBranch}:refs/remotes/origin/${fwBranch}")
+				refspec("+refs/heads/*:refs/remotes/origin/*")
 			}
-			branch fwBranch
+			branch '$BranchOrTagToBuild'
 			extensions {
 				relativeTargetDirectory('lfmerge-fdo/fw')
 				submoduleOptions {
@@ -221,8 +221,6 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 			project('libcom', "ant:*${libcomBranch}")
 		}
 	}
-
-	environmentVariables(DistributionsToPackage: distro, ArchesToPackage: 'amd64')
 
 	steps {
 		shell('''#!/bin/bash
