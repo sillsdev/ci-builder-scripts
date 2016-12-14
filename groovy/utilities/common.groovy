@@ -89,7 +89,7 @@ cd "${subdir_name}"
 
                 allowBrokenBuildClaiming()
 
-                mailer(email);
+                mailer(email)
 
                 if (buildMasterBranch) {
                     flexiblePublish {
@@ -173,8 +173,8 @@ cd "${subdir_name}"
         jobContext.with {
             scm {
                 hg(project, branch) { node ->
-                    node / clean('true');
-                    node / subdir(subdir_name);
+                    node / clean('true')
+                    node / subdir(subdir_name)
                 }
             }
         }
@@ -184,8 +184,8 @@ cd "${subdir_name}"
         jobContext.with {
             configure { project ->
                 project / 'publishers' << 'hudson.plugins.build__publisher.BuildPublisher' {
-                    publishUnstableBuilds(true);
-                    publishFailedBuilds(true);
+                    publishUnstableBuilds(true)
+                    publishFailedBuilds(true)
                     logRotator {
                         daysToKeep daysToKeepVal
                         numToKeep numToKeepVal
@@ -203,7 +203,7 @@ cd "${subdir_name}"
 set -e
 cd build
 mozroots --import --sync
-./install-deps''');
+./install-deps''')
         }
     }
 
@@ -212,7 +212,7 @@ mozroots --import --sync
             shell("""#!/bin/bash
 set -e
 . ./environ
-xbuild $cmdArgs $projFile""");
+xbuild $cmdArgs $projFile""")
         }
     }
 
@@ -223,7 +223,7 @@ set -e
 echo "Fetching dependencies"
 cd build
 ./getDependencies-Linux.sh
-''');
+''')
         }
     }
 
@@ -253,7 +253,7 @@ cd output/Debug
 mono --debug ../../packages/NUnit.Runners.Net4.2.6.4/tools/nunit-console.exe -apartment=STA -nothread \
 -labels -xml=''' + testDll + '.results.xml ' + testDll + ''' || true
 exit 0
-            ''');
+            ''')
         }
     }
 
@@ -262,13 +262,13 @@ exit 0
             batchFile('packages\\NUnit.Runners.Net4.2.6.4\\tools\\nunit-console-x86.exe -exclude=RequiresUI -xml=output\\Debug\\' +
                 testDll + '.results.xml output\\Debug\\' + testDll + '''
 exit 0
-            ''');
+            ''')
         }
     }
 
     static void addCopyArtifactsWindowsBuildStep(stepContext) {
         stepContext.with {
-            batchFile('xcopy /q /e /s /r /h /y %HOME%\\archive\\%ARTIFACTS_TAG%\\*.* .');
+            batchFile('xcopy /q /e /s /r /h /y %HOME%\\archive\\%ARTIFACTS_TAG%\\*.* .')
         }
     }
 
@@ -277,7 +277,7 @@ exit 0
             shell('''
 # this is needed so that upstream aggregation of unit tests works
 echo -n ${UPSTREAM_BUILD_TAG} > ${WORKSPACE}/magic.txt
-''');
+''')
         }
     }
 
@@ -286,7 +286,7 @@ echo -n ${UPSTREAM_BUILD_TAG} > ${WORKSPACE}/magic.txt
             batchFile('''
 REM This is needed so that upstream aggregation of test results works
 echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
-''');
+''')
         }
     }
 

@@ -19,25 +19,13 @@ class Bloom {
 				timestamps()
 				if (useTimeout) {
 					timeout {
-						noActivity 180
+						noActivity 360
 						abortBuild()
 					}
 				}
 			}
 
 			common.buildPublishers(delegate, 365, 100)
-
-			/*
-			publishers {
-				flowdock('608a6152ead8516caa955b81cda7c2cc') {
-					aborted(true)
-					failure(true)
-					fixed(true)
-					unstable(true)
-					tags('jenkins')
-				}
-			}
-			*/
 		}
 	}
 
