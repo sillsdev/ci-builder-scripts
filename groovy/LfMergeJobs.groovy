@@ -17,7 +17,7 @@ import utilities.LfMerge
 
 def distro = 'trusty xenial'
 def MinDbVersion = 7000068
-def MaxDbVersion = 7000069
+def MaxDbVersion = 7000070
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
