@@ -28,6 +28,9 @@ class monoRelatedViews {
 					lastSuccess()
 					lastFailure()
 					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
 					buildButton()
 					lastBuildNode()
 					lastBuildConsole()
@@ -64,6 +67,9 @@ class monoRelatedViews {
 					lastSuccess()
 					lastFailure()
 					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
 					buildButton()
 					lastBuildNode()
 					lastBuildConsole()

@@ -23,6 +23,9 @@ class bloomViews {
 					lastSuccess()
 					lastFailure()
 					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
 					buildButton()
 				}
 
@@ -85,6 +88,9 @@ class bloomViews {
 					lastSuccess()
 					lastFailure()
 					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
 					buildButton()
 					lastBuildNode()
 					lastBuildConsole()

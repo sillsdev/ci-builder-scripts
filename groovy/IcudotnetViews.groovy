@@ -28,6 +28,9 @@ class icuDotNetViews {
 					lastSuccess()
 					lastFailure()
 					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
 					buildButton()
 				}
 
