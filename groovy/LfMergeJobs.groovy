@@ -233,7 +233,6 @@ cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true)
-
 }
 
 // *********************************************************************************************

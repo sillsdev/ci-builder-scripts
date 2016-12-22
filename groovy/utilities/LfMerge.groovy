@@ -91,8 +91,7 @@ class LfMerge {
 				}
 
 				// Compile mercurial
-				shell('''#!/bin/bash
-set -e
+				shell('''#!/bin/bash -e
 BUILD=Release . environ
 echo "Compiling Mercurial"
 mkdir -p tmp_hg
@@ -104,8 +103,7 @@ make local
 cp -r mercurial ../../Mercurial/''')
 
 				// Install composer and initialize LF php code
-				shell('''#!/bin/bash
-set -e
+				shell('''#!/bin/bash -e
 cd data/php/src
 if [ -f mongo-1.4.1.installed ]; then
 	echo "Removing PECL mongo extension"
@@ -146,8 +144,7 @@ if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 fi
 ''')
 				// Compile and run tests
-				shell('''#!/bin/bash
-set -e
+				shell('''#!/bin/bash -e
 echo "Compiling LfMerge and running unit tests"
 BUILD=Release . environ
 mozroots --import --sync
@@ -163,6 +160,17 @@ exit $?''')
 
 			publishers {
 				configure common.NUnitPublisher('**/TestResults.xml')
+
+				postBuildScripts {
+					steps {
+						// Jenkins has problems using jgit to remove LinkedFiles directory with
+						// non-ASCII characters in filenames, so we delete these here
+						shell('''#!/bin/bash
+rm -rf data/testlangproj
+rm -rf data/testlangproj-modified
+''')
+					}
+				}
 			}
 		}
 	}
