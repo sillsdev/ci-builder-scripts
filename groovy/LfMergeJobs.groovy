@@ -173,6 +173,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 					shallow(true)
 					timeout(30)
 				}
+				cleanAfterCheckout()
 			}
 		}
 		git {
@@ -190,6 +191,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 					shallow(true)
 					timeout(30)
 				}
+				cleanAfterCheckout()
 			}
 		}
 		git {
@@ -207,6 +209,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 					shallow(true)
 					timeout(30)
 				}
+				cleanAfterCheckout()
 			}
 		}
 	}
