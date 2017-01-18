@@ -23,18 +23,15 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 
 /*
- * we're building release packages now.  When the Version3.8 branch is created, we will want three jobs on
- * three different branches...
- *freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
- *    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
- *        distros_tobuild, email_recipients, 'Version3.7');
+ * We have three jobs on three different branches for alpha ('master'), beta ('Version3.8'),
+ * and release ('Version3.7').
  */
 freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
     common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
         'precise trusty xenial', email_recipients, 'Version3.7')
 
     description '''
-<p>Automatic ("nightly") builds of the Version3.7 branch.</p>
+<p>Automatic ("nightly") builds of the Bloom Version3.7 branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 '''
 
@@ -46,7 +43,24 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
         false, subdir_name, false, true)
 }
 
-freeStyleJob('Bloom_Packaging-Linux-all-master-release') {
+freeStyleJob('Bloom_Packaging-Linux-all-3.8-beta') {
+    common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
+        distros_tobuild, email_recipients, 'Version3.8')
+
+    description '''
+<p>Automatic ("nightly") builds of the Bloom Version3.8 branch.</p>
+<p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
+'''
+
+    triggers {
+        githubPush()
+    }
+
+    common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
+        false, subdir_name, false, true)
+}
+
+freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
     common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
         distros_tobuild, email_recipients, 'master')
 
