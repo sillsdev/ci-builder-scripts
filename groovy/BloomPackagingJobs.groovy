@@ -7,7 +7,7 @@ import utilities.common
 def packagename = 'Bloom'
 def subdir_name = 'bloom-desktop'
 def subdir_name_beta = 'bloom-desktop-beta'
-def subdir_name_unstable = 'bloom-desktop-unstable'
+def subdir_name_alpha = 'bloom-desktop-alpha'
 def distros_tobuild = 'trusty xenial'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'eb1@sil.org stephen_mcconnel@sil.org'
@@ -61,7 +61,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.8-beta') {
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name_unstable, package_version, revision,
+    common.defaultPackagingJob(delegate, packagename, subdir_name_alpha, package_version, revision,
         distros_tobuild, email_recipients, 'master')
 
     description '''
@@ -74,5 +74,5 @@ freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
     }
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name_unstable, false, true)
+        false, subdir_name_alpha, false, true)
 }
