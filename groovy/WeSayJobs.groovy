@@ -71,7 +71,7 @@ for (kind in ['Gerrit', 'normal']) {
 							refUpdated()
 						}
 					}
-					project('wesay', '**')
+					project('wesay', 'ant:**')
 				}
 			}
 
