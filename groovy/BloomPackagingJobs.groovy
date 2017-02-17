@@ -10,7 +10,7 @@ def subdir_name_beta = 'bloom-desktop-beta'
 def subdir_name_alpha = 'bloom-desktop-alpha'
 def distros_tobuild = 'trusty xenial'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
-def email_recipients = 'eb1@sil.org stephen_mcconnel@sil.org'
+def email_recipients = 'stephen_mcconnel@sil.org'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
