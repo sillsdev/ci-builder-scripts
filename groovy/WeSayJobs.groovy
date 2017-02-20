@@ -96,6 +96,7 @@ cd build
 ./buildupdate.mono.sh
 ./TestBuild.sh''')
 				} else {
+					common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
 					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test')
 				}
 			}
