@@ -48,11 +48,11 @@ mozroots --import --sync
 }
 
 // *********************************************************************************************
-for (branchName in ['master', 'live']) {
+for (branchName in ['master', 'live', 'qa']) {
 	freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
 		LfMerge.commonLfMergeBuildJob(delegate, "+refs/heads/${branchName}:refs/remotes/origin/${branchName}", "*/${branchName}", true, true)
 
-		description """<p>Linux builds of live ${branchName}.<p>
+		description """<p>Linux builds of LfMerge ${branchName}.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
 
 		triggers {
@@ -62,7 +62,11 @@ for (branchName in ['master', 'live']) {
 		steps {
 			downstreamParameterized {
 				trigger("LfMerge_Packaging-Linux-all-${branchName}-release") {
-					if (branchName != "master") {
+					if (branchName == "qa") {
+						parameters {
+							predefinedProp("PackageBuildKind", "ReleaseCandidate")
+						}
+					} else if (branchName != "master") {
 						parameters {
 							predefinedProp("PackageBuildKind", "Release")
 						}
@@ -97,6 +101,9 @@ export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name=proposed"
 fi
 
 mkdir -p finalresults
