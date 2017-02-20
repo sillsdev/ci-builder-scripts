@@ -34,8 +34,8 @@ class common {
                     stringParam("ArchesToPackage", arches_tobuild,
                         "The architectures to build packages for (separated by space)")
                     choiceParam("PackageBuildKind",
-                        ["Nightly", "Release", "ReleaseCandidate"],
-                        "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release (or a release candidate) will just have the version number.")
+                        ["Nightly", "Release"],
+                        "What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release will just have the version number.")
                     stringParam("BranchOrTagToBuild", "refs/heads/$branch",
                         "What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)")
                 }
@@ -47,17 +47,11 @@ class common {
             }
 
             if (addSteps) {
-                // Note that the ReleaseCandidate BUILD_PACKAGE_ARGS could be "--suite-name=proposed" instead of "--no-upload".
-                // This would result in release candidates landing in "trusty-proposed", "xenial-propsed", and so on.
-                // See the LfMergeJobs.groovy script for an example.
                 steps {
                     shell("""#!/bin/bash
 export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
-    MAKE_SOURCE_ARGS="--preserve-changelog"
-    BUILD_PACKAGE_ARGS="--no-upload"
-elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
     MAKE_SOURCE_ARGS="--preserve-changelog"
     BUILD_PACKAGE_ARGS="--no-upload"
 fi
