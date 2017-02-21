@@ -103,7 +103,7 @@ if [ "\$PackageBuildKind" = "Release" ]; then
 	BUILD_PACKAGE_ARGS="--no-upload"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	BUILD_PACKAGE_ARGS="--suite-name=proposed"
+	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
 mkdir -p finalresults
