@@ -97,7 +97,7 @@ cd build
 ./TestBuild.sh''')
 				} else {
 					common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
-					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test')
+					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 				}
 			}
 		}
