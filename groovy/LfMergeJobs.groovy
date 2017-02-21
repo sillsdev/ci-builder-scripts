@@ -233,16 +233,45 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	}
 
 	steps {
-		shell('''#!/bin/bash
+		shell('''#!/bin/bash -e
 cd lfmerge-fdo
 mkdir cmakebuild
 cd cmakebuild
 cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 ''')
+
+		shell("""#!/bin/bash -e
+export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name proposed"
+fi
+
+cd "lfmerge-fdo"
+\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "lfmerge-fdo" \
+	--supported-distros "${distro}" \
+	--debkeyid \$DEBSIGNKEY \
+	--main-repo-dir "fw" \
+	${package_version} \
+	\$MAKE_SOURCE_ARGS
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "lfmerge-fdo" \
+	--supported-distros "${distro}" \
+	--debkeyid \$DEBSIGNKEY \
+	\$BUILD_PACKAGE_ARGS""")
+
 	}
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
-		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true)
+		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true, false)
 }
 
 // *********************************************************************************************
