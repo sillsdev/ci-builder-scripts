@@ -78,13 +78,12 @@ for (branchName in ['master', 'live', 'qa']) {
 
 	freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
 		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
-		def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 
 		description """<p>Continuous package builds of the LfMerge ${branchName} branch.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
 """
 
-		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', package_version, revision,
+		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
 			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"),
 			true, false, "finalresults")
 
@@ -96,8 +95,6 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		steps {
 			shell("""#!/bin/bash -e
-export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
-
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
@@ -122,12 +119,14 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 
 	xbuild /t:PrepareSource build/LfMerge.proj
 
+	. package-version
+
 	debian/PrepareSource \$curDbVersion
 
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
-		--source-code-subdir "lfmerge" ${package_version} \$MAKE_SOURCE_ARGS
+		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" \$MAKE_SOURCE_ARGS
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
