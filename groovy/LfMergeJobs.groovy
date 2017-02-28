@@ -18,6 +18,7 @@ import utilities.LfMerge
 def distro = 'trusty xenial'
 def MinDbVersion = 7000068
 def MaxDbVersion = 7000070
+def MonoPrefix = '/opt/mono-sil'
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
@@ -95,6 +96,20 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		steps {
 			shell("""#!/bin/bash -e
+cd lfmerge
+# We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
+export MONO_PREFIX=${MonoPrefix}
+RUNMODE="PACKAGEBUILD" BUILD=Release . environ
+xbuild /t:RestorePackages build/LfMerge.proj
+
+mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
+			""")
+
+			environmentVariables {
+				propertiesFile('gitversion.properties')
+			}
+
+			shell("""#!/bin/bash -e
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
@@ -108,18 +123,24 @@ rm -f finalresults/*
 
 cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
-export MONO_PREFIX=/opt/mono-sil
+export MONO_PREFIX=${MonoPrefix}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
 cd -
+
+if ("\${GitVersion_PreReleaseLabel}" != ""); then
+	PreReleaseTag="~\${GitVersion_PreReleaseLabel)-\${GitVersion_PreReleaseNumber}"
+fi
+
+export PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}
+
+echo "Building packages for version \$PackageVersion"
 
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
 	cd lfmerge
 	git clean -dxf
 
 	xbuild /t:PrepareSource build/LfMerge.proj
-
-	. package-version
 
 	debian/PrepareSource \$curDbVersion
 
