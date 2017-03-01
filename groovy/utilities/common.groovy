@@ -373,4 +373,19 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 			}
 		}
 	}
+
+	static void addBuildNumber(stepContext, envVariableName) {
+		stepContext.with {
+			systemGroovyCommand("""
+def build = Thread.currentThread().executable
+assert build
+def buildVersion = build.getEnvironment().get("${envVariableName}")
+try {
+	if (buildVersion)
+		build.displayName = buildVersion
+	println "Build display name is set to \${buildVersion}"
+} catch (MissingPropertyException e) {}
+			""")
+		}
+	}
 }

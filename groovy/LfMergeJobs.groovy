@@ -125,16 +125,7 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 				propertiesFile('lfmerge/gitversion.properties')
 			}
 
-			systemGroovyCommand("""
-def build = Thread.currentThread().executable
-assert build
-def PackageVersion = build.getEnvironment().get('PackageVersion')
-try {
-	if (PackageVersion)
-		build.displayName = PackageVersion
-	println "Build display name is set to \${PackageVersion}"
-} catch (MissingPropertyException e) {}
-			""")
+			common.addBuildNumber(delegate, 'PackageVersion')
 
 			shell("""#!/bin/bash -e
 echo "Building packages for version \$PackageVersion"
