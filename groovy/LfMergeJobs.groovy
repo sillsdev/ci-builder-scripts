@@ -101,7 +101,7 @@ for (branchName in ['master', 'live', 'qa']) {
 		}
 
 		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
-			distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', (branchName == "master"),
+			distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', false,
 			false, false, "finalresults")
 
 		// will be triggered by other jobs
@@ -134,6 +134,17 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 			environmentVariables {
 				propertiesFile('lfmerge/gitversion.properties')
 			}
+
+			systemGroovyCommand("""
+def build = Thread.currentThread().executable
+assert build
+def newBuildName = build.getEnvironment().get('newVersion')
+try {
+	if (newBuildName)
+		build.displayName = PackageVersion
+	println "Build display name is set to \${PackageVersion}"
+} catch (MissingPropertyException e) {}
+			""")
 
 			shell("""#!/bin/bash -e
 echo "Building packages for version \$PackageVersion"
