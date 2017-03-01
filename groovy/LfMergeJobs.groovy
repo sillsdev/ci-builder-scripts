@@ -107,7 +107,7 @@ mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output build
 . gitversion.properties
 
 if [ "\${GitVersion_PreReleaseLabel}" != "" ]; then
-	PreReleaseTag="~\${GitVersion_PreReleaseLabel}-\${GitVersion_PreReleaseNumber}"
+	PreReleaseTag="~\${GitVersion_PreReleaseLabel}.\${GitVersion_PreReleaseNumber}"
 fi
 
 echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}" >> gitversion.properties
