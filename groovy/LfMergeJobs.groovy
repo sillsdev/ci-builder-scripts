@@ -128,7 +128,7 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 			systemGroovyCommand("""
 def build = Thread.currentThread().executable
 assert build
-def newBuildName = build.getEnvironment().get('newVersion')
+def PackageVersion = build.getEnvironment().get('PackageVersion')
 try {
 	if (newBuildName)
 		build.displayName = PackageVersion
