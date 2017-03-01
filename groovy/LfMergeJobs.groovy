@@ -104,13 +104,15 @@ xbuild /t:RestorePackages build/LfMerge.proj
 
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
 
+. gitversion.properties
+
 if ("\${GitVersion_PreReleaseLabel}" != ""); then
 	PreReleaseTag="~\${GitVersion_PreReleaseLabel}-\${GitVersion_PreReleaseNumber}"
 fi
 
 echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}" >> gitversion.properties
 
-echo "Building packages for version \$PackageVersion"
+echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseTag}"
 				""")
 
 			environmentVariables {
@@ -118,6 +120,8 @@ echo "Building packages for version \$PackageVersion"
 			}
 
 			shell("""#!/bin/bash -e
+echo "Building packages for version \$PackageVersion"
+
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
