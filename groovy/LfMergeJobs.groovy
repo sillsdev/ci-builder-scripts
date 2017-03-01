@@ -106,7 +106,7 @@ mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output build
 
 . gitversion.properties
 
-if ("\${GitVersion_PreReleaseLabel}" != ""); then
+if [ "\${GitVersion_PreReleaseLabel}" != "" ]; then
 	PreReleaseTag="~\${GitVersion_PreReleaseLabel}-\${GitVersion_PreReleaseNumber}"
 fi
 
@@ -123,10 +123,8 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 echo "Building packages for version \$PackageVersion"
 
 if [ "\$PackageBuildKind" = "Release" ]; then
-	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
-	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
@@ -151,7 +149,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
-		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" \$MAKE_SOURCE_ARGS
+		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog \$MAKE_SOURCE_ARGS
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
