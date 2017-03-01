@@ -98,7 +98,7 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
 			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
-			true)
+			true, 'github-sillsdev')
 
 		steps {
 			shell("""#!/bin/bash -e
@@ -170,6 +170,19 @@ sleep 300
 ssh ba-xenial64weba sudo apt update || true
 ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f lfmerge || true
 ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f || true''')
+			}
+		}
+
+		if (branchName == "live") {
+			publishers {
+				git {
+					pushOnlyIfSuccess()
+					tag('origin', '$PackageVersion') {
+						message('Version $PackageVersion')
+						create()
+						update()
+					}
+				}
 			}
 		}
 	}

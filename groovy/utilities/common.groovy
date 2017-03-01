@@ -130,7 +130,7 @@ cd "${subdir_name}"
 
     static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",
         disableSubmodules_ = false, commitAuthorInChangelog_ = false, scmName_ = "",
-        refspec_ = "", clean_ = false) {
+        refspec_ = "", clean_ = false, credentials_ = "") {
         jobContext.with {
             scm {
                 git {
@@ -141,6 +141,9 @@ cd "${subdir_name}"
                         url(url_)
                         if (refspec_ != "") {
                             refspec(refspec_)
+                        }
+                        if (credentials_ != "") {
+                            credentials(credentials_)
                         }
                     }
                     branch(branch_)
