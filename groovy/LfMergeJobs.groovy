@@ -15,7 +15,7 @@ import utilities.LfMerge
  * and commit and push the changes.
  */
 
-def distro = 'trusty xenial'
+def distro = 'xenial'
 def MinDbVersion = 7000068
 def MaxDbVersion = 7000070
 def MonoPrefix = '/opt/mono-sil'
