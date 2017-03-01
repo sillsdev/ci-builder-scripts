@@ -130,7 +130,7 @@ def build = Thread.currentThread().executable
 assert build
 def PackageVersion = build.getEnvironment().get('PackageVersion')
 try {
-	if (newBuildName)
+	if (PackageVersion)
 		build.displayName = PackageVersion
 	println "Build display name is set to \${PackageVersion}"
 } catch (MissingPropertyException e) {}
