@@ -98,7 +98,7 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
 			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
-			true, 'github-sillsdev')
+			true, 'github-sillsdevgerrit')
 
 		steps {
 			shell("""#!/bin/bash -e
