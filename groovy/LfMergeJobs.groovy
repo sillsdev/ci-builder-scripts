@@ -80,13 +80,29 @@ for (branchName in ['master', 'live', 'qa']) {
 	freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
 		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 
-		description """<p>Continuous package builds of the LfMerge ${branchName} branch.</p>
+		if (branchName == "live") {
+			BuildPackageArgs = "--no-upload"
+			AdditionalDescription = "(Not automatically uploaded)"
+		} else if (branchName == "qa") {
+			BuildPackageArgs = "--suite-name proposed"
+			AdditionalDescription = "(Uploaded to -proposed section of llso)"
+		} else {
+			BuildPackageArgs = ""
+			AdditionalDescription = "(Uploaded to -experimental section of llso)"
+		}
+
+		description """<p>Package builds of the LfMerge ${branchName} branch ${AdditionalDescription}.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
 """
 
+		parameters {
+			stringParam("DistributionsToPackage", distro,
+				"The distributions to build packages for (separated by space)")
+		}
+
 		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
-			distro, 'eb1@sil.org', 'master', 'amd64', distro, false, '.', (branchName == "master"),
-			true, false, "finalresults")
+			distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', (branchName == "master"),
+			false, false, "finalresults")
 
 		// will be triggered by other jobs
 
@@ -122,12 +138,6 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 			shell("""#!/bin/bash -e
 echo "Building packages for version \$PackageVersion"
 
-if [ "\$PackageBuildKind" = "Release" ]; then
-	BUILD_PACKAGE_ARGS="--no-upload"
-elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
-	BUILD_PACKAGE_ARGS="--suite-name proposed"
-fi
-
 mkdir -p finalresults
 rm -f finalresults/*
 
@@ -153,7 +163,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
-		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \$BUILD_PACKAGE_ARGS
+		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
 
 	cd -
 	mv results/* finalresults/
