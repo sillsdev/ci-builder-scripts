@@ -62,17 +62,7 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		steps {
 			downstreamParameterized {
-				trigger("LfMerge_Packaging-Linux-all-${branchName}-release") {
-					if (branchName == "qa") {
-						parameters {
-							predefinedProp("PackageBuildKind", "ReleaseCandidate")
-						}
-					} else if (branchName != "master") {
-						parameters {
-							predefinedProp("PackageBuildKind", "Release")
-						}
-					}
-				}
+				trigger("LfMerge_Packaging-Linux-all-${branchName}-release")
 			}
 		}
 	}
@@ -106,7 +96,7 @@ for (branchName in ['master', 'live', 'qa']) {
 
 		// will be triggered by other jobs
 
-		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "\$BranchOrTagToBuild",
+		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
 			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
 			true)
 
