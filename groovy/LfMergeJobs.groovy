@@ -149,12 +149,12 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	debian/PrepareSource \$curDbVersion
 
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
-		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
+		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
 		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog \$MAKE_SOURCE_ARGS
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
-		--arches "\$ArchesToPackage" --main-package-name "lfmerge" \\
+		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
 
 	cd -
