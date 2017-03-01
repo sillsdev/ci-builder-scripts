@@ -103,10 +103,18 @@ RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 xbuild /t:RestorePackages build/LfMerge.proj
 
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
-			""")
+
+if ("\${GitVersion_PreReleaseLabel}" != ""); then
+	PreReleaseTag="~\${GitVersion_PreReleaseLabel}-\${GitVersion_PreReleaseNumber}"
+fi
+
+echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}" >> gitversion.properties
+
+echo "Building packages for version \$PackageVersion"
+				""")
 
 			environmentVariables {
-				propertiesFile('gitversion.properties')
+				propertiesFile('lfmerge/gitversion.properties')
 			}
 
 			shell("""#!/bin/bash -e
@@ -127,14 +135,6 @@ export MONO_PREFIX=${MonoPrefix}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
 cd -
-
-if ("\${GitVersion_PreReleaseLabel}" != ""); then
-	PreReleaseTag="~\${GitVersion_PreReleaseLabel)-\${GitVersion_PreReleaseNumber}"
-fi
-
-export PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}
-
-echo "Building packages for version \$PackageVersion"
 
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
 	cd lfmerge
