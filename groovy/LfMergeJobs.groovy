@@ -270,10 +270,10 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 
 	steps {
 		shell('''#!/bin/bash -e
-cd lfmerge-fdo
+cd lfmerge-fdo/fw
 . Src/MasterVersionInfo.txt 2>/dev/null || true
 
-echo "PackageVersion=$FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER" > ../lfmerge-fdo-version.properties
+echo "PackageVersion=$FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER" > ../../lfmerge-fdo-version.properties
 echo "Setting version to $FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER"
 ''')
 
@@ -285,7 +285,7 @@ echo "Setting version to $FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER"
 
 		shell('''#!/bin/bash -e
 cd lfmerge-fdo
-mkdir cmakebuild
+mkdir -p cmakebuild
 cd cmakebuild
 cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 ''')
