@@ -191,7 +191,6 @@ ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Optio
 // *********************************************************************************************
 freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
-	def package_version = '--package-version "0.0.0.\${BUILD_NUMBER}" '
 	def fwBranch = 'feature/lfmerge'
 	def debianBranch = 'feature/lfmerge'
 	def libcomBranch = 'develop'
@@ -272,13 +271,27 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	steps {
 		shell('''#!/bin/bash -e
 cd lfmerge-fdo
+. Src/MasterVersionInfo.txt 2>/dev/null || true
+
+echo "PackageVersion=$FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER" > ../lfmerge-fdo-version.properties
+echo "Setting version to $FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER"
+''')
+
+		environmentVariables {
+			propertiesFile('lfmerge-fdo-version.properties')
+		}
+
+		common.addBuildNumber(delegate, 'PackageVersion')
+
+		shell('''#!/bin/bash -e
+cd lfmerge-fdo
 mkdir cmakebuild
 cd cmakebuild
 cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 ''')
 
 		shell("""#!/bin/bash -e
-export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
+export FULL_BUILD_NUMBER=\$PackageVersion
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
@@ -295,7 +308,7 @@ cd "lfmerge-fdo"
 	--supported-distros "${distro}" \
 	--debkeyid \$DEBSIGNKEY \
 	--main-repo-dir "fw" \
-	${package_version} \
+	--package-version "\$PackageVersion" \
 	\$MAKE_SOURCE_ARGS
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
@@ -307,7 +320,7 @@ cd "lfmerge-fdo"
 
 	}
 
-	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', package_version, revision,
+	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true, false)
 }
 
