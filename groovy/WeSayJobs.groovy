@@ -71,7 +71,12 @@ for (kind in ['Gerrit', 'normal']) {
 							refUpdated()
 						}
 					}
-					project('wesay', 'ant:**')
+
+					if (kind == 'Gerrit') {
+						project('wesay', '**')
+					} else {
+						project('wesay', [ 'ant:master', 'ant:develop', 'ant:release/*', 'ant:feature/*', 'ant:hotfix/*' ])
+					}
 				}
 			}
 
