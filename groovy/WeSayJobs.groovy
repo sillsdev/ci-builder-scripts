@@ -73,7 +73,7 @@ for (kind in ['Gerrit', 'normal']) {
 					}
 
 					if (kind == 'Gerrit') {
-						project('wesay', '**')
+						project('wesay', 'ant:**')
 					} else {
 						project('wesay', [ 'ant:master', 'ant:develop', 'ant:release/*', 'ant:feature/*', 'ant:hotfix/*' ])
 					}
