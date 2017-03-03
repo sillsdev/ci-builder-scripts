@@ -170,6 +170,7 @@ rm -rf data/testlangproj
 rm -rf data/testlangproj-modified
 ''')
 					}
+					onlyIfBuildSucceeds(false)
 				}
 			}
 		}
