@@ -99,7 +99,7 @@ for (kind in ['Gerrit', 'normal']) {
 cd build
 ./agent/install-deps
 ./buildupdate.mono.sh
-./TestBuild.sh''')
+./TestBuild.sh Debug Test''')
 				} else {
 					common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
 					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT} /p:Platform=x86')
