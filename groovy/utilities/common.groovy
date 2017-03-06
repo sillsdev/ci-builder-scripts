@@ -206,49 +206,39 @@ cd "${subdir_name}"
         }
     }
 
-    static void addInstallPackagesBuildStep(stepContext) {
+    static void addInstallPackagesBuildStep(stepContext, scriptName = './install-deps') {
         stepContext.with {
-            shell('''#!/bin/bash
-set -e
-cd build
-mozroots --import --sync
-./install-deps''')
+            shell("""#!/bin/bash -e
+$scriptName""")
         }
     }
 
     static void addXbuildBuildStep(stepContext, projFile, cmdArgs = "") {
         stepContext.with {
-            shell("""#!/bin/bash
-set -e
+            shell("""#!/bin/bash -e
 . ./environ
 xbuild $cmdArgs $projFile""")
         }
     }
 
-    static void addGetDependenciesBuildStep(stepContext) {
+    static void addGetDependenciesBuildStep(stepContext, scriptName = 'build/getDependencies-Linux.sh') {
         stepContext.with {
-            shell('''#!/bin/bash
-set -e
+            shell("""#!/bin/bash -e
 echo "Fetching dependencies"
-cd build
-./getDependencies-Linux.sh
-''')
+$scriptName
+""")
         }
     }
 
     static void addGetDependenciesWindowsBuildStep(stepContext, scriptName = 'build/getDependencies-windows.sh') {
-        def build_script = '''SET TEMP=%HOME%\\\\tmp
+        stepContext.with {
+            batchFile("""SET TEMP=%HOME%\\\\tmp
 SET TMP=%TEMP%
 IF NOT EXIST %TEMP% mkdir %TEMP%
 echo which mkdir > %TEMP%\\\\%BUILD_TAG%.txt
-echo @@{scriptName} >> %TEMP%\\\\%BUILD_TAG%.txt
+echo $scriptName >> %TEMP%\\\\%BUILD_TAG%.txt
 "c:\\\\Program Files (x86)\\\\Git\\\\bin\\\\bash.exe" --login -i < %TEMP%\\\\%BUILD_TAG%.txt
-'''
-
-        stepContext.with {
-            def values = [ 'scriptName' : scriptName ]
-
-            batchFile(Helper.prepareScript(build_script, values))
+""")
         }
     }
 
