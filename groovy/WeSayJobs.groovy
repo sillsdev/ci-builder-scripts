@@ -95,11 +95,9 @@ for (kind in ['Gerrit', 'normal']) {
 
 			steps {
 				if (os == 'Linux') {
-					shell('''#!/bin/bash
-cd build
-./agent/install-deps
-./buildupdate.mono.sh
-./TestBuild.sh Debug Test''')
+					common.addInstallPackagesBuildStep(delegate, 'build/agent/install-deps')
+					common.addGetDependenciesBuildStep(delegate, 'build/buildupdate.mono.sh')
+					common.addXbuildBuildStep(delegate, 'build/build.mono.proj', '/t:Test /p:RootDir=${WORKSPACE} /p:BUILD_NUMBER="0.0.${BUILD_ID}.${GIT_COMMIT}"')
 				} else {
 					common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
 					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT} /p:Platform=x86')
