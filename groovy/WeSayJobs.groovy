@@ -105,6 +105,10 @@ cd build
 					common.addMsBuildStep(delegate, 'build\\build.win.proj', '/t:Test /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT} /p:Platform=x86')
 				}
 			}
+
+			publishers {
+				configure common.NUnitPublisher('output/**/TestResults.xml')
+			}
 		}
 	}
 }
