@@ -177,7 +177,7 @@ ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Optio
 			publishers {
 				git {
 					pushOnlyIfSuccess()
-					tag('origin', '$PackageVersion') {
+					tag('origin', 'v$PackageVersion') {
 						message('Version $PackageVersion')
 						create()
 						update()
