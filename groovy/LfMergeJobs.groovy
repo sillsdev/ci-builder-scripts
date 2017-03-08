@@ -151,7 +151,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
-		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog \$MAKE_SOURCE_ARGS
+		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog
 
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
@@ -294,10 +294,8 @@ cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 export FULL_BUILD_NUMBER=\$PackageVersion
 
 if [ "\$PackageBuildKind" = "Release" ]; then
-	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
-	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
@@ -309,7 +307,7 @@ cd "lfmerge-fdo"
 	--debkeyid \$DEBSIGNKEY \
 	--main-repo-dir "fw" \
 	--package-version "\$PackageVersion" \
-	\$MAKE_SOURCE_ARGS
+	--preserve-changelog
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
