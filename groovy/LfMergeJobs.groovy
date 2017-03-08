@@ -284,6 +284,9 @@ echo "Setting version to $FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER"
 		common.addBuildNumber(delegate, 'PackageVersion')
 
 		shell('''#!/bin/bash -e
+# Remove old packages
+find . -maxdepth 1 -type f -print0 | xargs -0 rm
+
 cd lfmerge-fdo
 mkdir -p cmakebuild
 cd cmakebuild
