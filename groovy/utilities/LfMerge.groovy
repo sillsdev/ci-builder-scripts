@@ -44,9 +44,9 @@ class LfMerge {
 					git {
 						remote {
 							github("sillsdev/web-languageforge", "https")
-							refspec('+refs/heads/master:refs/remotes/origin/master')
+							refspec(spec)
 						}
-						branch('*/master')
+						branch(sha1)
 						extensions {
 							relativeTargetDirectory('data/php')
 						}
