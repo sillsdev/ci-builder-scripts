@@ -242,7 +242,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				name('fw')
 				url('ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks')
 				refspec("+refs/heads/*:refs/remotes/fw/*")
-				credentials('jenkins')
+				credentials('f130e507-4ea0-49a6-8d3a-274485e4ee1a')
 			}
 			branch '$BranchOrTagToBuild'
 			extensions {
