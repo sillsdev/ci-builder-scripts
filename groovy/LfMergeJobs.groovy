@@ -294,6 +294,8 @@ cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 ''')
 
 		shell("""#!/bin/bash -e
+exit 0
+
 export FULL_BUILD_NUMBER=\$PackageVersion
 
 if [ "\$PackageBuildKind" = "Release" ]; then
@@ -324,13 +326,13 @@ cd "lfmerge-fdo"
 if [ "$PackageBuildKind" == "Release" ]; then
 	cd lfmerge-fdo/fw
 	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push https://gerrit.lsdev.sil.org/FieldWorks lfmerge-fdo_$PackageVersion
-	cd ../debian
-	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push https://gerrit.lsdev.sil.org/FwDebian lfmerge-fdo_$PackageVersion
-	cd ../libcom
-	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push https://gerrit.lsdev.sil.org/libcom lfmerge-fdo_$PackageVersion
+	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks lfmerge-fdo_$PackageVersion
+#	cd ../debian
+#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FwDebian lfmerge-fdo_$PackageVersion
+#	cd ../libcom
+#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/libcom lfmerge-fdo_$PackageVersion
 fi
 ''')
 	}
