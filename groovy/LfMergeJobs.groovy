@@ -239,8 +239,9 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		}
 		git {
 			remote {
+				name('fw')
 				url('git://gerrit.lsdev.sil.org/FieldWorks')
-				refspec("+refs/heads/*:refs/remotes/origin/*")
+				refspec("+refs/heads/*:refs/remotes/fw/*")
 			}
 			branch '$BranchOrTagToBuild'
 			extensions {
@@ -323,6 +324,26 @@ cd "lfmerge-fdo"
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true, false)
+
+	publishers {
+		flexiblePublish {
+			conditionalAction {
+				condition {
+					stringsMatch('$PackageBuildKind', 'Release', true)
+				}
+				publishers {
+					git {
+						pushOnlyIfSuccess()
+						tag('fw', 'lfmerge-fdo_$PackageVersion') {
+							message('Version $PackageVersion of lfmerge-fdo')
+							create()
+							update()
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 // *********************************************************************************************
