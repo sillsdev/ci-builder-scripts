@@ -239,9 +239,8 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		}
 		git {
 			remote {
-				name('fw')
 				url('git://gerrit.lsdev.sil.org/FieldWorks')
-				refspec("+refs/heads/*:refs/remotes/fw/*")
+				refspec("+refs/heads/*:refs/remotes/origin/*")
 			}
 			branch '$BranchOrTagToBuild'
 			extensions {
@@ -320,6 +319,20 @@ cd "lfmerge-fdo"
 	--debkeyid \$DEBSIGNKEY \
 	\$BUILD_PACKAGE_ARGS""")
 
+		// Tag commits
+		shell('''#!/bin/bash -e
+if [ "$PackageBuildKind" == "Release" ]; then
+	cd lfmerge-fdo/fw
+	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+	git push origin lfmerge-fdo_$PackageVersion
+	cd ../debian
+	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+	git push origin lfmerge-fdo_$PackageVersion
+	cd ../libcom
+	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+	git push origin lfmerge-fdo_$PackageVersion
+fi
+''')
 	}
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
@@ -332,14 +345,7 @@ cd "lfmerge-fdo"
 					stringsMatch('$PackageBuildKind', 'Release', true)
 				}
 				publishers {
-					git {
-						pushOnlyIfSuccess()
-						tag('fw', 'lfmerge-fdo_$PackageVersion') {
-							message('Version $PackageVersion of lfmerge-fdo')
-							create()
-							update()
-						}
-					}
+					buildDescription("<span style=\"background-color:yellow\">lfmerge-fdo \$PackageVersion</span>")
 				}
 			}
 		}
