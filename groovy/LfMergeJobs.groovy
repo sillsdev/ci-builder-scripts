@@ -296,8 +296,6 @@ cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
 ''')
 
 		shell("""#!/bin/bash -e
-exit 0
-
 export FULL_BUILD_NUMBER=\$PackageVersion
 
 if [ "\$PackageBuildKind" = "Release" ]; then
@@ -337,14 +335,6 @@ echo "Successfully build package" """)
 				}
 				publishers {
 					buildDescription("Successfully build package", "<span style=\"background-color:yellow\">lfmerge-fdo \$PackageVersion</span>")
-					git {
-						pushOnlyIfSuccess()
-						tag('ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks', 'lfmerge-fdo_$PackageVersion') {
-							message('Version $PackageVersion of lfmerge-fdo')
-							create()
-							update()
-						}
-					}
 				}
 			}
 		}
