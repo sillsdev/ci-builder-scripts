@@ -339,7 +339,7 @@ echo "Successfully build package" """)
 					buildDescription("Successfully build package", "<span style=\"background-color:yellow\">lfmerge-fdo \$PackageVersion</span>")
 					git {
 						pushOnlyIfSuccess()
-						tag('fw', 'lfmerge-fdo_$PackageVersion') {
+						tag('ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks', 'lfmerge-fdo_$PackageVersion') {
 							message('Version $PackageVersion of lfmerge-fdo')
 							create()
 							update()
