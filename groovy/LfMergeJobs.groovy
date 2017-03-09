@@ -239,8 +239,9 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 		}
 		git {
 			remote {
-				url('git://gerrit.lsdev.sil.org/FieldWorks')
-				refspec("+refs/heads/*:refs/remotes/origin/*")
+				name('fw')
+				url('ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks')
+				refspec("+refs/heads/*:refs/remotes/fw/*")
 			}
 			branch '$BranchOrTagToBuild'
 			extensions {
@@ -319,14 +320,16 @@ cd "lfmerge-fdo"
 	--main-package-name "lfmerge-fdo" \
 	--supported-distros "${distro}" \
 	--debkeyid \$DEBSIGNKEY \
-	\$BUILD_PACKAGE_ARGS""")
+	\$BUILD_PACKAGE_ARGS
+
+echo "Successfully build package" """)
 
 		// Tag commits
 		shell('''#!/bin/bash -e
 if [ "$PackageBuildKind" == "Release" ]; then
-	cd lfmerge-fdo/fw
-	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks lfmerge-fdo_$PackageVersion
+#	cd lfmerge-fdo/fw
+#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
+#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks lfmerge-fdo_$PackageVersion
 #	cd ../debian
 #	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
 #	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FwDebian lfmerge-fdo_$PackageVersion
@@ -347,7 +350,15 @@ fi
 					stringsMatch('$PackageBuildKind', 'Release', true)
 				}
 				publishers {
-					buildDescription("<span style=\"background-color:yellow\">lfmerge-fdo \$PackageVersion</span>")
+					buildDescription("Successfully build package", "<span style=\"background-color:yellow\">lfmerge-fdo \$PackageVersion</span>")
+					git {
+						pushOnlyIfSuccess()
+						tag('fw', 'lfmerge-fdo_$PackageVersion') {
+							message('Version $PackageVersion of lfmerge-fdo')
+							create()
+							update()
+						}
+					}
 				}
 			}
 		}
