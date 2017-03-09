@@ -324,13 +324,13 @@ cd "lfmerge-fdo"
 if [ "$PackageBuildKind" == "Release" ]; then
 	cd lfmerge-fdo/fw
 	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push origin lfmerge-fdo_$PackageVersion
+	git push https://gerrit.lsdev.sil.org/FieldWorks lfmerge-fdo_$PackageVersion
 	cd ../debian
 	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push origin lfmerge-fdo_$PackageVersion
+	git push https://gerrit.lsdev.sil.org/FwDebian lfmerge-fdo_$PackageVersion
 	cd ../libcom
 	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-	git push origin lfmerge-fdo_$PackageVersion
+	git push https://gerrit.lsdev.sil.org/libcom lfmerge-fdo_$PackageVersion
 fi
 ''')
 	}
