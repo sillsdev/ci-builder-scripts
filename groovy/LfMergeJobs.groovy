@@ -324,21 +324,6 @@ cd "lfmerge-fdo"
 	\$BUILD_PACKAGE_ARGS
 
 echo "Successfully build package" """)
-
-		// Tag commits
-		shell('''#!/bin/bash -e
-if [ "$PackageBuildKind" == "Release" ]; then
-#	cd lfmerge-fdo/fw
-#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FieldWorks lfmerge-fdo_$PackageVersion
-#	cd ../debian
-#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/FwDebian lfmerge-fdo_$PackageVersion
-#	cd ../libcom
-#	git tag -m "Version $PackageVersion of lfmerge-fdo" lfmerge-fdo_$PackageVersion
-#	git push ssh://jenkins@gerrit.lsdev.sil.org:59418/libcom lfmerge-fdo_$PackageVersion
-fi
-''')
 	}
 
 	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
