@@ -49,6 +49,7 @@ class LfMerge {
 						branch(sha1)
 						extensions {
 							relativeTargetDirectory('data/php')
+							ignoreNotifyCommit()
 						}
 					}
 				}
