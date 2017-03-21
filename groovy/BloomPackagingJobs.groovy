@@ -41,6 +41,14 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
         false, subdir_name, false, true)
+
+    wrappers {
+        timeout {
+            likelyStuck()
+            abortBuild()
+            writeDescription("Build timed out after {0} minutes")
+        }
+    }
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-3.8-beta') {
@@ -58,6 +66,14 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.8-beta') {
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
         false, subdir_name_beta, false, true)
+
+    wrappers {
+        timeout {
+            likelyStuck()
+            abortBuild()
+            writeDescription("Build timed out after {0} minutes")
+        }
+    }
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
@@ -75,4 +91,12 @@ freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
 
     common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
         false, subdir_name_alpha, false, true)
+
+    wrappers {
+        timeout {
+            likelyStuck()
+            abortBuild()
+            writeDescription("Build timed out after {0} minutes")
+        }
+    }
 }
