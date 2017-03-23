@@ -10,7 +10,8 @@ import utilities.Helper
 import utilities.common
 
 class LfMerge {
-	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge') {
+	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false,
+		githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge', isPr = false) {
 		jobContext.with {
 			properties {
 				priority(100)
@@ -44,9 +45,9 @@ class LfMerge {
 					git {
 						remote {
 							github("sillsdev/web-languageforge", "https")
-							refspec(spec)
+							refspec(isPr ? '+refs/heads/master:refs/remotes/origin/master' : spec)
 						}
-						branch(sha1)
+						branch(isPr ? '*/master' : sha1)
 						extensions {
 							relativeTargetDirectory('data/php')
 							ignoreNotifyCommit()
@@ -67,8 +68,8 @@ class LfMerge {
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false) {
-		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge)
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false) {
+		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge, "sillsdev/LfMerge", 'lfmerge', isPr)
 		jobContext.with {
 			steps {
 				throttleConcurrentBuilds {
