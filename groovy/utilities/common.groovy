@@ -206,7 +206,7 @@ cd "${subdir_name}"
         }
     }
 
-    static void addInstallPackagesBuildStep(stepContext, scriptName = './install-deps') {
+    static void addInstallPackagesBuildStep(stepContext, scriptName = 'build/install-deps') {
         stepContext.with {
             shell("""#!/bin/bash -e
 $scriptName""")
