@@ -6,8 +6,8 @@
 /*
  * DSL script for Jenkins icu-dotnet jobs
  */
-import utilities.IcuDotNet
-import utilities.common
+//#include utilities/Common.groovy
+//#include utilities/IcuDotNet.groovy
 
 /*
  * Definition of jobs
@@ -42,7 +42,7 @@ freeStyleJob('GitHub-IcuDotNet-Linux-any-master-release') {
 	description '''<p>Pre-merge Linux builds of master branch.</p>
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'master', 'linux', 'conniey')
+	Common.addGitHubParamAndTrigger(delegate, 'master', 'linux', 'conniey')
 	IcuDotNet.commonLinuxBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}')
 }
 
@@ -52,7 +52,7 @@ freeStyleJob('GitHub-IcuDotNet-Win-any-master-release') {
 	description '''<p>Pre-merge Windows builds of master branch.</p>
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'master', 'windows', 'conniey')
+	Common.addGitHubParamAndTrigger(delegate, 'master', 'windows', 'conniey')
 	IcuDotNet.commonWindowsBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', true)
 }
 

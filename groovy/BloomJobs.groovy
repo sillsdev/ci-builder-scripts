@@ -1,8 +1,8 @@
 /*
  * DSL script for Jenkins Bloom jobs
  */
-import utilities.common
-import utilities.Bloom
+//#include utilities/Common.groovy
+//#include utilities/Bloom.groovy
 
 /*
  * Definition of jobs
@@ -39,15 +39,15 @@ change got merged and collects the results.</p>
 
 	steps {
 		// Trigger downstream build
-		common.addTriggerDownstreamBuildStep(delegate,
+		Common.addTriggerDownstreamBuildStep(delegate,
 			'Bloom-Win32-master-release,Bloom-Linux-any-master-release')
 
-		common.addTriggerDownstreamBuildStep(delegate,
+		Common.addTriggerDownstreamBuildStep(delegate,
 			'Bloom-Linux-any-master-release-Tests, Bloom-Win32-master-release-Tests,Bloom-Linux-any-master--JSTests')
 
 	}
 
-	common.buildPublishers(delegate, 365, 100)
+	Common.buildPublishers(delegate, 365, 100)
 }
 
 // *********************************************************************************************
@@ -61,13 +61,13 @@ freeStyleJob('Bloom-Linux-any-master-release') {
 
 	steps {
 		// Install certificates
-		common.addInstallPackagesBuildStep(delegate)
+		Common.addInstallPackagesBuildStep(delegate)
 
 		// Get dependencies
-		common.addGetDependenciesBuildStep(delegate)
+		Common.addGetDependenciesBuildStep(delegate)
 
 		// Build
-		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+		Common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 	}
 }
 
@@ -81,14 +81,14 @@ freeStyleJob('Bloom-Win32-master-release') {
 
 	steps {
 		// Get dependencies
-		common.addGetDependenciesWindowsBuildStep(delegate)
+		Common.addGetDependenciesWindowsBuildStep(delegate)
 
 		batchFile('''cd src\\BloomBrowserUI
 npm install
 npm run build
 ''')
 
-		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', 'msbuild14')
+		Common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', 'msbuild14')
 	}
 }
 
@@ -104,17 +104,17 @@ freeStyleJob('Bloom-Linux-any-master-release-Tests') {
 	customWorkspace '/home/jenkins/workspace/Bloom-Linux-any-master-release'
 
 	wrappers {
-		common.addXvfbBuildWrapper(delegate)
+		Common.addXvfbBuildWrapper(delegate)
 		runOnSameNodeAs('Bloom-Linux-any-master-release', true)
 	}
 
 	steps {
 		// Run unit tests
-		common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+		Common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 	}
 
 	publishers {
-		configure common.NUnitPublisher('output/Release/TestResults.xml')
+		configure Common.NUnitPublisher('output/Release/TestResults.xml')
 	}
 }
 
@@ -137,16 +137,16 @@ freeStyleJob('Bloom-Win32-master-release-Tests') {
 
 	steps {
 		// Run unit tests
-		common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
+		Common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 
 		// this is needed so that upstream aggregation of unit tests works
-		common.addMagicAggregationFileWindows(delegate)
+		Common.addMagicAggregationFileWindows(delegate)
 	}
 
 	publishers {
 		fingerprint('magic.txt')
 		archiveArtifacts('output/Release/TestResults.xml')
-		configure common.NUnitPublisher('output/Release/TestResults.xml')
+		configure Common.NUnitPublisher('output/Release/TestResults.xml')
 	}
 }
 
@@ -176,12 +176,12 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 			noActivity 180
 			abortBuild()
 		}
-		common.addXvfbBuildWrapper(delegate)
+		Common.addXvfbBuildWrapper(delegate)
 	}
 
 	steps {
 		// Get dependencies
-		common.addGetDependenciesBuildStep(delegate)
+		Common.addGetDependenciesBuildStep(delegate)
 
 		// Install nodejs dependencies
 		Bloom.addInstallKarmaBuildStep(delegate)
@@ -201,5 +201,5 @@ freeStyleJob('Bloom-Linux-any-master--JSTests') {
 		}
 	}
 
-	common.buildPublishers(delegate, 365, 100)
+	Common.buildPublishers(delegate, 365, 100)
 }

@@ -1,7 +1,7 @@
 /*
  * DSL script for Jenkins Bloom Packaging jobs
  */
-import utilities.common
+//#include utilities/Common.groovy
 
 // Variables
 def packagename = 'Bloom'
@@ -27,76 +27,76 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * and release ('Version3.7').
  */
 freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-        'precise trusty xenial', email_recipients, 'Version3.7')
+	Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
+		'precise trusty xenial', email_recipients, 'Version3.7')
 
-    description '''
+	description '''
 <p>Automatic ("nightly") builds of the Bloom Version3.7 branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 '''
 
-    triggers {
-        githubPush()
-    }
+	triggers {
+		githubPush()
+	}
 
-    common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name, false, true)
+	Common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
+		false, subdir_name, false, true)
 
-    wrappers {
-        timeout {
-            likelyStuck()
-            abortBuild()
-            writeDescription("Build timed out after {0} minutes")
-        }
-    }
+	wrappers {
+		timeout {
+			likelyStuck()
+			abortBuild()
+			writeDescription("Build timed out after {0} minutes")
+		}
+	}
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-3.8-beta') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
-        distros_tobuild, email_recipients, 'Version3.8')
+	Common.defaultPackagingJob(delegate, packagename, subdir_name_beta, package_version, revision,
+		distros_tobuild, email_recipients, 'Version3.8')
 
-    description '''
+	description '''
 <p>Automatic ("nightly") builds of the Bloom Version3.8 branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 '''
 
-    triggers {
-        githubPush()
-    }
+	triggers {
+		githubPush()
+	}
 
-    common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name_beta, false, true)
+	Common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
+		false, subdir_name_beta, false, true)
 
-    wrappers {
-        timeout {
-            likelyStuck()
-            abortBuild()
-            writeDescription("Build timed out after {0} minutes")
-        }
-    }
+	wrappers {
+		timeout {
+			likelyStuck()
+			abortBuild()
+			writeDescription("Build timed out after {0} minutes")
+		}
+	}
 }
 
 freeStyleJob('Bloom_Packaging-Linux-all-master-alpha') {
-    common.defaultPackagingJob(delegate, packagename, subdir_name_alpha, package_version, revision,
-        distros_tobuild, email_recipients, 'master')
+	Common.defaultPackagingJob(delegate, packagename, subdir_name_alpha, package_version, revision,
+		distros_tobuild, email_recipients, 'master')
 
-    description '''
+	description '''
 <p>Nightly builds of the Bloom master branch.</p>
 <p>The job is created by the DSL plugin from <i>BloomPackagingJobs.groovy</i> script.</p>
 '''
 
-    triggers {
-        githubPush()
-    }
+	triggers {
+		githubPush()
+	}
 
-    common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-        false, subdir_name_alpha, false, true)
+	Common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
+		false, subdir_name_alpha, false, true)
 
-    wrappers {
-        timeout {
-            likelyStuck()
-            abortBuild()
-            writeDescription("Build timed out after {0} minutes")
-        }
-    }
+	wrappers {
+		timeout {
+			likelyStuck()
+			abortBuild()
+			writeDescription("Build timed out after {0} minutes")
+		}
+	}
 }

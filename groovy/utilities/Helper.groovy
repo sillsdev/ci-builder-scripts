@@ -1,6 +1,11 @@
-package utilities;
+/*
+ * Copyright (c) 2017 SIL International
+ * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
+ */
 
-import groovy.text.*;
+package utilities
+
+import groovy.text.*
 
 public class Helper {
 

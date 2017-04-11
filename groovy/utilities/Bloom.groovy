@@ -1,9 +1,11 @@
 /*
- * some common definitions for Bloom related jobs
+ * Copyright (c) 2017 SIL International
+ * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
-package utilities
-import utilities.Helper
-import utilities.common
+
+/*
+ * some Common definitions for Bloom related jobs
+ */
 
 class Bloom {
 	static void generalBloomBuildJob(jobContext, useTimeout = true) {
@@ -25,7 +27,7 @@ class Bloom {
 				}
 			}
 
-			common.buildPublishers(delegate, 365, 100)
+			Common.buildPublishers(delegate, 365, 100)
 		}
 	}
 

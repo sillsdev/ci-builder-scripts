@@ -6,7 +6,7 @@
 /*
  * DSL script for Jenkins Mono jobs
  */
-import utilities.common
+//#include utilities/Common.groovy
 
 /*
  * Definition of jobs
@@ -109,7 +109,7 @@ make
 ''')
 				}
 
-				common.buildPublishers(delegate, 365, 100)
+				Common.buildPublishers(delegate, 365, 100)
 			}
 		}
 	}

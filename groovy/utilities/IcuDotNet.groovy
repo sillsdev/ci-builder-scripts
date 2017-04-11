@@ -4,11 +4,8 @@
  */
 
 /*
- * some common definitions for IcuDotNet related jobs
+ * some Common definitions for IcuDotNet related jobs
  */
-package utilities
-import utilities.common
-
 class IcuDotNet {
 	static void commonBuildJob(jobContext, _label, _refspec = '+refs/heads/master:refs/remotes/origin/master', _branch = '*/master') {
 		jobContext.with {
@@ -41,10 +38,10 @@ class IcuDotNet {
 			}
 
 			publishers {
-				configure common.NUnitPublisher('**/TestResults.xml')
+				configure Common.NUnitPublisher('**/TestResults.xml')
 			}
 		}
-		common.buildPublishers(jobContext, 365, 100)
+		Common.buildPublishers(jobContext, 365, 100)
 	}
 
 	static void addGitHubPushTrigger(jobContext) {
@@ -87,7 +84,7 @@ xbuild /t:Test /property:Configuration=Release build/icu-dotnet.proj
 
 		jobContext.with {
 			steps {
-				common.addMsBuildStep(delegate, 'build\\icu-dotnet.proj', '/t:Test /property:Configuration=Release')
+				Common.addMsBuildStep(delegate, 'build\\icu-dotnet.proj', '/t:Test /property:Configuration=Release')
 
 				if (!isPr) {
 					//batchFile("build\\NuGet.exe push source\\NuGetBuild\\*.nupkg -Source https://www.nuget.org/api/v2/package")

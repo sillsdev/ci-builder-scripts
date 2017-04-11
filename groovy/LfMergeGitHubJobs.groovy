@@ -6,8 +6,8 @@
 /*
  * DSL script for Jenkins LfMerge jobs
  */
-import utilities.LfMerge
-import utilities.common
+//#include utilities/Common.groovy
+//#include utilities/LfMerge.groovy
 
 // *********************************************************************************************
 freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
@@ -16,7 +16,7 @@ freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
 	description '''<p>Pre-merge Linux builds of master branch. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'master')
+	Common.addGitHubParamAndTrigger(delegate, 'master')
 }
 
 // *********************************************************************************************
@@ -25,11 +25,11 @@ freeStyleJob('GitHub-Chorus-Linux-any-lfmerge-release') {
 	description '''<p>Pre-merge Linux builds of lfmerge branch of Chorus. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'lfmerge')
+	Common.addGitHubParamAndTrigger(delegate, 'lfmerge')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/chorus", 'linux&&supported')
 
 	wrappers {
-		common.addXvfbBuildWrapper(delegate)
+		Common.addXvfbBuildWrapper(delegate)
 	}
 
 
@@ -44,7 +44,7 @@ xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:Configuratio
 	}
 
 	publishers {
-		configure common.NUnitPublisher('**/TestResults.xml')
+		configure Common.NUnitPublisher('**/TestResults.xml')
 	}
 }
 
@@ -54,17 +54,17 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	description '''<p>Pre-merge Windows builds of lfmerge branch of Chorus. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
+	Common.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/chorus", 'windows&&timeInSync')
 
 	steps {
-		common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
+		Common.addGetDependenciesWindowsBuildStep(delegate, 'build/buildupdate.win.sh')
 
-		common.addMsBuildStep(delegate, 'build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
+		Common.addMsBuildStep(delegate, 'build\\Chorus.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:Configuration=Release')
 	}
 
 	publishers {
-		configure common.NUnitPublisher('**/TestResults.xml')
+		configure Common.NUnitPublisher('**/TestResults.xml')
 	}
 }
 
@@ -74,11 +74,11 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 	description '''<p>Pre-merge Linux builds of lfmerge branch of FLExBridge. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'lfmerge')
+	Common.addGitHubParamAndTrigger(delegate, 'lfmerge')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/flexbridge", 'linux&&supported')
 
 	wrappers {
-		common.addXvfbBuildWrapper(delegate)
+		Common.addXvfbBuildWrapper(delegate)
 	}
 
 	steps {
@@ -92,7 +92,7 @@ xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NU
 	}
 
 	publishers {
-		configure common.NUnitPublisher('**/TestResults.xml')
+		configure Common.NUnitPublisher('**/TestResults.xml')
 	}
 }
 
@@ -102,16 +102,16 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 	description '''<p>Pre-merge Windows builds of lfmerge branch of FLExBridge. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
-	common.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
+	Common.addGitHubParamAndTrigger(delegate, 'lfmerge', 'windows')
 	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/flexbridge", 'windows&&timeInSync')
 
 	steps {
-		common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')
+		Common.addGetDependenciesWindowsBuildStep(delegate, './download_dependencies_windows.sh')
 
-		common.addMsBuildStep(delegate, 'build\\FLExBridge.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=Release')
+		Common.addMsBuildStep(delegate, 'build\\FLExBridge.proj', '/t:Test /property:BUILD_NUMBER=0.0.%BUILD_NUMBER%.0 /property:BUILD_VCS_NUMBER=%GIT_COMMIT% /property:Configuration=Release')
 	}
 
 	publishers {
-		configure common.NUnitPublisher('**/TestResults.xml')
+		configure Common.NUnitPublisher('**/TestResults.xml')
 	}
 }

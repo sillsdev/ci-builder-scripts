@@ -3,12 +3,8 @@
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 /*
- * some common definitions for LfMerge related jobs
+ * some Common definitions for LfMerge related jobs
  */
-package utilities
-import utilities.Helper
-import utilities.common
-
 class LfMerge {
 	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false,
 		githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge', isPr = false) {
@@ -158,10 +154,10 @@ exit $?''')
 
 			}
 
-			common.buildPublishers(delegate, 365, 100)
+			Common.buildPublishers(delegate, 365, 100)
 
 			publishers {
-				configure common.NUnitPublisher('**/TestResults.xml')
+				configure Common.NUnitPublisher('**/TestResults.xml')
 
 				postBuildScripts {
 					steps {

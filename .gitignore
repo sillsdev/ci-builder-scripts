@@ -1,4 +1,8 @@
 *~
 *.swp
 /.idea/
+/.gradle/
+/build/
+/classes/
+/target/
 ci-builder-scripts.iml

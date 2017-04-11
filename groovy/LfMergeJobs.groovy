@@ -5,8 +5,8 @@
 /*
  * DSL script for Jenkins LfMerge jobs
  */
-import utilities.common
-import utilities.LfMerge
+//#include utilities/Common.groovy
+//#include utilities/LfMerge.groovy
 
 /*
  * Definition of jobs
@@ -38,13 +38,13 @@ freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
 
 	steps {
 		// Install packages
-		shell('''#!/bin/bash
+		shell("""#!/bin/bash
 set -e
-PATH=/opt/mono-sil/bin:$PATH
+PATH=${MonoPrefix}/bin:\$PATH
 debian/PrepareSource
 cd build
 mozroots --import --sync
-./install-deps''')
+./install-deps""")
 	}
 }
 
@@ -90,13 +90,13 @@ for (branchName in ['master', 'live', 'qa']) {
 				"The distributions to build packages for (separated by space)")
 		}
 
-		common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
+		Common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
 			distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', false,
 			false, false, "finalresults")
 
 		// will be triggered by other jobs
 
-		common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
+		Common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
 			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
 			true, 'github-sillsdevgerrit')
 
@@ -125,7 +125,7 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 				propertiesFile('lfmerge/gitversion.properties')
 			}
 
-			common.addBuildNumber(delegate, 'PackageVersion')
+			Common.addBuildNumber(delegate, 'PackageVersion')
 
 			shell("""#!/bin/bash -e
 echo "Building packages for version \$PackageVersion"
@@ -283,7 +283,7 @@ echo "Setting version to $FWMAJOR.$FWMINOR.$FWREVISION.$BUILD_NUMBER"
 			propertiesFile('lfmerge-fdo-version.properties')
 		}
 
-		common.addBuildNumber(delegate, 'PackageVersion')
+		Common.addBuildNumber(delegate, 'PackageVersion')
 
 		shell('''#!/bin/bash -e
 # Remove old packages
@@ -324,7 +324,7 @@ cd "lfmerge-fdo"
 echo "Successfully build package" """)
 	}
 
-	common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
+	Common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
 		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true, false)
 
 	publishers {

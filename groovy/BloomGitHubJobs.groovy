@@ -1,8 +1,8 @@
 /*
  * DSL script for Jenkins Bloom GitHub jobs
  */
-import utilities.common
-import utilities.Bloom
+//#include utilities/Common.groovy
+//#include utilities/Bloom.groovy
 
 /*
  * Definition of jobs
@@ -64,10 +64,10 @@ collects the results and reports them back to GitHub.</p>
 		steps {
 			shell('echo -n ${BUILD_TAG} > ${WORKSPACE}/magic.txt')
 
-			common.addTriggerDownstreamBuildStep(delegate,
+			Common.addTriggerDownstreamBuildStep(delegate,
 				"GitHub-Bloom-Linux-any-$branchName-release,GitHub-Bloom-Win32-$branchName-release,GitHub-Bloom-Linux-any-$branchName--JSTests")
 
-			common.addTriggerDownstreamBuildStep(delegate,
+			Common.addTriggerDownstreamBuildStep(delegate,
 				"GitHub-Bloom-Linux-any-$branchName-release-Tests, GitHub-Bloom-Win32-$branchName-release-Tests",
 				["ARTIFACTS_TAG":
 				"jenkins-GitHub-Bloom-Win32-$branchName-release-\${TRIGGERED_BUILD_NUMBERS_GitHub_Bloom_Win32_PR_debug}",
@@ -111,10 +111,10 @@ collects the results and reports them back to GitHub.</p>
 		publishers {
 			fingerprint('magic.txt')
 			archiveJunit("GitHub-Bloom-Linux-any-$branchName--JSTests-results/test-results.xml")
-			configure common.NUnitPublisher('**/BloomTests.dll.results.xml')
+			configure Common.NUnitPublisher('**/BloomTests.dll.results.xml')
 		}
 
-		common.buildPublishers(delegate, 365, 100)
+		Common.buildPublishers(delegate, 365, 100)
 	}
 
 	// *********************************************************************************************
@@ -126,13 +126,13 @@ collects the results and reports them back to GitHub.</p>
 
 		steps {
 			// Install certificates
-			common.addInstallPackagesBuildStep(delegate)
+			Common.addInstallPackagesBuildStep(delegate)
 
 			// Get dependencies
-			common.addGetDependenciesBuildStep(delegate)
+			Common.addGetDependenciesBuildStep(delegate)
 
 			// Build
-			common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+			Common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 		}
 	}
 
@@ -151,22 +151,22 @@ collects the results and reports them back to GitHub.</p>
 		customWorkspace "/home/jenkins/workspace/GitHub-Bloom-Linux-any-$branchName-release"
 
 		wrappers {
-			common.addXvfbBuildWrapper(delegate)
+			Common.addXvfbBuildWrapper(delegate)
 			runOnSameNodeAs("GitHub-Bloom-Linux-any-$branchName-release", true)
 		}
 
 		steps {
 			// Run unit tests
-			common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
+			Common.addXbuildBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}')
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFile(delegate)
+			Common.addMagicAggregationFile(delegate)
 		}
 
 		publishers {
 			fingerprint('magic.txt')
 			archiveArtifacts('output/Release/TestResults.xml')
-			configure common.NUnitPublisher('output/Release/TestResults.xml')
+			configure Common.NUnitPublisher('output/Release/TestResults.xml')
 		}
 	}
 
@@ -179,14 +179,14 @@ collects the results and reports them back to GitHub.</p>
 
 		steps {
 			// Get dependencies
-			common.addGetDependenciesWindowsBuildStep(delegate)
+			Common.addGetDependenciesWindowsBuildStep(delegate)
 
 			batchFile('''cd src\\BloomBrowserUI
 npm install
 npm run build
 ''')
 
-			common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
+			Common.addMsBuildStep(delegate, 'build\\Bloom.proj', '/t:Build /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 		}
 	}
 
@@ -208,16 +208,16 @@ npm run build
 
 		steps {
 			// Run unit tests
-			common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
+			Common.addMsBuildStep(delegate, 'build/Bloom.proj', '/t:TestOnly /p:BUILD_NUMBER=0.0.${BUILD_ID}.${GIT_COMMIT}', '.NET 4.5')
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFileWindows(delegate)
+			Common.addMagicAggregationFileWindows(delegate)
 		}
 
 		publishers {
 			fingerprint('magic.txt')
 			archiveArtifacts('output/Release/TestResults.xml')
-			configure common.NUnitPublisher('output/Release/TestResults.xml')
+			configure Common.NUnitPublisher('output/Release/TestResults.xml')
 		}
 	}
 
@@ -234,12 +234,12 @@ npm run build
 		label 'jstests'
 
 		wrappers {
-			common.addXvfbBuildWrapper(delegate)
+			Common.addXvfbBuildWrapper(delegate)
 		}
 
 		steps {
 			// Get dependencies
-			common.addGetDependenciesBuildStep(delegate)
+			Common.addGetDependenciesBuildStep(delegate)
 
 			// Install nodejs dependencies
 			Bloom.addInstallKarmaBuildStep(delegate)
@@ -248,7 +248,7 @@ npm run build
 			Bloom.addRunJsTestsBuildStep(delegate)
 
 			// this is needed so that upstream aggregation of unit tests works
-			common.addMagicAggregationFile(delegate)
+			Common.addMagicAggregationFile(delegate)
 		}
 
 		publishers {
