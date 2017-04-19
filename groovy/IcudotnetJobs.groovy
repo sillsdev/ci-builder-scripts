@@ -62,10 +62,15 @@ multibranchPipelineJob('icu4c') {
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
 
 	branchSources {
-		git {
-			remote('https://github.com/sillsdev/icu4c')
-			credentialsId('github-sillsdev')
+		github {
+			repoOwner('sillsdev')
+			repository('icu4c')
+			scanCredentialsId('github-sillsdev')
 			excludes('tags/*')
+			buildOriginBranch(true)
+			buildOriginBranchWithPR(false)
+			buildOriginPRMerge(true)
+			buildForkPRMerge(true)
 		}
 
 		orphanedItemStrategy {
