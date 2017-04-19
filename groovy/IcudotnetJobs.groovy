@@ -65,7 +65,7 @@ multibranchPipelineJob('icu4c') {
 		github {
 			repoOwner('sillsdev')
 			repository('icu4c')
-			scanCredentialsId('github-sillsdev')
+			scanCredentialsId('github-sillsdevgerrit')
 			excludes('tags/*')
 			buildOriginBranch(true)
 			buildOriginBranchWithPR(false)
