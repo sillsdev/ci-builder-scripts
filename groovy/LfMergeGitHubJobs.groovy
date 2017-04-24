@@ -11,7 +11,8 @@
 
 // *********************************************************************************************
 freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', true, true, true)
+	// Temporarily turned off LanguageForge dependency for PR builds until we get PHP 7 installed on the build agents. 2017-04-24 RM
+	LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', true, false, true)
 
 	description '''<p>Pre-merge Linux builds of master branch. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
