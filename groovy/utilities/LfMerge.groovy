@@ -135,7 +135,7 @@ if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 	php composer-setup.php
 	php -r "unlink('composer-setup.php');"
 	echo "Running composer install"
-	php composer.phar install
+	php composer.phar install --no-dev
 	echo $COMPOSERJSON > composer.json.sha
 	# git clean got rid of this, so create it again
 	touch mongodb.installed
