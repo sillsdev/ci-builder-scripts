@@ -46,7 +46,7 @@ freeStyleJob('Bloom_Packaging-Linux-all-3.7-release') {
 
 	wrappers {
 		timeout {
-			likelyStuck()
+			elastic(300, 3, 90)
 			abortBuild()
 			writeDescription("Build timed out after {0} minutes")
 		}
