@@ -150,7 +150,14 @@ yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
 yes | certmgr -ssl https://nuget.org
 xbuild /t:Test /property:Configuration=Release build/LfMerge.proj
-exit $?''')
+result=$?
+
+# Jenkins has problems using jgit to remove LinkedFiles directory with
+# non-ASCII characters in filenames, so we delete these here
+rm -rf data/testlangproj
+rm -rf data/testlangproj-modified
+exit $result
+''')
 
 			}
 
@@ -158,18 +165,6 @@ exit $?''')
 
 			publishers {
 				configure Common.NUnitPublisher('**/TestResults.xml')
-
-				postBuildScripts {
-					steps {
-						// Jenkins has problems using jgit to remove LinkedFiles directory with
-						// non-ASCII characters in filenames, so we delete these here
-						shell('''#!/bin/bash
-rm -rf data/testlangproj
-rm -rf data/testlangproj-modified
-''')
-					}
-					onlyIfBuildSucceeds(false)
-				}
 			}
 		}
 	}
