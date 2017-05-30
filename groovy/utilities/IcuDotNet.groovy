@@ -34,6 +34,9 @@ class IcuDotNet {
 						refspec(_refspec)
 					}
 					branch(_branch)
+					extensions {
+						cleanAfterCheckout()
+					}
 				}
 			}
 
@@ -60,6 +63,8 @@ class IcuDotNet {
 
 		jobContext.with {
 			steps {
+				// Call Compile and TestOnly as separate targets. This works around a mono bug where the Clean
+				// target deletes all files in the source tree.
 				shell('''#!/bin/bash
 ICUVER=$(icu-config --version|tr -d .|cut -c -2)
 
@@ -73,7 +78,8 @@ MONO_GAC_PREFIX="$MONO_PREFIX:/usr"
 
 export LD_LIBRARY_PATH PKG_CONFIG_PATH MONO_GAC_PREFIX
 
-xbuild /t:Test /property:Configuration=Release build/icu-dotnet.proj
+xbuild /t:Compile /property:Configuration=Release build/icu-dotnet.proj
+xbuild /t:TestOnly/property:Configuration=Release build/icu-dotnet.proj
 ''')
 			}
 		}
