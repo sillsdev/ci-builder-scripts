@@ -18,7 +18,7 @@ class icuDotNetViews {
 				filterExecutors false
 
 				jobs {
-					regex('(^IcuDotNet.*|^GitHub-IcuDotNet.*|icu4c)')
+					regex('(^IcuDotNet.*|^GitHub-IcuDotNet.*|icu4c|icu-dotnet)')
 				}
 
 				columns {
@@ -37,7 +37,6 @@ class icuDotNetViews {
 				categorizationCriteria {
 					regexGroupingRule('^IcuDotNet.*-any-master-release$', 'master branch jobs')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
-					regexGroupingRule('icu4c', 'Builds of icu4c')
 				}
 			}
 		}

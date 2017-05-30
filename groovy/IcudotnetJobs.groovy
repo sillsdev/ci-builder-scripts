@@ -57,6 +57,36 @@ freeStyleJob('GitHub-IcuDotNet-Win-any-master-release') {
 }
 
 // *********************************************************************************************
+multibranchPipelineJob('icu-dotnet') {
+	description '''<p>Builds of icu-dotnet</p>
+<p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
+
+	branchSources {
+		github {
+			repoOwner('sillsdev')
+			repository('icu-dotnet')
+			scanCredentialsId('github-sillsdevgerrit')
+			excludes('tags/*')
+			buildOriginBranch(true)
+			buildOriginBranchWithPR(false)
+			buildOriginPRMerge(true)
+			buildForkPRMerge(true)
+		}
+
+		orphanedItemStrategy {
+			discardOldItems {
+				numToKeep(10)
+			}
+		}
+
+		triggers {
+			// run once a day if not otherwise run
+			periodic(1440)
+		}
+	}
+}
+
+// *********************************************************************************************
 multibranchPipelineJob('icu4c') {
 	description '''<p>Builds of ICU4C nuget packages</p>
 <p>The job is created by the DSL plugin from <i>IcudotnetJobs.groovy</i> script.</p>'''
