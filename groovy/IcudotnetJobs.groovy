@@ -25,11 +25,6 @@ multibranchPipelineJob('icu-dotnet') {
 				numToKeep(10)
 			}
 		}
-
-		triggers {
-			// run once a day if not otherwise run
-			periodic(1440)
-		}
 	}
 }
 
@@ -54,11 +49,6 @@ multibranchPipelineJob('icu4c') {
 			discardOldItems {
 				numToKeep(10)
 			}
-		}
-
-		triggers {
-			// run once a day if not otherwise run
-			periodic(1440)
 		}
 	}
 }
