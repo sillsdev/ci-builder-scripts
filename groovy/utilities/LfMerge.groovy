@@ -116,13 +116,13 @@ if [ ! -f mongodb.installed ]; then
 	DEBIAN_FRONTEND=noninteractive
 	sudo apt-get -y install libpcre3-dev
 	sudo pecl install mongodb || true
-	if [ ! -f /etc/php5/mods-available/mongodb.ini ]; then
-		sudo mkdir -p /etc/php5/mods-available
-		sudo sh -c 'echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini'
+	if [ ! -f /etc/php/7.0/mods-available/mongodb.ini ]; then
+		sudo mkdir -p /etc/php/7.0/mods-available
+		sudo sh -c 'echo "extension=mongodb.so" >> /etc/php/7.0/mods-available/mongodb.ini'
 	fi
-	if [ ! -f /etc/php5/cli/conf.d/20-mongodb.ini ]; then
-		sudo mkdir -p /etc/php5/cli/conf.d
-		sudo ln -s /etc/php5/mods-available/mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
+	if [ ! -f /etc/php/7.0/cli/conf.d/20-mongodb.ini ]; then
+		sudo mkdir -p /etc/php/7.0/cli/conf.d
+		sudo ln -s /etc/php/7.0/mods-available/mongodb.ini /etc/php/7.0/cli/conf.d/20-mongodb.ini
 	fi
 	touch mongodb.installed
 fi
