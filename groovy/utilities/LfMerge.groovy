@@ -151,7 +151,7 @@ mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
 yes | certmgr -ssl https://nuget.org
-xbuild /t:Test /property:Configuration=Release build/LfMerge.proj
+xbuild /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
 result=$?
 
 # Jenkins has problems using jgit to remove LinkedFiles directory with

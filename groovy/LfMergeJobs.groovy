@@ -144,7 +144,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	cd lfmerge
 	git clean -dxf
 
-	xbuild /t:PrepareSource build/LfMerge.proj
+	xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	debian/PrepareSource \$curDbVersion
 
