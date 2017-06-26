@@ -117,9 +117,11 @@ if [ ! -f mongodb.installed ]; then
 	sudo apt-get -y install libpcre3-dev
 	sudo pecl install mongodb || true
 	if [ ! -f /etc/php5/mods-available/mongodb.ini ]; then
+		sudo mkdir -p /etc/php5/mods-available
 		sudo sh -c 'echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini'
 	fi
 	if [ ! -f /etc/php5/cli/conf.d/20-mongodb.ini ]; then
+		sudo mkdir -p /etc/php5/cli/conf.d
 		sudo ln -s /etc/php5/mods-available/mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
 	fi
 	touch mongodb.installed
