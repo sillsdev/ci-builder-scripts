@@ -109,6 +109,7 @@ cd lfmerge
 export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 xbuild /t:RestorePackages build/LfMerge.proj
+mkdir -p output/Release
 
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
 
