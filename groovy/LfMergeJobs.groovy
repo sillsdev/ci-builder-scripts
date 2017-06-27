@@ -20,6 +20,7 @@ def MinDbVersion = 7000068
 def MaxDbVersion = 7000070
 def MonoPrefix = '/opt/mono-sil'
 def MonoPrefixForPackaging = '/opt/mono4-sil'
+def buildAgent = 'ba-xenial-web-s2-138'
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
@@ -165,12 +166,12 @@ done
 
 			if (branchName == "master") {
 				// Last step: update lfmerge package on TeamCity build agent. 2016-05 RM
-				shell('''#!/bin/bash
+				shell("""#!/bin/bash
 echo Waiting 5 minutes for package to show up on LLSO
 sleep 300
-ssh ba-xenial64weba sudo apt update || true
-ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f lfmerge || true
-ssh ba-xenial64weba sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f || true''')
+ssh ${buildAgent} sudo apt update || true
+ssh ${buildAgent} sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f lfmerge || true
+ssh ${buildAgent} sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f || true""")
 			}
 		}
 
