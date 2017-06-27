@@ -19,6 +19,7 @@ def distro = 'xenial'
 def MinDbVersion = 7000068
 def MaxDbVersion = 7000070
 def MonoPrefix = '/opt/mono-sil'
+def MonoPrefixForPackaging = '/opt/mono4-sil'
 
 // *********************************************************************************************
 freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
@@ -104,7 +105,7 @@ for (branchName in ['master', 'live', 'qa']) {
 			shell("""#!/bin/bash -e
 cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
-export MONO_PREFIX=${MonoPrefix}
+export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 xbuild /t:RestorePackages build/LfMerge.proj
 
@@ -135,7 +136,7 @@ rm -f finalresults/*
 
 cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
-export MONO_PREFIX=${MonoPrefix}
+export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 
 cd -
