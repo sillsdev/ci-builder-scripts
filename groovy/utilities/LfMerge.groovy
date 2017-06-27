@@ -143,6 +143,15 @@ if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 	touch mongodb.installed
 fi
 ''')
+				// Download dependencies
+				// We use mono 4 for that because it fails with mono 3 due to some async bugs
+				shell('''#!/bin/bash -e
+echo "Downloading dependencies"
+export MONO_PREFIX=/opt/mono4-sil
+. environ
+xbuild /t:DownloadDependencies build/LfMerge.proj
+''')
+
 				// Compile and run tests
 				shell('''#!/bin/bash -e
 echo "Compiling LfMerge and running unit tests"
