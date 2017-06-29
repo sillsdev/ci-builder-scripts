@@ -2,6 +2,8 @@
  * DSL script for package builder Jenkins jobs
  */
 
+def distros = "precise trusty xenial wheezy jessie"
+
 freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
     description '''
 <p>Maintenance job that updates all chroot instances for pbuilder</p>
@@ -13,7 +15,7 @@ freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
 	logRotator(365, 100, 10, 10)
 
 	parameters {
-		stringParam("Distributions", "precise trusty wily xenial wheezy jessie",
+		stringParam("Distributions", distros,
 			"The distributions to update")
 	}
 

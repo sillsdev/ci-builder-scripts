@@ -2,7 +2,7 @@
 
 stderr()
 {
-	echo >&2 "$PROGRAM_NAME: $1"
+	echo -e "${RED}$PROGRAM_NAME: $1${NC}" >&2
 }
 
 init()
@@ -79,4 +79,8 @@ init()
 	else
 		VCS=git
 	fi
+
+	RED='\033[0;31m'
+	GREEN='\033[0;32m'
+	NC='\033[0m' # No Color
 }
