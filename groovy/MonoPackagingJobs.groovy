@@ -3,7 +3,7 @@
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
-def distros_tobuild = "precise trusty xenial"
+def distros_tobuild = "trusty xenial"
 def email = "eb1@sil.org"
 
 static String GetPackageName(repo, branchName) {

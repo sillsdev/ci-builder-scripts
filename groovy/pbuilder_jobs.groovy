@@ -2,7 +2,7 @@
  * DSL script for package builder Jenkins jobs
  */
 
-def distros = "precise trusty xenial wheezy jessie"
+def distros = "trusty xenial jessie"
 
 freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
     description '''

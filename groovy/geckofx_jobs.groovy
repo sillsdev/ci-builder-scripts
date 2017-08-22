@@ -4,7 +4,7 @@
 //#include utilities/Common.groovy
 
 // Variables
-def distros_tobuild = 'precise trusty wily xenial';
+def distros_tobuild = 'trusty xenial';
 def revision = "\$(echo \${MERCURIAL_REVISION_SHORT} | cut -b 1-6)";
 
 /*
