@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 SIL International
+ * Copyright (c) 2016-2017 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
@@ -12,13 +12,15 @@ static String GetPackageName(repo, branchName) {
 		ext = '2'
 	}
 	if (branchName == 'develop') {
-		ext = '4'
+		ext = '5'
+	} else if (branchName ==~ /release\/mono([0-9]+)/){
+		ext = (branchName =~ /release\/mono([0-9]+)/)[0][1]
 	}
 	return "${repo}${ext}-sil"
 }
 
 for (repo in [ 'mono', 'gtk-sharp', 'libgdiplus', 'mono-basic']) {
-	for (branchName in ['develop', 'release/mono-sil-3.4']) {
+	for (branchName in ['develop', 'release/mono-sil-3.4', 'release/mono4-sil']) {
 		def packageName = GetPackageName(repo, branchName)
 
 		freeStyleJob("${repo.capitalize().replace('-', '')}_NightlyPackaging-Linux-all-${branchName.replace('/', '_').replace('-', '_')}-debug") {
