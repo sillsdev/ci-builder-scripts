@@ -1,8 +1,11 @@
 # Jenkins Job Definitions
 
-This repo contains definitions of our Jenkins jobs.
+This repo contains definitions of our Jenkins jobs (consisting of groovy
+scripts) as well as shell scripts used in these jobs. Additional shell
+scripts can be found in the [FwSupportTools](https://github.com/sillsdev/FwSupportTools) repo.
 
-[//]: # (see https://github.com/sheehan/job-dsl-gradle-example for setup of gradle)
+(see [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example)
+for setup of gradle)
 
 ## File Structure
 
@@ -18,4 +21,3 @@ This repo contains definitions of our Jenkins jobs.
     │       └── groovy          # specs
     ├── Tests                   # NUnit tests
     └── build.gradle            # build file
-
