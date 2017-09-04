@@ -23,16 +23,15 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 /*
  * We have two jobs on two different branches for beta/release ('master') and alpha ('develop')
  */
-for (version in ['master']) {
-	switch (version) {
+for (branch in ['master']) {
+	switch (branch) {
 		case 'master':
-			branch = 'master'
 			subdir_name = 'wesay'
 			kind = 'release'
 			break
 	}
 
-	freeStyleJob("WeSay_Packaging-Linux-all-${version}-${kind}") {
+	freeStyleJob("WeSay_Packaging-Linux-all-${branch}-${kind}") {
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
 			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, '.',
@@ -56,6 +55,18 @@ for (version in ['master']) {
 				abortBuild()
 				writeDescription("Build timed out after {0} minutes")
 			}
+		}
+
+		steps {
+			shell("""#!/bin/bash
+cd "${subdir_name}"
+echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > packageversion.properties
+""")
+			environmentVariables {
+				propertiesFile("${subdir_name}/packageversion.properties")
+			}
+
+			Common.addBuildNumber(delegate, 'PackageVersion')
 		}
 	}
 }
