@@ -5,6 +5,11 @@ stderr()
 	echo -e "${RED}$PROGRAM_NAME: $1${NC}" >&2
 }
 
+log()
+{
+	echo -e "${GREEN}$PROGRAM_NAME: $1${NC}" >&2
+}
+
 init()
 {
 	# Process arguments.
@@ -49,6 +54,10 @@ init()
 			# This directory is relative to $repo_base_dir.
 			--source-code-subdir) shift; source_package_dir=$1 ;;
 			--no-package) no_package=true ;;
+			# append the argument to the package name. Only relevant for make-source.
+			--append-to-package) shift; append_to_package=$1;;
+			# use current directory to build source package instead of $repo_base_dir/${$source_package_name}
+			--build-in-place) build_in_place=true ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2
