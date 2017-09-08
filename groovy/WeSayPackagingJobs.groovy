@@ -23,7 +23,7 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 /*
  * We have two jobs on two different branches for beta/release ('master') and alpha ('develop')
  */
-for (branch in ['master']) {
+for (branch in ['master', 'develop']) {
 	switch (branch) {
 		case 'master':
 			subdir_name = 'wesay'
