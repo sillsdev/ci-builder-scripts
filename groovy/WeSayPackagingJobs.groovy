@@ -49,8 +49,8 @@ for (branch in ['master', 'develop']) {
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
 			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
-			/* extraSourceArgs: */ extraParameter, /* extraBuildArgs: */ '',
-			/* fullBuildNumber: */ fullBuildNumber)
+			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
+			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
 
 		description """
 <p>Automatic ("nightly") builds of the WeSay ${branch} branch.</p>
