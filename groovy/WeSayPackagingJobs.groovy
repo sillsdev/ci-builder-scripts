@@ -41,8 +41,10 @@ for (branch in ['master']) {
 
 	freeStyleJob("WeSay_Packaging-Linux-all-${branch}-${kind}") {
 
+		mainRepoDir = '.'
+
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, '.',
+			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false)
 
 		description """
@@ -81,7 +83,7 @@ cd "${subdir_name}"
 \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
 	--main-package-name "${packagename}" \
-	--supported-distros "${supported_distros}" \
+	--supported-distros "\$DistributionsToPackage" \
 	--debkeyid \$DEBSIGNKEY \
 	--main-repo-dir ${mainRepoDir} \
 	${extraParameter} \
@@ -91,7 +93,7 @@ cd "${subdir_name}"
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
 	--main-package-name "${packagename}" \
-	--supported-distros "${supported_distros}" \
+	--supported-distros "\$DistributionsToPackage" \
 	--debkeyid \$DEBSIGNKEY \
 	\$BUILD_PACKAGE_ARGS
 
