@@ -58,6 +58,8 @@ init()
 			--append-to-package) shift; append_to_package=$1;;
 			# use current directory to build source package instead of $repo_base_dir/${$source_package_name}
 			--build-in-place) build_in_place=true ;;
+			# use argument as delimiter that seperates the version number from the 'nightly' string
+			--nightly-delimiter) shift; nightlydelimeter=$1;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2

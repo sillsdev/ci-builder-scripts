@@ -20,7 +20,10 @@ class Common {
 		buildMasterBranch = true,
 		addParameters = true,
 		addSteps = true,
-		resultsDir = "results") {
+		resultsDir = "results",
+		extraSourceArgs = "",
+		extraBuildArgs = "",
+		fullBuildNumber = "0.0.\$BUILD_NUMBER.${revision}") {
 
 		jobContext.with {
 
@@ -53,7 +56,7 @@ class Common {
 				// See the LfMergeJobs.groovy script for an example.
 				steps {
 					shell("""#!/bin/bash
-export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
+export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
@@ -71,6 +74,7 @@ cd "${subdir_name}"
 	--debkeyid \$DEBSIGNKEY \
 	--main-repo-dir ${mainRepoDir} \
 	${package_version} \
+	${extraSourceArgs} \
 	\$MAKE_SOURCE_ARGS
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
@@ -78,6 +82,7 @@ cd "${subdir_name}"
 	--main-package-name "${packagename}" \
 	--supported-distros "${supported_distros}" \
 	--debkeyid \$DEBSIGNKEY \
+	${extraBuildArgs} \
 	\$BUILD_PACKAGE_ARGS""")
 				}
 			}
