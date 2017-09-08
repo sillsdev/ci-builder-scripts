@@ -29,17 +29,18 @@ for (branch in ['master', 'develop']) {
 			subdir_name = 'wesay'
 			kind = 'release'
 			packagename = 'wesay'
-			extraParameter = '--nightly-delimiter "~"'
+			extraParameter = ''
 			break
 		case 'develop':
 			subdir_name = 'wesay-alpha'
 			kind = 'alpha'
 			packagename = 'wesay-alpha'
-			extraParameter = '--append-to-package -alpha --nightly-delimiter "~"'
+			extraParameter = '--append-to-package -alpha'
 			break
 	}
 
-	def package_version = """--package-version "${fullBuildNumber}" """
+	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name} ${extraParameter}"
+	package_version = """--package-version "${fullBuildNumber}" """
 
 	freeStyleJob("WeSay_Packaging-Linux-all-${branch}-${kind}") {
 
