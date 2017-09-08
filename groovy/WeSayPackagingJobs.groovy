@@ -28,6 +28,14 @@ for (branch in ['master']) {
 		case 'master':
 			subdir_name = 'wesay'
 			kind = 'release'
+			packagename = 'wesay'
+			extraParameter = ''
+			break
+		case 'develop':
+			subdir_name = 'wesay-alpha'
+			kind = 'alpha'
+			packagename = 'wesay-alpha'
+			extraParameter = '--append-to-package -alpha'
 			break
 	}
 
@@ -35,7 +43,7 @@ for (branch in ['master']) {
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
 			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, '.',
-			/* buildMasterBranch: */ false)
+			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false)
 
 		description """
 <p>Automatic ("nightly") builds of the WeSay ${branch} branch.</p>
@@ -59,9 +67,37 @@ for (branch in ['master']) {
 
 		steps {
 			shell("""#!/bin/bash
+export FULL_BUILD_NUMBER=0.0.\$BUILD_NUMBER.${revision}
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+fi
+
 cd "${subdir_name}"
+\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${supported_distros}" \
+	--debkeyid \$DEBSIGNKEY \
+	--main-repo-dir ${mainRepoDir} \
+	${extraParameter} \
+	${package_version} \
+	\$MAKE_SOURCE_ARGS
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${supported_distros}" \
+	--debkeyid \$DEBSIGNKEY \
+	\$BUILD_PACKAGE_ARGS
+
 echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > packageversion.properties
 """)
+
 			environmentVariables {
 				propertiesFile("${subdir_name}/packageversion.properties")
 			}
