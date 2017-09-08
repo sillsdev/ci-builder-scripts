@@ -3,6 +3,11 @@
 /.idea/
 /.gradle/
 /build/
+/bin/
 /classes/
 /target/
+.vscode/launch.json
 ci-builder-scripts.iml
+.classpath
+.project
+.settings/org.eclipse*
