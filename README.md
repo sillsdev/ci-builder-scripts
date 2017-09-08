@@ -4,9 +4,6 @@ This repo contains definitions of our Jenkins jobs (consisting of groovy
 scripts) as well as shell scripts used in these jobs. Additional shell
 scripts can be found in the [FwSupportTools](https://github.com/sillsdev/FwSupportTools) repo.
 
-(see [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example)
-for setup of gradle)
-
 ## File Structure
 
     .
@@ -21,3 +18,19 @@ for setup of gradle)
     │       └── groovy          # specs
     ├── Tests                   # NUnit tests
     └── build.gradle            # build file
+
+## Information for developers
+
+The Jenkins jobs will be created by the `Job-Wrapper-Seed-debug` job which runs some tests and
+then executes the groovy scripts.
+
+The tests can be run on a local machine by running:
+
+	./gradlew clean test
+
+This can helpful because it reveals any syntax errors in the scripts.
+
+The tests can also be run by the included VS Code task.
+
+(see [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example)
+for additional information about the setup of gradle)
