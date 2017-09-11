@@ -66,7 +66,7 @@ for (branch in ['master', 'develop']) {
 
 		wrappers {
 			timeout {
-				elastic(300, 3, 90)
+				elastic(300, 3, 120)
 				abortBuild()
 				writeDescription("Build timed out after {0} minutes")
 			}
