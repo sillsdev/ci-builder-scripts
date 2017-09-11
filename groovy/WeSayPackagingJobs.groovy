@@ -57,6 +57,10 @@ for (branch in ['master', 'develop']) {
 <p>The job is created by the DSL plugin from <i>WeSayPackagingJobs.groovy</i> script.</p>
 """
 
+		// TriggerToken needs to be set in the seed job! Note that we use the
+		// `binding.variables.*` notation so that it works when we build the tests.
+		authenticationToken(binding.variables.TriggerToken)
+
 		triggers {
 			githubPush()
 		}
