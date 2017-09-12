@@ -46,7 +46,8 @@ done
 log "Building binary package(s)"
 
 cd "$repo_base_dir"
-packagedsc="${source_package_name}_*.dsc"
+DSCNAME=$(ls ${source_package_name}_*.dsc)
+packagedsc="${DSCNAME#${source_package_name}_}"
 sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$PBUILDER_TOOLS_PATH/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" FULL_BUILD_NUMBER="$FULL_BUILD_NUMBER" $PBUILDER_TOOLS_PATH/build-multi.sh "$packagedsc"
 
 log "Signing package(s)"
