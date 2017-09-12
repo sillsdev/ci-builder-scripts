@@ -10,11 +10,11 @@ init "$@"
 
 # Don't try to process 32-bit package products if they are all architectureless.
 grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" || {
-    stderr "All binary packages are listed as 'all' architecture. Resetting --arches to 'amd64'."
-    ARCHES_TO_PACKAGE="amd64"
+	log "All binary packages are listed as 'all' architecture. Resetting --arches to 'amd64'."
+	ARCHES_TO_PACKAGE="amd64"
 }
 
-stderr "Removing old packages"
+log "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
@@ -24,7 +24,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-stderr "Preparing for building binary package(s)"
+log "Preparing for building binary package(s)"
 
 mkdir -p "$pbuilder_path"
 
@@ -35,21 +35,21 @@ mkdir -p "$pbuilder_path"
 
 # Make sure base.tgz is in place for any distributions being used.
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
-    for arch in $ARCHES_TO_PACKAGE; do
-        if [ ! -e "$pbuilder_path"/$distribution/$arch/base.tgz ]; then
-            PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
+	for arch in $ARCHES_TO_PACKAGE; do
+		if [ ! -e "$pbuilder_path"/$distribution/$arch/base.tgz ]; then
+			PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
 				$PBUILDER_TOOLS_PATH/setup.sh
-        fi
-    done
+		fi
+	done
 done
 
-stderr "Building binary package(s)"
+log "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc="${source_package_name}_*.dsc"
 sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$PBUILDER_TOOLS_PATH/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" FULL_BUILD_NUMBER="$FULL_BUILD_NUMBER" $PBUILDER_TOOLS_PATH/build-multi.sh "$packagedsc"
 
-stderr "Signing package(s)"
+log "Signing package(s)"
 
 cd "$pbuilder_path"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
@@ -65,7 +65,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-stderr "Binary package files exist with the following sha256sums:"
+log "Binary package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
@@ -75,20 +75,20 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-stderr "Results:"
+log "Results:"
 any_failures=false
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-    for arch in $ARCHES_TO_PACKAGE; do
-        RESULT="$pbuilder_path/$dist/$arch/result/${source_package_name}_*.status"
-        echo $RESULT:
-        cat $RESULT
-        grep -q '^0$' $RESULT || any_failures=true
-    done
+	for arch in $ARCHES_TO_PACKAGE; do
+		RESULT="$pbuilder_path/$dist/$arch/result/${source_package_name}_*.status"
+		echo $RESULT:
+		cat $RESULT
+		grep -q '^0$' $RESULT || any_failures=true
+	done
 done
 
 if [ "$any_failures" = "true" ]; then
-    stderr "One or more failures detected. Not uploading any packages."
-    exit 100
+	stderr "Error: One or more failures detected. Not uploading any packages."
+	exit 100
 fi
 
 if [ -n "$no_upload" ]; then
@@ -96,7 +96,7 @@ if [ -n "$no_upload" ]; then
 	exit 0
 fi
 
-stderr "Upload binary packages"
+log "Upload binary packages"
 cd "$pbuilder_path"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
@@ -107,7 +107,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-stderr "Upload source package"
+log "Upload source package"
 cd "$repo_base_dir"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	dput $dput_simulate -U llso:ubuntu/$dist-$SUITE_NAME ${source_package_name}_*source.changes
