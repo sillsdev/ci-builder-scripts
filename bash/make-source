@@ -85,7 +85,15 @@ elif [ -n "$DEBSIGNKEY" ]; then
 	signing_opt="-k$DEBSIGNKEY"
 	echo "Setting signing opts to ^$signing_opt^"
 fi
-debuild -S -sa -Zxz $signing_opt
+
+if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
+	log "Native package. Building original source package."
+	dpkg-source -b .
+	mv ../${source_package_name}_$(dpkg-parsechangelog --show-field=Version){,.orig}.tar.xz
+	debuild -S -sa -Zxz $signing_opt --source-option=--format="3.0 (quilt)"
+else
+	debuild -S -sa -Zxz $signing_opt
+fi
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then
