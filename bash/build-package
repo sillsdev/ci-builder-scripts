@@ -65,13 +65,15 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-log "Binary package files exist with the following sha256sums:"
+log "Package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		mkdir -p "$WORKSPACE/results"
 		dcmd --deb --changes sha256sum ${source_package_name}_*.changes || true
 		dcmd --deb --changes cp ${source_package_name}_*.changes $WORKSPACE/results/
+		dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
+		dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $WORKSPACE/results/
 	done
 done
 
