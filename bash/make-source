@@ -96,7 +96,7 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 		dpkg-source --tar-ignore=debian -b .
 		mv ../${source_package_name}_${native_version}{,.orig}.tar.xz
 	else
-		trap "cd $repo_base_dir && git checkout debian/source/format .gitattributes debian/changelog" EXIT
+		[ -n "$build_in_place" ] && trap "cd $repo_base_dir && git checkout debian/source/format .gitattributes debian/changelog" EXIT
 		echo "debian/ export-ignore" >> .gitattributes
 		for line in $(cat debian/source/options); do
 			echo "${line#tar-ignore=} export-ignore" >> .gitattributes

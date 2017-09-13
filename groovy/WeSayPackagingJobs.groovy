@@ -79,11 +79,11 @@ for (branch in ['master', 'develop']) {
 		steps {
 			shell("""#!/bin/bash
 cd "${subdir_name}"
-echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > packageversion.properties
+echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
 """)
 
 			environmentVariables {
-				propertiesFile("${subdir_name}/packageversion.properties")
+				propertiesFile("${packagename}-packageversion.properties")
 			}
 
 			Common.addBuildNumber(delegate, 'PackageVersion')
