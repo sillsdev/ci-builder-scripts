@@ -21,7 +21,7 @@ if [ -n "$append_to_package" ]; then
 fi
 
 # Clean out old packages
-rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*}
+rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*,log}
 
 # Add entry to debian/changelog
 if [ "$VCS" = "hg" ]; then
