@@ -3,8 +3,9 @@
 # set supported distros and architectures
 
 PROGRAM_NAME="$(basename "$0")"
+PROGRAM_DIR="$(dirname "$0")"
 
-. $(dirname "$0")/common.sh
+. ${PROGRAM_DIR}/common.sh
 init "$@"
 
 log "Preparing"
@@ -15,7 +16,7 @@ mkdir -p "$pbuilder_path"
 if [ -n "$append_to_package" ]; then
 	NEWPACKAGENAME="--package=${source_package_name}${append_to_package}"
 	source_package_name=${source_package_name}${append_to_package}
-	$(dirname "$0")/change-package-name.pl $append_to_package
+	${PROGRAM_DIR}/change-package-name.pl $append_to_package
 	sed -e "s/^PACKAGENAME *=.*/&${append_to_package}/" -e "s/^APPEND *=.*/&${append_to_package}/" -i debian/rules
 fi
 
@@ -65,15 +66,18 @@ if [ -n "$most_recent_tag" ]; then
 	changelog_message="See git log $most_recent_tag..$hash_of_current_commit"
 fi
 if [ -z "$preserve_changelog_arg" ]; then
-	log "Using package version: $nightlyversion for $distribution_of_last_change"
+	log "Using package version: $nightlyversion-1 for $distribution_of_last_change"
 	dch --distribution $distribution_of_last_change --force-distribution --upstream \
-		$NEWPACKAGENAME --newversion "$nightlyversion" --force-bad-version "$changelog_message"
+		$NEWPACKAGENAME --newversion "$nightlyversion-1" --force-bad-version "$changelog_message"
+	native_version=$nightlyversion
 elif [ -n "${package_version}" ]; then
-	log "Using package version: $base_version for $distribution_of_last_change"
+	log "Using package version: $base_version-1 for $distribution_of_last_change"
 	dch --distribution $distribution_of_last_change --force-distribution --upstream \
-		$NEWPACKAGENAME --newversion "$base_version" --force-bad-version "$changelog_message"
+		$NEWPACKAGENAME --newversion "$base_version-1" --force-bad-version "$changelog_message"
+	native_version=$base_version
 else
 	log "Using package version: $latest_version_in_debian_changelog"
+	native_version=$latest_version_in_debian_changelog
 fi
 
 log "Building source package:"
@@ -88,12 +92,22 @@ fi
 
 if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	log "Native package. Building original source package."
-	dpkg-source -b .
-	mv ../${source_package_name}_$(dpkg-parsechangelog --show-field=Version){,.orig}.tar.xz
-	debuild -S -sa -Zxz $signing_opt --source-option=--format="3.0 (quilt)"
-else
-	debuild -S -sa -Zxz $signing_opt
+	if [ "$VCS" = "hg" ]; then
+		dpkg-source --tar-ignore=debian -b .
+		mv ../${source_package_name}_${native_version}{,.orig}.tar.xz
+	else
+		trap "cd $repo_base_dir && git checkout debian/source/format .gitattributes debian/changelog" EXIT
+		echo "debian/ export-ignore" >> .gitattributes
+		for line in $(cat debian/source/options); do
+			echo "${line#tar-ignore=} export-ignore" >> .gitattributes
+		done
+		echo "git archive --format=tar --worktree-attributes HEAD | xz -c > ../${source_package_name}_${native_version}.orig.tar.xz"
+		git archive --format=tar --worktree-attributes HEAD | xz -c > ../${source_package_name}_${native_version}.orig.tar.xz
+	fi
+	echo "3.0 (quilt)" > debian/source/format
 fi
+
+debuild -S -sa -Zxz ${signing_opt}
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then

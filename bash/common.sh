@@ -85,6 +85,10 @@ init()
 		source_package_name=$(dpkg-parsechangelog |grep ^Source:|cut -d' ' -f2)
 	fi
 
+	if [ -n "$build_in_place" ]; then
+		repo_base_dir=$PWD
+	fi
+
 	if [ -d ".hg" ]; then
 		VCS=hg
 	else
