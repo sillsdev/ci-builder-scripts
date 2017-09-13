@@ -96,7 +96,7 @@ if [ -n "$no_upload" ]; then
 	exit 0
 fi
 
-log "Upload binary packages"
+log "Upload packages"
 cd "$pbuilder_path"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
@@ -105,14 +105,6 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			dput $dput_simulate -U llso:ubuntu/$dist-$SUITE_NAME ${source_package_name}_*.changes
 		fi
 	done
-done
-
-log "Upload source package"
-cd "$repo_base_dir"
-for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-	dput $dput_simulate -U llso:ubuntu/$dist-$SUITE_NAME ${source_package_name}_*source.changes
-	# uploading once is sufficient, so we break here
-	break
 done
 
 exit 0
