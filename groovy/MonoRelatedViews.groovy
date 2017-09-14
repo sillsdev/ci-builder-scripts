@@ -38,11 +38,14 @@ class monoRelatedViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^(Mono|Gtk|Libgdiplus).*-any-develop-debug$', 'develop branch jobs (Mono 4.4)')
+					regexGroupingRule('^(Mono|Gtk|Libgdiplus).*-any-develop-debug$', 'develop branch jobs (Mono 5.4)')
+					regexGroupingRule('^(Mono|Gtk|Libgdiplus).*-any-release_mono4_sil-debug$', 'release/mono4-sil branch jobs (Mono 4.6)')
 					regexGroupingRule('^(Mono|Gtk|Libgdiplus).*-any-release_mono_sil_3.4-debug$', 'release/mono-sil-3.4 branch jobs (Mono 3.4)')
-					regexGroupingRule('.*(Packaging).*-develop-.*', 'Package builds of develop branch (Mono 4.4)')
+					regexGroupingRule('.*(Packaging).*-develop-.*', 'Package builds of develop branch (Mono 5.4)')
+					regexGroupingRule('.*(Packaging).*-release_mono4_sil-.*', 'Package builds of release/mono4-sil branch (Mono 4.6)')
 					regexGroupingRule('.*(Packaging).*-release_mono_sil_3.4-.*', 'Package builds of release/mono-sil-3.4 branch (Mono 3.4)')
-					regexGroupingRule('^Gerrit-(Mono|Gtk|Libgdiplus).*-develop-.*', 'Gerrit builds for Mono 4.4 (develop branch)')
+					regexGroupingRule('^Gerrit-(Mono|Gtk|Libgdiplus).*-develop-.*', 'Gerrit builds for Mono 5.4 (develop branch)')
+					regexGroupingRule('^Gerrit-(Mono|Gtk|Libgdiplus).*-release_mono4_sil-.*', 'Gerrit builds for Mono 4.6 (release/mono4-sil branch)')
 					regexGroupingRule('^Gerrit-(Mono|Gtk|Libgdiplus).*-release_mono_sil_3.4-.*', 'Gerrit builds for Mono 3.4 (release/mono-sil-3.4 branch)')
 				}
 			}
@@ -77,7 +80,8 @@ class monoRelatedViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('.*-develop-.*', 'Package builds of develop branch (Mono 4.4)')
+					regexGroupingRule('.*-develop-.*', 'Package builds of develop branch (Mono 5.4)')
+					regexGroupingRule('.*-release_mono4_sil-.*', 'Package builds of release/mono4-sil branch (Mono 4.6)')
 					regexGroupingRule('.*-release_mono_sil_3.4-.*', 'Package builds of release/mono-sil-3.4 branch (Mono 3.4)')
 				}
 			}

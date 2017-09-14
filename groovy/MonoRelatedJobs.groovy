@@ -17,7 +17,7 @@
 
 for (type in ['', 'Gerrit']) {
 	for (repo in ['mono', 'gtk-sharp', 'libgdiplus', 'mono-basic']) {
-		for (branchName in ['develop', 'release/mono-sil-3.4']) {
+		for (branchName in ['develop', 'release/mono-sil-3.4', 'release/mono4-sil']) {
 			def isGerritBuild = (type == 'Gerrit')
 
 			freeStyleJob("${isGerritBuild ? type + '-' : ''}${repo.capitalize().replace('-', '')}-Linux-any-${branchName.replace('/', '_').replace('-', '_')}-debug") {
@@ -93,6 +93,8 @@ for (type in ['', 'Gerrit']) {
 
 				steps {
 					if (branchName == 'develop')
+						MONO_PREFIX="/opt/mono5-sil"
+					else if (branchName == 'release/mono4-sil')
 						MONO_PREFIX="/opt/mono4-sil"
 					else
 						MONO_PREFIX="/opt/mono-sil"
