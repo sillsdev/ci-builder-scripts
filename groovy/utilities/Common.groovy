@@ -344,12 +344,25 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 		}
 	}
 
-	static void addNUnitPublisher(publisherContext, results, failIfNotPresent = true) {
+	static void addNUnitPublisher(publisherContext, results, failIfNotPresent = true, failedThresholdsClosure = null, skippedThresholdsClosure = null) {
 		publisherContext.with {
 			archiveXUnit {
 				nUnit{
 					pattern(results)
 					skipNoTestFiles(!failIfNotPresent)
+				}
+				if (failedThresholdsClosure) {
+					failedThresholdsClosure()
+				} // else use default, which is 0 for everything
+				if (skippedThresholdsClosure) {
+					skippedThresholdsClosure()
+				} else {
+					skippedThresholds {
+						failure(999999)
+						failureNew(999999)
+						unstable(999999)
+						unstableNew(999999)
+					}
 				}
 			}
 		}
