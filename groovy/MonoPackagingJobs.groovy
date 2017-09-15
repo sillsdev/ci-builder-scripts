@@ -13,8 +13,8 @@ static String GetPackageName(repo, branchName) {
 	}
 	if (branchName == 'develop') {
 		ext = '5'
-	} else if (branchName ==~ /release\/mono([0-9]+)/){
-		ext = (branchName =~ /release\/mono([0-9]+)/)[0][1]
+	} else if (branchName ==~ /release\/mono([0-9]+)-sil/){
+		ext = (branchName =~ /release\/mono([0-9]+)-sil/)[0][1]
 	}
 	return "${repo}${ext}-sil"
 }
