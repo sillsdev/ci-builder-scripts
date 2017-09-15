@@ -344,6 +344,17 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 		}
 	}
 
+	static void addNUnitPublisher(publisherContext, results, failIfNotPresent = true) {
+		publisherContext.with {
+			archiveXUnit {
+				nUnit{
+					pattern(results)
+					skipNoTestFiles(!failIfNotPresent)
+				}
+			}
+		}
+	}
+
 	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux', whitelistArgs = '') {
 		jobContext.with {
 			parameters {

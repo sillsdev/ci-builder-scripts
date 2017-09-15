@@ -45,7 +45,7 @@ xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:Configuratio
 	}
 
 	publishers {
-		configure Common.NUnitPublisher('**/TestResults.xml')
+		Common.addNUnitPublisher(delegate, '**/TestResults.xml')
 	}
 }
 
@@ -65,7 +65,7 @@ freeStyleJob('GitHub-Chorus-Win32-lfmerge-release') {
 	}
 
 	publishers {
-		configure Common.NUnitPublisher('**/TestResults.xml')
+		Common.addNUnitPublisher(delegate, '**/TestResults.xml')
 	}
 }
 
@@ -93,7 +93,7 @@ xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NU
 	}
 
 	publishers {
-		configure Common.NUnitPublisher('**/TestResults.xml')
+		Common.addNUnitPublisher(delegate, '**/TestResults.xml')
 	}
 }
 
@@ -113,6 +113,6 @@ freeStyleJob('GitHub-FlexBridge-Win32-lfmerge-release') {
 	}
 
 	publishers {
-		configure Common.NUnitPublisher('**/TestResults.xml')
+		Common.addNUnitPublisher(delegate, '**/TestResults.xml')
 	}
 }

@@ -175,7 +175,7 @@ exit $result
 			Common.buildPublishers(delegate, 365, 100)
 
 			publishers {
-				configure Common.NUnitPublisher('**/TestResults.xml')
+				Common.addNUnitPublisher(delegate, '**/TestResults.xml')
 			}
 		}
 	}
