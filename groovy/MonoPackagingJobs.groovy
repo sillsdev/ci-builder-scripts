@@ -105,6 +105,12 @@ exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + pac
     $Simulate $PreserveChangelog \\
     --debkeyid 90872B06
 ''')
+
+				environmentVariables {
+					propertiesFile("${packagename}-packageversion.properties")
+				}
+
+				Common.addBuildNumber(delegate, 'PACKAGE_VERSION')
 			}
 
 			publishers {
