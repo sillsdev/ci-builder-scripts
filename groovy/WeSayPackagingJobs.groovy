@@ -8,7 +8,7 @@
 def packagename = 'WeSay'
 def distros_tobuild = 'trusty xenial'
 def repo = 'git://github.com/sillsdev/wesay.git'
-def email_recipients = 'eb1@sil.org'
+def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
@@ -26,10 +26,10 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 for (branch in ['master', 'develop']) {
 	switch (branch) {
 		case 'master':
-			subdir_name = 'wesay'
-			kind = 'release'
-			packagename = 'wesay'
-			extraParameter = ''
+			subdir_name = 'wesay-beta'
+			kind = 'beta'
+			packagename = 'wesay-beta'
+			extraParameter = '--append-to-package -beta'
 			break
 		case 'develop':
 			subdir_name = 'wesay-alpha'
