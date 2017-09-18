@@ -83,6 +83,8 @@ fi
 if [ -x "build/buildupdate.mono.sh" ]; then
 	log "Getting artifacts from TeamCity:"
 	./build/buildupdate.mono.sh
+	git add .
+	git commit -m "teamcity artifacts"
 fi
 
 log "Building source package:"
@@ -111,6 +113,10 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	fi
 	echo "3.0 (quilt)" > debian/source/format
 	debuild_opts="--source-option=--include-binaries"
+fi
+
+if [ -x "build/buildupdate.mono.sh" ]; then
+	git reset HEAD~1
 fi
 
 debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
