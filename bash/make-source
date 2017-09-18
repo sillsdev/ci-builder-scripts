@@ -65,15 +65,12 @@ changelog_message="Built from commit $hash_of_current_commit"
 if [ -n "$most_recent_tag" ]; then
 	changelog_message="See git log $most_recent_tag..$hash_of_current_commit"
 fi
+
 if [ -z "$preserve_changelog_arg" ]; then
 	log "Using package version: $nightlyversion-1 for $distribution_of_last_change"
-	# Don't change distribution here - we don't want to create a new changelog entry!
-	dch $NEWPACKAGENAME --newversion "$nightlyversion-1" --force-bad-version "$changelog_message"
 	native_version=$nightlyversion
 elif [ -n "${package_version}" ]; then
 	log "Using package version: $base_version-1 for $distribution_of_last_change"
-	# Don't change distribution here - we don't want to create a new changelog entry!
-	dch $NEWPACKAGENAME --newversion "$base_version-1" --force-bad-version "$changelog_message"
 	native_version=$base_version
 else
 	log "Using package version: $latest_version_in_debian_changelog"
@@ -104,6 +101,11 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	debuild_opts="--source-option=--include-binaries"
 fi
 
+if [ -z "$preserve_changelog_arg" -o -n "${package_version}" ]; then
+	# Don't change distribution here - we don't want to create a new changelog entry!
+	dch $NEWPACKAGENAME --newversion "$nightlyversion-1" --force-bad-version "$changelog_message"
+fi
+
 echo "debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}"
 debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
 
@@ -114,4 +116,3 @@ else
 	cd ..
 fi
 sha256sum ${source_package_name}_*.{dsc,build,changes,tar.?z}
-
