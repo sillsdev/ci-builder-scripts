@@ -13,26 +13,26 @@ mkdir -p "$repo_base_dir"
 mkdir -p "$pbuilder_path"
 
 # change package name
+timestamp=$(date -u +"%Y%m%dT%H%M%SZ")
+latest_version_in_debian_changelog=$(dpkg-parsechangelog --show-field=Version)
+
 if [ -n "$append_to_package" ]; then
 	NEWPACKAGENAME="--package=${source_package_name}${append_to_package}"
 	source_package_name=${source_package_name}${append_to_package}
 	${PROGRAM_DIR}/change-package-name.pl $append_to_package
 	sed -e "s/^PACKAGENAME *=.*/&${append_to_package}/" -e "s/^APPEND *=.*/&${append_to_package}/" -i debian/rules
-	TRACE dch $NEWPACKAGENAME ""
+	TRACE dch $NEWPACKAGENAME --newversion "${latest_version_in_debian_changelog}" --force-bad-version ""
 fi
 
 # Clean out old packages
 rm -f "$repo_base_dir"/${source_package_name}_*.{dsc,build,changes,tar.*,log}
 
-# Add entry to debian/changelog
 if [ "$VCS" = "hg" ]; then
 	hash_of_current_commit=$(cd ${main_repo_dir:-.} && hg id -i 2>/dev/null |cut -c -12)
 else
 	hash_of_current_commit=$(cd ${main_repo_dir:-.} && git rev-parse --short HEAD)
 fi
 
-timestamp=$(date -u +"%Y%m%dT%H%M%SZ")
-latest_version_in_debian_changelog=$(dpkg-parsechangelog --show-field=Version)
 if [ -z "$package_version" ]; then
 	base_version=${code_version:-$latest_version_in_debian_changelog}
 else
