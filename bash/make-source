@@ -115,11 +115,11 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	debuild_opts="--source-option=--include-binaries"
 fi
 
+debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
+
 if [ -x "build/buildupdate.mono.sh" ]; then
 	git reset HEAD~1
 fi
-
-debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then
