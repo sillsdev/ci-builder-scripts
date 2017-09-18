@@ -2,6 +2,7 @@
  * Copyright (c) 2016-2017 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
+//#include utilities/Common.groovy
 
 def distros_tobuild = "trusty xenial"
 def email = "eb1@sil.org"
@@ -107,7 +108,7 @@ exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + pac
 ''')
 
 				environmentVariables {
-					propertiesFile("${packagename}-packageversion.properties")
+					propertiesFile("${packageName}-packageversion.properties")
 				}
 
 				Common.addBuildNumber(delegate, 'PACKAGE_VERSION')
