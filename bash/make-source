@@ -80,6 +80,11 @@ else
 	native_version=$latest_version_in_debian_changelog
 fi
 
+if [ -x "build/buildupdate.mono.sh" ]; then
+	log "Getting artifacts from TeamCity:"
+	./build/buildupdate.mono.sh
+fi
+
 log "Building source package:"
 [ -z "$build_in_place" ] && cd $repo_base_dir/${source_package_dir:-$source_package_name}
 if [ -n "$debkeyid" ]; then
