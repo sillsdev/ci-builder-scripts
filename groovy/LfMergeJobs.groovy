@@ -131,7 +131,7 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 			Common.addBuildNumber(delegate, 'PackageVersion')
 
 			shell("""#!/bin/bash -e
-echo "Building packages for version \$PackageVersion"
+echo -e "\\033[0;34mBuilding packages for version \${PackageVersion}\\033[0m"
 
 mkdir -p finalresults
 rm -f finalresults/*
@@ -144,18 +144,22 @@ RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 cd -
 
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
+	echo -e "\\033[0;34mBuilding package for database version \${curDbVersion}\\033[0m"
 	cd lfmerge
 	git clean -dxf
 
+	echo -e "\\033[0;34mPrepare source\\033[0m"
 	xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	debian/PrepareSource \$curDbVersion
 
+	echo -e "\\033[0;34mBuild source package\\033[0m"
 	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
 		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog
 
+	echo -e "\\033[0;34mBuild binary package\\033[0m"
 	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
