@@ -133,6 +133,12 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 			shell("""#!/bin/bash -e
 echo -e "\\033[0;34mBuilding packages for version \${PackageVersion}\\033[0m"
 
+TRACE()
+{
+	echo $@
+	$@
+}
+
 mkdir -p finalresults
 rm -f finalresults/*
 
@@ -149,18 +155,18 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	git clean -dxf
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
-	xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
+	TRACE xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
 
-	debian/PrepareSource \$curDbVersion
+	TRACE debian/PrepareSource \$curDbVersion
 
 	echo -e "\\033[0;34mBuild source package\\033[0m"
-	\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
+	TRACE \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
 		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog
 
 	echo -e "\\033[0;34mBuild binary package\\033[0m"
-	\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
+	TRACE \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
 
