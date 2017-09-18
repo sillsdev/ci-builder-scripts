@@ -85,12 +85,6 @@ if [ -x "build/buildupdate.mono.sh" ]; then
 	./build/buildupdate.mono.sh
 fi
 
-if [ "$VCS" = "git" ]; then
-	log "Committing prior to building source package"
-	find . -print0 | xargs -0 git add -f
-	git commit --allow-empty -m "Build source package"
-fi
-
 log "Building source package:"
 [ -z "$build_in_place" ] && cd $repo_base_dir/${source_package_dir:-$source_package_name}
 if [ -n "$debkeyid" ]; then
@@ -103,29 +97,15 @@ fi
 
 if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	log "Native package. Building original source package."
-	if [ "$VCS" = "hg" ]; then
-		dpkg-source --tar-ignore=debian -b .
-		mv ../${source_package_name}_${native_version}{,.orig}.tar.xz
-	else
-		[ -n "$build_in_place" ] && trap "cd $repo_base_dir && git checkout debian/source/format .gitattributes debian/changelog" EXIT
-		echo "debian/ export-ignore" >> .gitattributes
-		[ -f debian/source/options ] && cat debian/source/options | while read line; do
-			echo "${line#tar-ignore=} export-ignore" >> .gitattributes
-		done
-		echo "git archive --format=tar --worktree-attributes HEAD | xz -c > ../${source_package_name}_${native_version}.orig.tar.xz"
-		git archive --format=tar --worktree-attributes HEAD | xz -c > ../${source_package_name}_${native_version}.orig.tar.xz
-	fi
+	echo "dpkg-source --tar-ignore=debian -b ."
+	dpkg-source --tar-ignore=debian -b .
+	mv ../${source_package_name}_${native_version}{,.orig}.tar.xz
 	echo "3.0 (quilt)" > debian/source/format
 	debuild_opts="--source-option=--include-binaries"
 fi
 
 echo "debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}"
 debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
-
-if [ "$VCS" = "git" ]; then
-	log "Resetting git repo to previous state"
-	git reset HEAD~1
-fi
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then
