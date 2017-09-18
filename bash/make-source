@@ -96,7 +96,9 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	log "Native package. Building original source package."
 	echo "dpkg-source --tar-ignore=debian -b ."
 	dpkg-source --tar-ignore=debian -b .
+	echo "mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz"
 	mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz
+	rm ../${source_package_name}_${latest_version_in_debian_changelog}.dsc
 	echo "3.0 (quilt)" > debian/source/format
 	debuild_opts="--source-option=--include-binaries"
 fi
