@@ -103,7 +103,7 @@ fi
 
 if [ -z "$preserve_changelog_arg" -o -n "${package_version}" ]; then
 	# Don't change distribution here - we don't want to create a new changelog entry!
-	dch $NEWPACKAGENAME --newversion "$nightlyversion-1" --force-bad-version "$changelog_message"
+	dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version "$changelog_message"
 fi
 
 echo "debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}"
