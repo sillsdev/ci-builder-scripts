@@ -10,6 +10,12 @@ log()
 	echo -e "${GREEN}$PROGRAM_NAME: $1${NC}" >&2
 }
 
+TRACE()
+{
+	echo $@
+	$@
+}
+
 init()
 {
 	# Process arguments.

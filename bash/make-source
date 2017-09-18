@@ -18,6 +18,7 @@ if [ -n "$append_to_package" ]; then
 	source_package_name=${source_package_name}${append_to_package}
 	${PROGRAM_DIR}/change-package-name.pl $append_to_package
 	sed -e "s/^PACKAGENAME *=.*/&${append_to_package}/" -e "s/^APPEND *=.*/&${append_to_package}/" -i debian/rules
+	TRACE dch $NEWPACKAGENAME ""
 fi
 
 # Clean out old packages
@@ -79,7 +80,7 @@ fi
 
 if [ -x "build/buildupdate.mono.sh" ]; then
 	log "Getting artifacts from TeamCity:"
-	./build/buildupdate.mono.sh
+	TRACE ./build/buildupdate.mono.sh
 fi
 
 log "Building source package:"
@@ -94,22 +95,19 @@ fi
 
 if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	log "Native package. Building original source package."
-	echo "dpkg-source --tar-ignore=debian -b ."
-	dpkg-source --tar-ignore=debian -b .
-	echo "mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz"
-	mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz
-	rm ../${source_package_name}_${latest_version_in_debian_changelog}.dsc
+	TRACE dpkg-source --tar-ignore=debian -b .
+	TRACE mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz
+	TRACE rm ../${source_package_name}_${latest_version_in_debian_changelog}.dsc
 	echo "3.0 (quilt)" > debian/source/format
 	debuild_opts="--source-option=--include-binaries"
 fi
 
 if [ -z "$preserve_changelog_arg" -o -n "${package_version}" ]; then
 	# Don't change distribution here - we don't want to create a new changelog entry!
-	dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version "$changelog_message"
+	TRACE dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version "$changelog_message"
 fi
 
-echo "debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}"
-debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
+TRACE debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then
