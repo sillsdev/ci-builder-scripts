@@ -20,19 +20,12 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 
 /*
+ * [[TEMPORARY HACK: master-alpha really uses Version4.0 until it goes Beta]]
  * We have four jobs on four different branches for alpha ('master'), beta ('Version3.9'),
- * and release ('Version3.8' and 'Version3.7').
- * Version3.7 is the last version which builds for precise, so we're keeping it around at least
- * for a bit even after precise's impending End Of Life.
+ * and release ('Version3.8').
  */
-for (version in ['3.7', '3.8', '3.9', 'master']) {
+for (version in ['3.8', '3.9', 'master']) {
 	switch (version) {
-		case '3.7':
-			branch = 'Version3.7'
-			subdir_name = 'bloom-desktop'
-			kind = 'release'
-			distros_thisjob = 'precise trusty xenial'
-			break
 		case '3.8':
 			branch = 'Version3.8'
 			subdir_name = 'bloom-desktop'
@@ -46,7 +39,7 @@ for (version in ['3.7', '3.8', '3.9', 'master']) {
 			distros_thisjob = distros_tobuild
 			break
 		case 'master':
-			branch = 'master'
+			branch = 'Version4.0'
 			subdir_name = 'bloom-desktop-alpha'
 			kind = 'alpha'
 			distros_thisjob = distros_tobuild
