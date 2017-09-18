@@ -83,8 +83,12 @@ fi
 if [ -x "build/buildupdate.mono.sh" ]; then
 	log "Getting artifacts from TeamCity:"
 	./build/buildupdate.mono.sh
+fi
+
+if [ "$VCS" = "git" ]; then
+	log "Commiting prior to building source package"
 	git add .
-	git commit -m "teamcity artifacts"
+	git commit --allow-empty -m "Build source package"
 fi
 
 log "Building source package:"
@@ -117,7 +121,8 @@ fi
 
 debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
 
-if [ -x "build/buildupdate.mono.sh" ]; then
+if [ "$VCS" = "git" ]; then
+	log "Resetting git repo to previous state"
 	git reset HEAD~1
 fi
 
