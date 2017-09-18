@@ -116,7 +116,7 @@ if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 		git archive --format=tar --worktree-attributes HEAD | xz -c > ../${source_package_name}_${native_version}.orig.tar.xz
 	fi
 	echo "3.0 (quilt)" > debian/source/format
-	debuild_opts="--source-option=--include-binaries"
+	debuild_opts="--source-option=--include-binaries --source-option=--commit"
 fi
 
 debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
