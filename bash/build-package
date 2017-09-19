@@ -72,7 +72,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 		mkdir -p "$WORKSPACE/results"
 		dcmd --deb --changes sha256sum ${source_package_name}_*.changes || true
 		dcmd --deb --changes cp ${source_package_name}_*.changes $WORKSPACE/results/
-		if [ -f "${source_package_name}_*-1+*.dsc" ]; then
+		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
 			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
 			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $WORKSPACE/results/
 		fi
