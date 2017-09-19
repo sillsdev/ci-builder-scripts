@@ -1,0 +1,8 @@
+Code-Review+2: Daniel Glassey <daniel_glassey@sil.org>
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Verified+1: Eberhard Beilharz <eb1@sil.org>
+Submitted-by: Eberhard Beilharz <eb1@sil.org>
+Submitted-at: Tue, 19 Sep 2017 06:08:14 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/5498
+Project: ci-builder-scripts
+Branch: refs/heads/master
