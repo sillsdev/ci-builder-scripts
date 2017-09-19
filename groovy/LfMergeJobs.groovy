@@ -135,8 +135,8 @@ echo -e "\\033[0;34mBuilding packages for version \${PackageVersion}\\033[0m"
 
 TRACE()
 {
-	echo $@
-	$@
+	echo \$@
+	\$@
 }
 
 mkdir -p finalresults
