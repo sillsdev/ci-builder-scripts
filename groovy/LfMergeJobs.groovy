@@ -153,6 +153,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	echo -e "\\033[0;34mBuilding package for database version \${curDbVersion}\\033[0m"
 	cd lfmerge
 	git clean -dxf
+	git reset --hard
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
 	TRACE xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
