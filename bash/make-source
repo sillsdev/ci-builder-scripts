@@ -16,12 +16,17 @@ mkdir -p "$pbuilder_path"
 timestamp=$(date -u +"%Y%m%dT%H%M%SZ")
 latest_version_in_debian_changelog=$(dpkg-parsechangelog --show-field=Version)
 
+if [ "$(dpkg-parsechangelog --show-field=Distribution)" = "UNRELEASED" ]; then
+	unset DEBFULLNAME
+	export DEBEMAIL="$(dpkg-parsechangelog --show-field=Maintainer)"
+fi
+
 if [ -n "$append_to_package" ]; then
 	NEWPACKAGENAME="--package=${source_package_name}${append_to_package}"
 	source_package_name=${source_package_name}${append_to_package}
 	${PROGRAM_DIR}/change-package-name.pl $append_to_package
 	sed -e "s/^PACKAGENAME *=.*/&${append_to_package}/" -e "s/^APPEND *=.*/&${append_to_package}/" -i debian/rules
-	dch $NEWPACKAGENAME --newversion "${latest_version_in_debian_changelog}" --force-bad-version ""
+	dch $NEWPACKAGENAME --newversion "${latest_version_in_debian_changelog}" --force-bad-version --nomultimaint ""
 fi
 
 # Clean out old packages
@@ -104,7 +109,7 @@ fi
 
 if [ -z "$preserve_changelog_arg" -o -n "${package_version}" ]; then
 	# Don't change distribution here - we don't want to create a new changelog entry!
-	dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version "$changelog_message"
+	dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version --nomultimaint "$changelog_message"
 fi
 
 TRACE debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
