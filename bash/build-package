@@ -18,8 +18,7 @@ log "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.changes || true
-		rm $pbuilder_path/$dist/$arch/result/${source_package_name}*.deb || true
+		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
 		rm $WORKSPACE/results/* || true
 	done
 done
