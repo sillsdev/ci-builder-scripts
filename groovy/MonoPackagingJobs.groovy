@@ -108,7 +108,7 @@ exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + pac
 ''')
 
 				environmentVariables {
-					propertiesFile("${packageName}-packageversion.properties")
+					propertiesFile("results/${packageName}-packageversion.properties")
 				}
 
 				Common.addBuildNumber(delegate, 'PACKAGE_VERSION')
