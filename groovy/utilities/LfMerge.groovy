@@ -37,6 +37,11 @@ class LfMerge {
 							refspec(spec)
 						}
 						branch(sha1)
+						extensions {
+							cloneOptions {
+								noTags(false)
+							}
+						}
 					}
 					git {
 						remote {
@@ -58,6 +63,11 @@ class LfMerge {
 							refspec(spec)
 						}
 						branch(sha1)
+						extensions {
+							cloneOptions {
+								noTags(false)
+							}
+						}
 					}
 				}
 			}

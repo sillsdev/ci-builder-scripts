@@ -60,6 +60,9 @@ for (type in ['', 'Gerrit']) {
 							choosingStrategy {
 								gerritTrigger()
 							}
+							cloneOptions {
+								noTags(false)
+							}
 						}
 						configure { git ->
 							git / 'extensions' << 'hudson.plugins.git.extensions.impl.AuthorInChangelog'()

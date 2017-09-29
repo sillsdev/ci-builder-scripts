@@ -136,7 +136,7 @@ cd "${subdir_name}"
 
 	static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",
 		disableSubmodules_ = false, commitAuthorInChangelog_ = false, scmName_ = "",
-		refspec_ = "", clean_ = false, credentials_ = "") {
+		refspec_ = "", clean_ = false, credentials_ = "", fetchTags = true) {
 		jobContext.with {
 			scm {
 				git {
@@ -168,6 +168,11 @@ cd "${subdir_name}"
 								disable(disableSubmodules_)
 								/*recursive(false)
 								tracking(false) */
+							}
+						}
+						if (fetchTags) {
+							cloneOptions {
+								noTags(!fetchTags)
 							}
 						}
 					}

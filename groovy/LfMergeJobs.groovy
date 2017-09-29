@@ -229,6 +229,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				cloneOptions {
 					shallow(true)
 					timeout(30)
+					noTags(false)
 				}
 				cleanAfterCheckout()
 			}
@@ -247,6 +248,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				cloneOptions {
 					shallow(true)
 					timeout(30)
+					noTags(false)
 				}
 				cleanAfterCheckout()
 			}
@@ -267,6 +269,7 @@ freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 				cloneOptions {
 					shallow(true)
 					timeout(30)
+					noTags(false)
 				}
 				cleanAfterCheckout()
 			}

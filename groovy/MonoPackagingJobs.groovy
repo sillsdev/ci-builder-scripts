@@ -63,6 +63,9 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 					branch branchName
 					extensions {
 						relativeTargetDirectory('mono-calgary')
+						cloneOptions {
+							noTags(false)
+						}
 					}
 				}
 				git {
@@ -72,6 +75,9 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 					branch branchName
 					extensions {
 						relativeTargetDirectory(repo)
+						cloneOptions {
+							noTags(false)
+						}
 					}
 				}
 			}
