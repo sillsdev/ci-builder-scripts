@@ -13,7 +13,6 @@ multibranchPipelineJob('icu-dotnet') {
 			repoOwner('sillsdev')
 			repository('icu-dotnet')
 			scanCredentialsId('github-sillsdevgerrit')
-			excludes('tags/*')
 			buildOriginBranch(true)
 			buildOriginBranchWithPR(false)
 			buildOriginPRMerge(true)
