@@ -50,8 +50,8 @@ else
 		if [ ${#result_version} -gt 0 ]; then
 			result_version="${result_version}."
 		fi
-		if [ "$part" = "0" ]; then
-			result_version="${result_version}${base_version_parts[$i]}"
+		if [ "${part:0:1}" = "0" ]; then
+			result_version="${result_version}${base_version_parts[$i]}${part:1}"
 		else
 			result_version="${result_version}$part"
 		fi
