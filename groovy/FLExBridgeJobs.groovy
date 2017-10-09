@@ -9,6 +9,7 @@ def packagename = 'flexbridge'
 def distros = 'xenial trusty'
 def repo = 'git://github.com/sillsdev/flexbridge.git'
 def email_recipients = 'eb1@sil.org'
+def subdir_name = 'flexbridge'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
@@ -21,14 +22,15 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
  */
 
 for (branch in ['develop']) {
+	/*
 	switch (branch) {
 		case 'develop':
 			subdir_name = 'flexbridge'
-			kind = 'develop'
 			break
 	}
+	*/
 
-	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name} --append-to-package -${branch}"
+	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
 
 	freeStyleJob("FlexBridge_Packaging-Linux-all-${branch}") {
