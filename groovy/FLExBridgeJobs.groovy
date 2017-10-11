@@ -39,7 +39,7 @@ for (branch in ['develop']) {
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
 			distros, email_recipients, branch, "amd64 i386", distros, true, mainRepoDir,
-			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
+			/* buildMasterBranch: */ false, /* addParameters: */ true, /* addSteps: */ false,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
 			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
 
@@ -71,7 +71,29 @@ for (branch in ['develop']) {
 
 		steps {
 			shell("""#!/bin/bash
+export FULL_BUILD_NUMBER=${fullBuildNumber}
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--no-upload"
+fi
+
 cd "${subdir_name}"
+make vcs-version
+
+\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${distros}" \
+	--debkeyid \$DEBSIGNKEY \
+	--main-repo-dir ${mainRepoDir} \
+	${package_version} \
+	${extraParameter} \
+	\$MAKE_SOURCE_ARGS
+
 echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
 """)
 
@@ -80,6 +102,23 @@ echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packag
 			}
 
 			Common.addBuildNumber(delegate, 'PackageVersion')
+
+			shell("""#!/bin/bash -e
+if [ "\$PackageBuildKind" = "Release" ]; then
+	BUILD_PACKAGE_ARGS="--no-upload"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	BUILD_PACKAGE_ARGS="--no-upload"
+fi
+
+cd "${subdir_name}"
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${distros}" \
+	--debkeyid \$DEBSIGNKEY \
+	\$BUILD_PACKAGE_ARGS
+""")
 		}
 	}
 }
