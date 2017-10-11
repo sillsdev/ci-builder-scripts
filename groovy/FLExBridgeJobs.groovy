@@ -82,7 +82,7 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 cd "${subdir_name}"
-make vcs-version
+make vcs_version
 
 \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
