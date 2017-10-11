@@ -18,7 +18,7 @@ class monoRelatedViews {
 				filterExecutors false
 
 				jobs {
-					regex('^(Gerrit-)?(Mono|Gtksharp|Libgdiplus|Monobasic)(_Nightly|-).*')
+					regex('^(Gerrit-)?(Mono|Gtksharp|Libgdiplus|Monobasic)(_Nightly|-|_Packaging).*')
 				}
 
 				columns {

@@ -24,9 +24,9 @@ for (repo in [ 'mono', 'gtk-sharp', 'libgdiplus', 'mono-basic']) {
 	for (branchName in ['develop', 'release/mono-sil-3.4', 'release/mono4-sil']) {
 		def packageName = GetPackageName(repo, branchName)
 
-		freeStyleJob("${repo.capitalize().replace('-', '')}_NightlyPackaging-Linux-all-${branchName.replace('/', '_').replace('-', '_')}-debug") {
+		freeStyleJob("${repo.capitalize().replace('-', '')}_Packaging-Linux-all-${branchName.replace('/', '_').replace('-', '_')}-debug") {
 
-			description """<p>Automatically creates the <i>$packageName</i> package from the <i>$branchName</i> branch
+			description """<p>Automatically creates the <i>${packageName}</i> package from the <i>${branchName}</i> branch
 for testing. Can be used to manually make a package for release.</p>
 <p>The job is created by the DSL plugin from <i>MonoPackagingJobs.groovy</i> script.</p>"""
 
