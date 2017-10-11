@@ -56,8 +56,10 @@ for (branch in ['develop']) {
 			githubPush()
 		}
 
-		Common.gitScm(delegate, repo, "\$BranchOrTagToBuild",
-			false, subdir_name, false, true)
+		Common.gitScm(delegate, /* url: */ repo, /* branch: */ "\$BranchOrTagToBuild",
+			/* createTag: */ false, /* subdir: */ subdir_name, /* disableSubmodules: */ false,
+			/* commitAuthorInChangelog: */ true, /* scmName: */ "", /* refspec: */ "",
+			/* clean: */ true)
 
 		wrappers {
 			timeout {
