@@ -99,6 +99,13 @@ for distribution in $Distributions; do
 	done
 done
 ''')
+		downstreamParameterized {
+			trigger("PBuilder_Update-Linux-all-master-debug") {
+				parameters {
+					currentBuild()
+				}
+			}
+		}
 	}
 }
 
