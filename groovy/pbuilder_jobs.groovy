@@ -89,14 +89,14 @@ freeStyleJob('PBuilder_Setup-Linux-all-master-debug') {
 	steps {
 		shell('''
 cd $HOME/ci-builder-scripts/bash
-. common.sh
+. ./common.sh
 init "$@"
 
 for distribution in $Distributions; do
-    for arch in $ARCHES_TO_PACKAGE; do
+	for arch in $ARCHES_TO_PACKAGE; do
 		PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
 			$HOME/FwSupportTools/packaging/pbuilder/setup.sh
-    done
+	done
 done
 ''')
 	}
