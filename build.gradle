@@ -94,6 +94,7 @@ dependencies {
 	testPlugins 'org.jenkins-ci.plugins:token-macro:2.1'
 	testPlugins 'org.jenkins-ci.plugins:git:3.2.0'
 	testPlugins 'org.jenkins-ci.main:maven-plugin:2.15.1'
+	testPlugins 'org.jenkins-ci.ui:ace-editor:1.0.1'
 
 	// won't be needed once we get rid of internal jenkins
 	testPlugins 'org.jenkins-ci.plugins:build-publisher:1.21'
