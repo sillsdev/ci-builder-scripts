@@ -20,26 +20,25 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 
 /*
- * [[TEMPORARY HACK: master-alpha really uses Version4.0 until it goes Beta]]
- * We have four jobs on four different branches for alpha ('master'), beta ('Version3.9'),
- * and release ('Version3.8').
+ * We have three jobs on three different branches for alpha ('master'), beta ('Version4.0'),
+ * and release ('Version3.9').
  */
-for (version in ['3.8', '3.9', 'master']) {
+for (version in ['3.9', '4.0', 'master']) {
 	switch (version) {
-		case '3.8':
-			branch = 'Version3.8'
+		case '3.9':
+			branch = 'Version3.9'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
-		case '3.9':
-			branch = 'Version3.9'
+		case '4.0':
+			branch = 'Version4.0'
 			subdir_name = 'bloom-desktop-beta'
 			kind = 'beta'
 			distros_thisjob = distros_tobuild
 			break
 		case 'master':
-			branch = 'Version4.0'
+			branch = 'master'
 			subdir_name = 'bloom-desktop-alpha'
 			kind = 'alpha'
 			distros_thisjob = distros_tobuild
