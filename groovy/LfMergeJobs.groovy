@@ -119,9 +119,9 @@ if [ "\${GitVersion_PreReleaseLabel}" != "" ]; then
 	PreReleaseTag="~\${GitVersion_PreReleaseLabel}.\${GitVersion_PreReleaseNumber}"
 fi
 
-echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}" >> gitversion.properties
+echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}" >> gitversion.properties
 
-echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseTag}"
+echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}"
 				""")
 
 			environmentVariables {
