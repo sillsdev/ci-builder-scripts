@@ -100,7 +100,14 @@ fi
 
 if [ "$(cat debian/source/format)" == "3.0 (native)" ]; then
 	log "Native package. Building original source package."
-	TRACE dpkg-source --tar-ignore --tar-ignore=debian -b .
+	# Unfortunately we have to list the files to ignore explicitly and can't use the default
+	# ignores because we want *.so files in the source package (needed for Mercurial)
+	TRACE dpkg-source --tar-ignore=*.a --tar-ignore=*.la --tar-ignore=*.o --tar-ignore=.*.sw? \
+		--tar-ignore=*/*~ --tar-ignore=,,* --tar-ignore=.[#~]* --tar-ignore=.deps \
+		--tar-ignore=.git --tar-ignore=.gitattributes --tar-ignore=.gitignore \
+		--tar-ignore=.gitmodules --tar-ignore=.gitreview --tar-ignore=.hg --tar-ignore=.hgignore \
+		--tar-ignore=.hgsigs --tar-ignore=.hgtags --tar-ignore=.svn --tar-ignore=debian -b .
+
 	TRACE mv ../${source_package_name}_${latest_version_in_debian_changelog}.tar.xz ../${source_package_name}_${native_version}.orig.tar.xz
 	TRACE rm ../${source_package_name}_${latest_version_in_debian_changelog}.dsc
 	echo "3.0 (quilt)" > debian/source/format
