@@ -20,10 +20,13 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  */
 
 /*
- * We have three jobs on three different branches for alpha ('master'), beta ('Version4.0'),
- * and release ('Version3.9').
+ * We have up to four jobs on four different branches for alpha ('master'), betainternal ('Version4.1'),
+ * beta ('Version4.0'), and release ('Version3.9').
+ * betainternal is used periodically when a new release is almost ready and we are in the process
+ * of shifting the previous alpha to beta.  Except for alpha on the master branch, the other jobs all
+ * shift branches as new releases are made.
  */
-for (version in ['3.9', '4.0', 'master']) {
+for (version in ['3.9', '4.0', '4.1', 'master']) {
 	switch (version) {
 		case '3.9':
 			branch = 'Version3.9'
@@ -35,6 +38,12 @@ for (version in ['3.9', '4.0', 'master']) {
 			branch = 'Version4.0'
 			subdir_name = 'bloom-desktop-beta'
 			kind = 'beta'
+			distros_thisjob = distros_tobuild
+			break
+		case '4.1':
+			branch = 'Version4.1'
+			subdir_name = 'bloom-desktop-betainternal'
+			kind = 'betainternal'
 			distros_thisjob = distros_tobuild
 			break
 		case 'master':
