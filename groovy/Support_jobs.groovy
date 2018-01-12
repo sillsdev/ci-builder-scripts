@@ -6,7 +6,7 @@
  * Definition of jobs
  */
 
-pipelineJob('FwSupport-checkoutOnly') {
+pipelineJob('FwSupportTools-checkoutOnly') {
 	description '''<p>This job keeps the <i>FwSupportTools</i> directory up-to-date on the packaging agents.</p>
 <p>The job is created by the DSL plugin from <i>Support-jobs.groovy</i> script.<p>'''
 
