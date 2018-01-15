@@ -51,17 +51,16 @@ class Common {
 			}
 
 			if (addSteps) {
-				// Note that the ReleaseCandidate BUILD_PACKAGE_ARGS could be "--suite-name=proposed".
-				// This would result in release candidates landing in "trusty-proposed", "xenial-propsed", and so on.
-				// See the LfMergeJobs.groovy script for an example.
 				steps {
 					shell("""#!/bin/bash
 export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name=main"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name=proposed"
 fi
 
 cd "${subdir_name}"

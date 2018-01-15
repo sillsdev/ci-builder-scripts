@@ -76,7 +76,11 @@ init()
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
-	SUITE_NAME="${suite_name:-experimental}"
+	if [ "$suite_name" = "main" ]; then
+		SUITE_NAME=""
+	else
+		SUITE_NAME="-${suite_name:-experimental}"
+	fi
 	[ -z $PBUILDER_TOOLS_PATH ] && PBUILDER_TOOLS_PATH="$HOME/FwSupportTools/packaging/pbuilder"
 
 	pbuilder_path="${PBUILDERDIR:-$HOME/pbuilder}"
