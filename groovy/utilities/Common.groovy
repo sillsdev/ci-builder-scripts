@@ -57,10 +57,10 @@ export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	BUILD_PACKAGE_ARGS="--suite-name=main"
+	BUILD_PACKAGE_ARGS="--suite-name main"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	BUILD_PACKAGE_ARGS="--suite-name=proposed"
+	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
 cd "${subdir_name}"
