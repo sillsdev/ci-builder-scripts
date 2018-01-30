@@ -140,17 +140,36 @@ fi
 COMPOSERJSON=$(git log --format=%H -1 composer.json)
 COMPOSERJSON_PREV=$(cat composer.json.sha 2>/dev/null || true)
 
+NODEVERSION=8
+DISTRO="$(lsb_release -s -c)"
+
+[ -f /etc/apt/sources.list.d/nodesource.list ] && OLDVERSION=$(cat /etc/apt/sources.list.d/nodesource.list | head -1 | sed 's/.*node_\([0-9]*\).*/\1/')
+
+if [ ! -f /usr/bin/npm ] || [[ $OLDVERSION < $NODEVERSION ]]; then
+	curl --silent https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+	echo "deb https://deb.nodesource.com/node_${NODEVERSION}.x $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+	echo "deb-src https://deb.nodesource.com/node_${NODEVERSION}.x $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+	sudo apt-get update
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
+fi
+
 if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 	git clean -dxf
 	echo "Installing composer"
 	php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
 	php composer-setup.php
 	php -r "unlink('composer-setup.php');"
-	echo "Running composer install"
-	php composer.phar install --no-dev
-	echo $COMPOSERJSON > composer.json.sha
+	sudo mkdir -p /usr/local/bin
+	sudo mv composer.phar /usr/local/bin/composer
+	sudo apt update
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0-cli php7.0-curl php7.0-dev php7.0-gd php7.0-intl php7.0-mbstring php-pear php-xdebug
+	sudo npm install --global gulp-cli jscs
+	echo "Running refreshDeps.sh"
+	cd ..
+	./refreshDeps.sh
+	echo $COMPOSERJSON > src/composer.json.sha
 	# git clean got rid of this, so create it again
-	touch mongodb.installed
+	touch src/mongodb.installed
 fi
 ''')
 				// Download dependencies
