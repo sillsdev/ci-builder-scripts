@@ -143,7 +143,7 @@ COMPOSERJSON_PREV=$(cat composer.json.sha 2>/dev/null || true)
 NODEVERSION=8
 DISTRO="$(lsb_release -s -c)"
 
-[ -f /etc/apt/sources.list.d/nodesource.list ] && OLDVERSION=$(cat /etc/apt/sources.list.d/nodesource.list | head -1 | sed 's/.*node_\([0-9]*\).*/\1/')
+[ -f /etc/apt/sources.list.d/nodesource.list ] && OLDVERSION=$(cat /etc/apt/sources.list.d/nodesource.list | head -1 | sed 's/.*node_\\([0-9]*\\).*/\\1/')
 
 if [ ! -f /usr/bin/npm ] || [[ $OLDVERSION < $NODEVERSION ]]; then
 	curl --silent https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
