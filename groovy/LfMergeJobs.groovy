@@ -310,6 +310,9 @@ cd lfmerge-fdo
 mkdir -p cmakebuild
 cd cmakebuild
 cmake -DADD_PACKAGE_LINK:BOOL=ON ../debian/
+cd ..
+rm -rf cmakebuild
+rm -rf fw/Lib/src/Enchant/fieldworks-enchant-1.6.1
 ''')
 
 		shell("""#!/bin/bash -e
