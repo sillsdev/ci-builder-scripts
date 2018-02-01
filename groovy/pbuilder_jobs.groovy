@@ -4,13 +4,11 @@
 
 def distros = "trusty xenial bionic"
 
-freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
+pipelineJob('PBuilder_Update-Linux-all') {
 	description '''
 <p>Maintenance job that updates all chroot instances for pbuilder</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
 '''
-
-	label 'packager'
 
 	logRotator(365, 100, 10, 10)
 
@@ -30,21 +28,22 @@ freeStyleJob('PBuilder_Update-Linux-all-master-debug') {
 		colorizeOutput()
 	}
 
-	steps {
-		shell('''
-$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"
-''')
+	definition {
+		cps {
+			script('''@Library('lsdev-pipeline-library') _
+				runOnAllNodes(label: 'packager',
+					command: '$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
+			)
+		}
 	}
 }
 
-freeStyleJob('PBuilder_Cleanup-Linux-all-master-debug') {
+pipelineJob('PBuilder_Cleanup-Linux-all') {
 	description '''
-<p>Maintenance job that cleans out previously built binary packages and cancelled builds left on disk
-that are at least two days old.</p>
+<p>Maintenance job that cleans out previously built binary packages and cancelled builds left on
+disk that are at least two days old.</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
 '''
-
-	label 'packager'
 
 	logRotator(365, 100, 10, 10)
 
@@ -59,20 +58,21 @@ that are at least two days old.</p>
 		colorizeOutput()
 	}
 
-	steps {
-		shell('''
-$HOME/ci-builder-scripts/bash/clean-old-builds --no-package
-''')
+	definition {
+		cps {
+			script('''@Library('lsdev-pipeline-library') _
+				runOnAllNodes(label: 'packager',
+					command: '$HOME/ci-builder-scripts/bash/clean-old-builds --no-package')'''
+			)
+		}
 	}
 }
 
-freeStyleJob('PBuilder_Setup-Linux-all-master-debug') {
+pipelineJob('PBuilder_Setup-Linux-all') {
 	description '''
 <p>Maintenance job that creates chroot instances for pbuilder. To be triggered manually.</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
 '''
-
-	label 'packager'
 
 	logRotator(365, 100, 10, 10)
 
@@ -86,9 +86,11 @@ freeStyleJob('PBuilder_Setup-Linux-all-master-debug') {
 		colorizeOutput()
 	}
 
-	steps {
-		shell('''
-cd $HOME/ci-builder-scripts/bash
+	definition {
+		cps {
+			script('''@Library('lsdev-pipeline-library') _
+				runOnAllNodes(label: 'packager',
+					command: \'\'\'cd $HOME/ci-builder-scripts/bash
 . ./common.sh
 init "$@"
 
@@ -97,15 +99,10 @@ for distribution in $Distributions; do
 		PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
 			$HOME/FwSupportTools/packaging/pbuilder/setup.sh
 	done
-done
-''')
-		downstreamParameterized {
-			trigger("PBuilder_Update-Linux-all-master-debug") {
-				parameters {
-					currentBuild()
-				}
-			}
+done\'\'\')
+
+				runOnAllNodes(label: 'packager', command: '$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
+			)
 		}
 	}
 }
-
