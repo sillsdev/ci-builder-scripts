@@ -6,7 +6,7 @@ you don't have an account on Gerrit yet.
 A recommended setup is (replace _gerritusername_ with your gerrit account
 name):
 
-	git clone git@github.com:sillsdev/ci-builder-scripts.git
+	git clone https://github.com/sillsdev/ci-builder-scripts.git
 	cd ci-builder-scripts
 	git config remote.origin.pushurl \
 		ssh://<gerritusername>@gerrit.lsdev.sil.org:59418/ci-builder-scripts.git
