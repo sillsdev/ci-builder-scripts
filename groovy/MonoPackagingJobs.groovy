@@ -90,7 +90,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 				timestamps()
 				colorizeOutput()
 				timeout {
-					noActivity(600)
+					noActivity(1200)
 					abortBuild()
 					writeDescription("Build timed out after {0} minutes")
 				}
