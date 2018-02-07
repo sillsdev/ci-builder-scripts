@@ -6,7 +6,7 @@
 
 // Variables
 def packagename = 'flexbridge'
-def distros = 'xenial trusty'
+def distros = 'bionic xenial trusty'
 def repo = 'git://github.com/sillsdev/flexbridge.git'
 def email_recipients = 'eb1@sil.org'
 def subdir_name = 'flexbridge'
