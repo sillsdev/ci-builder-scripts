@@ -4,7 +4,7 @@
  */
 //#include utilities/Common.groovy
 
-def distros_tobuild = "trusty xenial"
+def distros_tobuild = "trusty xenial bionic"
 def email = "eb1@sil.org"
 
 static String GetPackageName(repo, branchName) {
