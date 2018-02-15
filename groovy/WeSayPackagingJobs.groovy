@@ -6,7 +6,7 @@
 
 // Variables
 def packagename = 'WeSay'
-def distros_tobuild = 'trusty xenial'
+def distros_tobuild = 'trusty xenial bionic'
 def repo = 'git://github.com/sillsdev/wesay.git'
 def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
