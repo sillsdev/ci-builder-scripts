@@ -11,6 +11,8 @@ freeStyleJob('Gerrit-CiBuilderScripts-preMerge') {
 	description '''<p>Pre-merge builds of ci-builder-scripts.<p>
 <p>The job is created by the DSL plugin from <i>CiBuilderScriptsJobs.groovy</i> script.</p>'''
 
+	label 'packager'
+
 	scm {
 		git {
 			remote {
@@ -24,7 +26,6 @@ freeStyleJob('Gerrit-CiBuilderScripts-preMerge') {
 				}
 				cloneOptions {
 					shallow(true)
-					depth(1)
 					timeout(30)
 					noTags(false)
 				}
