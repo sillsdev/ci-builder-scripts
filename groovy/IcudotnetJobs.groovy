@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 SIL International
+ * Copyright (c) 2016-2018 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
@@ -10,6 +10,7 @@ multibranchPipelineJob('icu-dotnet') {
 
 	branchSources {
 		github {
+			id('icu-dotnet')
 			repoOwner('sillsdev')
 			repository('icu-dotnet')
 			scanCredentialsId('github-sillsdevgerrit')
@@ -34,6 +35,7 @@ multibranchPipelineJob('icu4c') {
 
 	branchSources {
 		github {
+			id('icu4c')
 			repoOwner('sillsdev')
 			repository('icu4c')
 			scanCredentialsId('github-sillsdevgerrit')
