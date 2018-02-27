@@ -175,16 +175,6 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	mv results/* finalresults/
 done
 """)
-
-			if (branchName == "master") {
-				// Last step: update lfmerge package on TeamCity build agent. 2016-05 RM
-				shell("""#!/bin/bash
-echo Waiting 5 minutes for package to show up on LLSO
-sleep 300
-ssh ${buildAgent} sudo apt update || true
-ssh ${buildAgent} sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f lfmerge || true
-ssh ${buildAgent} sudo apt -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y -f || true""")
-			}
 		}
 
 		if (branchName == "live") {
