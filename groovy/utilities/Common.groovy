@@ -29,7 +29,7 @@ class Common {
 
 			label('packager')
 
-			logRotator(365, 20, 10, 10)
+			logRotator(365, 20, 365, 10)
 
 			if (addParameters) {
 				parameters {
