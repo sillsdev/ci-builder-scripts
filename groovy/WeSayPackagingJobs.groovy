@@ -21,33 +21,37 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
  */
 
 /*
- * We have two jobs on two different branches for beta/release ('master') and alpha ('develop')
+ * We have multiple jobs on different branches for release, beta ('master') and alpha ('develop')
  */
-for (branch in ['master', 'develop']) {
+for (branch in ['release/1.6', 'master', 'develop']) {
+	extraParameter = ''
 	switch (branch) {
+		case 'release/1.6':
+			packagename = 'wesay'
+			kind = 'stable'
+			break
 		case 'master':
-			subdir_name = 'wesay-beta'
-			kind = 'beta'
 			packagename = 'wesay-beta'
+			kind = 'beta'
 			extraParameter = '--append-to-package -beta'
 			break
 		case 'develop':
-			subdir_name = 'wesay-alpha'
-			kind = 'alpha'
 			packagename = 'wesay-alpha'
+			kind = 'alpha'
 			extraParameter = '--append-to-package -alpha'
 			break
 	}
 
+	subdir_name = packagename
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name} ${extraParameter}"
 	package_version = """--package-version "${fullBuildNumber}" """
 
-	freeStyleJob("WeSay_Packaging-Linux-all-${branch}-${kind}") {
+	freeStyleJob("WeSay_Packaging-Linux-all-${branch.replace('/', '_').replace('-', '_')}-${kind}") {
 
 		mainRepoDir = '.'
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial", true, mainRepoDir,
+			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial bionic", true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
 			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
