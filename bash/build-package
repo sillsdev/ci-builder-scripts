@@ -69,8 +69,8 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		mkdir -p "$WORKSPACE/results"
-		dcmd --deb --changes sha256sum ${source_package_name}_*.changes || true
-		dcmd --deb --changes cp ${source_package_name}_*.changes $WORKSPACE/results/
+		dcmd --deb --changes --buildinfo sha256sum ${source_package_name}_*.changes || true
+		dcmd --deb --changes --buildinfo cp ${source_package_name}_*.changes $WORKSPACE/results/
 		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
 			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
 			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $WORKSPACE/results/
