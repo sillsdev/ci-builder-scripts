@@ -1,24 +1,24 @@
 /*
- * Copyright (c) 2016 SIL International
+ * Copyright (c) 2016-2018 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
 /*
- * DSL script for icu-dotnet Jenkins views
+ * DSL script for Library related Jenkins views
  */
 
 /* Definition of views */
 
-class icuDotNetViews {
-	static void IcuDotNetViewAll(viewContext) {
+class libraryViews {
+	static void LibraryViewAll(viewContext) {
 		viewContext.with {
 			categorizedJobsView('All') {
-				description 'All <b>ICU</b> related jobs'
+				description 'All jobs related to libraries'
 				filterBuildQueue false
 				filterExecutors false
 
 				jobs {
-					regex('(icu4c|icu-dotnet)')
+					regex('(icu4c|icu-dotnet|SIL.BuildTasks)')
 				}
 
 				columns {
@@ -38,11 +38,11 @@ class icuDotNetViews {
 	}
 }
 
-nestedView('Icu') {
+nestedView('Libraries') {
 	configure { view ->
 		view / defaultView('All')
 	}
 	views {
-		icuDotNetViews.IcuDotNetViewAll(delegate)
+		libraryViews.LibraryViewAll(delegate)
 	}
 }
