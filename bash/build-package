@@ -69,8 +69,8 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		mkdir -p "$WORKSPACE/results"
-		if [ $(grep -q '.buildinfo$' ${source_package_name}_*.changes) ]; then
-			# Starting with Xenial the package contains a .buildinfo file that's required to
+		if grep -q '.buildinfo$' ${source_package_name}_*.changes ; then
+			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
 			DCMD_ARGS="--deb --changes --buildinfo"
 		else
