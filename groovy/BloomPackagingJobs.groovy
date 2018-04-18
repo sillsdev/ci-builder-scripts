@@ -5,7 +5,7 @@
 
 // Variables
 def packagename = 'Bloom'
-def distros_tobuild = 'trusty xenial'
+def distros_tobuild = 'bionic xenial trusty'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'stephen_mcconnel@sil.org'
 
