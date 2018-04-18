@@ -73,11 +73,19 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
 			DCMD_ARGS="--deb --changes --buildinfo"
+			DCMD_NOARGS="--no-deb --no-changes --no-buildinfo"
 		else
 			DCMD_ARGS="--deb --changes"
+			DCMD_NOARGS="--no-deb --no-changes"
 		fi
 		dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
 		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
+		if grep -q '.ddeb$' ${source_package_name}_*.changes ; then
+			# Unfortunately dcmd doesn't yet have a way to select .ddeb files...
+			ddebfile="$(dcmd --package ${DCMD_NOARGS} echo ${source_package_name}_*.changes)"
+			sha256sum ${ddebfile}*.ddeb
+			cp ${ddebfile}*.ddeb $WORKSPACE/results/
+		fi
 		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
 			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
 			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $WORKSPACE/results/
