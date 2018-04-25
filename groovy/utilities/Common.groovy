@@ -131,9 +131,15 @@ cd "${subdir_name}"
 		}
 	}
 
+	/*
+	`onlyTriggerFileSpec` is a java regular expression
+	(http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html)
+	e.g. "testproject/testprojectTests/.*"
+	*/
 	static void gitScm(jobContext, url_, branch_, createTag_ = false, subdir = "",
 		disableSubmodules_ = false, commitAuthorInChangelog_ = false, scmName_ = "",
-		refspec_ = "", clean_ = false, credentials_ = "", fetchTags = true) {
+		refspec_ = "", clean_ = false, credentials_ = "", fetchTags = true,
+		onlyTriggerFileSpec = "", githubRepo = "") {
 		jobContext.with {
 			scm {
 				git {
@@ -141,7 +147,11 @@ cd "${subdir_name}"
 						if (scmName_ != "") {
 							name(scmName_)
 						}
-						url(url_)
+						if (githubRepo != "") {
+							github(githubRepo, "https")
+						} else {
+							url(url_)
+						}
 						if (refspec_ != "") {
 							refspec(refspec_)
 						}
@@ -172,12 +182,20 @@ cd "${subdir_name}"
 								noTags(!fetchTags)
 							}
 						}
+						if (onlyTriggerFileSpec != "") {
+							disableRemotePoll()
+						}
 					}
 
-					if (commitAuthorInChangelog_) {
+					if (commitAuthorInChangelog_ || onlyTriggerFileSpec != "") {
 						configure { node ->
 							if (commitAuthorInChangelog_) {
 								node / 'extensions' / 'hudson.plugins.git.extensions.impl.AuthorInChangelog'
+							}
+							if (onlyTriggerFileSpec != "") {
+								node / 'extensions' / 'hudson.plugins.git.extensions.impl.PathRestriction' {
+									includedRegions onlyTriggerFileSpec
+								}
 							}
 						}
 					}
