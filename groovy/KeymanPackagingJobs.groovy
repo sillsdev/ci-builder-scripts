@@ -23,7 +23,7 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
  * We are building multiple packages in this job
  */
 for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl']) {
-	subdir_name = packagename
+	subdir_name = "linux/${packagename}"
 	branch = 'master'
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
