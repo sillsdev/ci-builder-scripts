@@ -7,7 +7,7 @@
  */
 class LfMerge {
 	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false,
-		githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge', isPr = false) {
+		githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge', isPr = false, branchName = '') {
 		jobContext.with {
 			properties {
 				priority(100)
@@ -44,11 +44,17 @@ class LfMerge {
 						}
 					}
 					git {
+						def xforgeSpec = spec
+						def xforgeSha1 = sha1
+						if ((branchName == 'qa' || branchName == 'live') && !isPr) {
+							xforgeSpec = "+refs/heads/lf-${branchName}:refs/remotes/origin/lf-${branchName}"
+							xforgeSha1 = "*/lf-${branchName}"
+						}
 						remote {
 							github("sillsdev/web-languageforge", "https")
-							refspec(isPr ? '+refs/heads/master:refs/remotes/origin/master' : spec)
+							refspec(isPr ? '+refs/heads/master:refs/remotes/origin/master' : xforgeSpec)
 						}
-						branch(isPr ? '*/master' : sha1)
+						branch(isPr ? '*/master' : xforgeSha1)
 						extensions {
 							relativeTargetDirectory('data/php')
 							ignoreNotifyCommit()
@@ -74,8 +80,8 @@ class LfMerge {
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false) {
-		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge, "sillsdev/LfMerge", 'lfmerge', isPr)
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false, branchName = '') {
+		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge, "sillsdev/LfMerge", 'lfmerge', isPr, branchName)
 		jobContext.with {
 			steps {
 				throttleConcurrentBuilds {

@@ -53,7 +53,10 @@ mozroots --import --sync
 // *********************************************************************************************
 for (branchName in ['master', 'live', 'qa']) {
 	freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
-		LfMerge.commonLfMergeBuildJob(delegate, "+refs/heads/${branchName}:refs/remotes/origin/${branchName}", "*/${branchName}", true, true)
+		LfMerge.commonLfMergeBuildJob(delegate,
+			/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
+			/* sha1: */ "*/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
+			/* isPr: */ false, /* branchName: */ branchName)
 
 		description """<p>Linux builds of LfMerge ${branchName}.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
