@@ -30,6 +30,15 @@ for (branch in ['develop']) {
 	}
 	*/
 
+	upload_target = 'experimental'
+
+	switch (branch) {
+		case 'develop':
+			// or 'experimental'
+			upload_target = 'proposed'
+			break
+	}
+
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
 
@@ -116,6 +125,7 @@ cd "${subdir_name}"
 	--arches "\$ArchesToPackage" \
 	--main-package-name "${packagename}" \
 	--supported-distros "${distros}" \
+	--suite-name "${upload_target}" \
 	--debkeyid \$DEBSIGNKEY \
 	\$BUILD_PACKAGE_ARGS
 """)
