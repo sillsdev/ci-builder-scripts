@@ -39,7 +39,7 @@ class Common {
 						"The architectures to build packages for (separated by space)")
 					choiceParam("PackageBuildKind",
 						["Nightly", "Release", "ReleaseCandidate"],
-						"What kind of build is this? A nightly build will have the prefix +nightly2016... appended, a release (or a release candidate) will just have the version number.")
+						"What kind of build is this? A nightly build will have a version suffix like +nightly2016... appended, a release (or a release candidate) will just have the version number.")
 					stringParam("BranchOrTagToBuild", "refs/heads/$branch",
 						"What branch/tag to build? (examples: refs/heads/master, refs/tags/v3.1, origin/pr/9/head)")
 				}
