@@ -370,6 +370,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 				nUnit{
 					pattern(results)
 					skipNoTestFiles(!failIfNotPresent)
+					stopProcessingIfError(false)
 				}
 				if (failedThresholdsClosure) {
 					failedThresholdsClosure()
