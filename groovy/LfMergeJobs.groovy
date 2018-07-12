@@ -76,8 +76,8 @@ for (branchName in ['master', 'live', 'qa']) {
 		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 
 		if (branchName == "live") {
-			BuildPackageArgs = "--no-upload"
-			AdditionalDescription = "(Not automatically uploaded)"
+			BuildPackageArgs = "--suite-name main"
+			AdditionalDescription = "(Uploaded to main section of llso)"
 		} else if (branchName == "qa") {
 			BuildPackageArgs = "--suite-name proposed"
 			AdditionalDescription = "(Uploaded to -proposed section of llso)"
