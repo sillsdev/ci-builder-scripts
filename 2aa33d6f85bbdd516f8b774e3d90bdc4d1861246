@@ -1,0 +1,7 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Submitted-by: Eberhard Beilharz <eb1@sil.org>
+Submitted-at: Thu, 12 Jul 2018 10:19:05 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/6362
+Project: ci-builder-scripts
+Branch: refs/heads/master
