@@ -112,9 +112,9 @@ mkdir -p output/Release
 
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
 
-echo "BuildVersion=\${GitVersion_SemVer}.\${BUILD_NUMBER}" >> gitversion.properties
-
 . gitversion.properties
+
+echo "BuildVersion=${GitVersion_SemVer}.${BUILD_NUMBER}" >> gitversion.properties
 				''')
 
 				environmentVariables {
