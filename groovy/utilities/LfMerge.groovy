@@ -104,6 +104,25 @@ class LfMerge {
 					}
 				}
 
+				// Set build number in Jenkins
+				shell("""#!/bin/bash -e
+. environ
+xbuild /t:RestorePackages build/LfMerge.proj
+mkdir -p output/Release
+
+mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
+
+echo "BuildVersion=\${GitVersion_SemVer}.\${BUILD_NUMBER}" >> gitversion.properties
+
+. gitversion.properties
+				""")
+
+				environmentVariables {
+					propertiesFile('gitversion.properties')
+				}
+
+				Common.addBuildNumber(delegate, 'BuildVersion')
+
 				// Compile mercurial
 				shell('''#!/bin/bash -e
 BUILD=Release . environ
