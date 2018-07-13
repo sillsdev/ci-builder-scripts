@@ -85,6 +85,7 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 	steps {
 		shell('''#!/bin/bash
 BUILD=ReleaseMono
+export MONO_PREFIX=/opt/mono5-sil
 . environ
 
 ./download_dependencies_linux.sh

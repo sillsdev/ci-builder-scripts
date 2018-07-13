@@ -198,10 +198,10 @@ if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 fi
 ''')
 				// Download dependencies
-				// We use mono 4 for that because it fails with mono 3 due to some async bugs
+				// We use mono 5 for that because it fails with mono 3 due to some async bugs
 				shell('''#!/bin/bash -e
 echo "Downloading dependencies"
-export MONO_PREFIX=/opt/mono4-sil
+export MONO_PREFIX=/opt/mono5-sil
 . environ
 xbuild /t:DownloadDependencies build/LfMerge.proj
 ''')
