@@ -76,7 +76,7 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 <p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
 
 	Common.addGitHubParamAndTrigger(delegate, 'lfmerge')
-	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/flexbridge", 'linux&&supported')
+	LfMerge.generalLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}', false, false, "sillsdev/flexbridge", 'linux&&supported&&mono5')
 
 	wrappers {
 		Common.addXvfbBuildWrapper(delegate)
