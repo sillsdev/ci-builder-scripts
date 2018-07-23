@@ -203,7 +203,7 @@ fi
 echo "Downloading dependencies"
 export MONO_PREFIX=/opt/mono5-sil
 . environ
-xbuild /t:DownloadDependencies build/LfMerge.proj
+xbuild /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
 ''')
 
 				// Compile and run tests
