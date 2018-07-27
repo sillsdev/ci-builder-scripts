@@ -18,7 +18,7 @@ class flexBridgeViews {
 				filterExecutors false
 
 				jobs {
-					regex('FlexBridge')
+					regex('FLExBridge')
 				}
 
 				columns {
