@@ -132,3 +132,29 @@ cd "${subdir_name}"
 		}
 	}
 }
+
+// *******************************************************************************************
+multibranchPipelineJob('FLExBridge') {
+	description """<p>Builds of FLExBridge</p>
+<p>The job is created by the DSL plugin from <i>FLExBridgeJobs.groovy</i> script.</p>"""
+
+	branchSources {
+		github {
+			id('flexbridge')
+			repoOwner('sillsdev')
+			repository('flexbridge')
+			scanCredentialsId('github-sillsdevgerrit')
+			buildOriginBranch(true)
+			buildOriginBranchWithPR(false)
+			buildOriginPRMerge(true)
+			buildForkPRMerge(true)
+		}
+
+		orphanedItemStrategy {
+			discardOldItems {
+				daysToKeep(60)
+				numToKeep(10)
+			}
+		}
+	}
+}
