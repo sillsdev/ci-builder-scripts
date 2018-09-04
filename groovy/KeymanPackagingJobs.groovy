@@ -22,9 +22,9 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 /*
  * We are building multiple packages in this job
  */
-for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl']) {
+for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 	subdir_name = "linux/${packagename}"
-	branch = 'master'
+	branch = 'linux-buildsys'
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
 
@@ -34,12 +34,12 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl']) {
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
 			distros_tobuild, email_recipients, branch, "amd64 i386", "xenial bionic", true, mainRepoDir,
-			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
+			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
 			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
 
 		description """
-<p>Automatic ("nightly") builds of the Keyman master branch.</p>
+<p>Automatic ("nightly") builds of the Keyman for Linux master branch.</p>
 <p>The job is created by the DSL plugin from <i>KeymanPackagingJobs.groovy</i> script.</p>
 """
 
@@ -68,7 +68,36 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl']) {
 
 		steps {
 			shell("""#!/bin/bash
+export FULL_BUILD_NUMBER=${fullBuildNumber}
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name main"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name proposed"
+fi
+
+# make source package
+cd linux
+rm -rf builddebs
+./reconf.sh dev ${packagename}
+./dist.sh origdist ${packagename}
+./deb.sh sourcepackage ${packagename}
+
+#sign source package
+for file in `ls builddebs/*.dsc`; do debsign -k\$DEBSIGNKEY \$file; done
+mv builddebs/* .
+cd ..
 cd "${subdir_name}"
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${distros_tobuild}" \
+	--debkeyid \$DEBSIGNKEY \
+	\$BUILD_PACKAGE_ARGS
+
 echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
 """)
 
