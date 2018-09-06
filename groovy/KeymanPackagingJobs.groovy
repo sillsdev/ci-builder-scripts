@@ -52,10 +52,10 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 		}
 
 		Common.gitScm(delegate, /*url*/ repo, /*branch*/"\$BranchOrTagToBuild",
-			/*createTag*/ false, /*subdir*/ "linux", /*disableSubmodules*/ false,
+			/*createTag*/ false, /*subdir*/ "", /*disableSubmodules*/ false,
 			/*commitAuthorInChangelog*/ true, /*scmName*/ "", /*refspec*/ "",
 			/*clean*/ false, /*credentials*/ "", /*fetchTags*/ true,
-			/*onlyTriggerFileSpec*/ "${subdir_name}/linux/.*",
+			/*onlyTriggerFileSpec*/ "linux/.*",
 			/*githubRepo*/ "keymanapp/keyman")
 
 		wrappers {
@@ -82,6 +82,7 @@ fi
 pwd
 ls
 cd linux
+ls
 rm -rf builddebs
 ./scripts/reconf.sh dev ${packagename}
 ./scripts/dist.sh origdist ${packagename}
