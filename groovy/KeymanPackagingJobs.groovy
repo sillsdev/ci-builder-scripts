@@ -97,6 +97,7 @@ cd "${subdir_name}"
 	--main-package-name "${packagename}" \
 	--supported-distros "${distros_tobuild}" \
 	--debkeyid \$DEBSIGNKEY \
+	--build-in-place \
 	\$BUILD_PACKAGE_ARGS
 
 echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
