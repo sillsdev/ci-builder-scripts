@@ -88,7 +88,7 @@ rm -rf builddebs
 
 #sign source package
 for file in `ls builddebs/*.dsc`; do debsign -k\$DEBSIGNKEY \$file; done
-mv builddebs/* .
+mv builddebs/* ${packagename}
 cd ..
 cd "${subdir_name}"
 
