@@ -52,7 +52,7 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 		}
 
 		Common.gitScm(delegate, /*url*/ repo, /*branch*/"\$BranchOrTagToBuild",
-			/*createTag*/ false, /*subdir*/ subdir_name, /*disableSubmodules*/ false,
+			/*createTag*/ false, /*subdir*/ "linux", /*disableSubmodules*/ false,
 			/*commitAuthorInChangelog*/ true, /*scmName*/ "", /*refspec*/ "",
 			/*clean*/ false, /*credentials*/ "", /*fetchTags*/ true,
 			/*onlyTriggerFileSpec*/ "${subdir_name}/linux/.*",
@@ -79,11 +79,13 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 # make source package
+pwd
+ls
 cd linux
 rm -rf builddebs
-./reconf.sh dev ${packagename}
-./dist.sh origdist ${packagename}
-./deb.sh sourcepackage ${packagename}
+./scripts/reconf.sh dev ${packagename}
+./scripts/dist.sh origdist ${packagename}
+./scripts/deb.sh sourcepackage ${packagename}
 
 #sign source package
 for file in `ls builddebs/*.dsc`; do debsign -k\$DEBSIGNKEY \$file; done
