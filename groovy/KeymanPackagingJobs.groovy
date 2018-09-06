@@ -79,11 +79,9 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 # make source package
-pwd
-ls
 cd linux
-ls
 rm -rf builddebs
+. \$HOME/ci-builder-scripts/bash/common.sh
 ./scripts/reconf.sh dev ${packagename}
 ./scripts/dist.sh origdist ${packagename}
 ./scripts/deb.sh sourcepackage ${packagename}
