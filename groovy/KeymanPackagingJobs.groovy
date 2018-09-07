@@ -78,6 +78,8 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
+rm -f ${packagename}-packageversion.properties
+
 # make source package
 cd linux
 ./scripts/jenkins.sh "${packagename}" "\$DEBSIGNKEY"
@@ -92,7 +94,10 @@ cd "${subdir_name}"
 	--build-in-place \
 	\$BUILD_PACKAGE_ARGS
 
-echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../../${packagename}-packageversion.properties
+buildret = "\$?"
+
+if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(for file in `ls -1 ${packagename}*_source.build`;do basename \$file _source.build;done|cut -d "_" -f2|cut -d "-" -f1)" > ../../${packagename}-packageversion.properties; fi
+exit \$buildret
 """)
 
 			environmentVariables {
