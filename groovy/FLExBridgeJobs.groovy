@@ -84,7 +84,7 @@ export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	upload_target = 'main'
+	upload_target='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
@@ -114,7 +114,7 @@ echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packag
 
 			shell("""#!/bin/bash -e
 if [ "\$PackageBuildKind" = "Release" ]; then
-	upload_target = 'main'
+	upload_target='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--no-upload"
 fi
