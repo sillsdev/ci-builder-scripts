@@ -80,15 +80,7 @@ fi
 
 # make source package
 cd linux
-rm -rf builddebs
-. \$HOME/ci-builder-scripts/bash/common.sh
-./scripts/reconf.sh dev ${packagename}
-./scripts/dist.sh origdist ${packagename}
-./scripts/deb.sh sourcepackage ${packagename}
-
-#sign source package
-for file in `ls builddebs/*.dsc`; do debsign -k\$DEBSIGNKEY \$file; done
-mv builddebs/* ${packagename}
+./scripts/jenkins.sh "${packagename}" "\$DEBSIGNKEY"
 cd ..
 cd "${subdir_name}"
 
@@ -100,7 +92,7 @@ cd "${subdir_name}"
 	--build-in-place \
 	\$BUILD_PACKAGE_ARGS
 
-echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
+echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../../${packagename}-packageversion.properties
 """)
 
 			environmentVariables {

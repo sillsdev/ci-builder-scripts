@@ -73,10 +73,10 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
 			DCMD_ARGS="--deb --changes --buildinfo"
-			DCMD_NOARGS="--no-deb --no-changes --no-buildinfo"
+			DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc --no-buildinfo"
 		else
 			DCMD_ARGS="--deb --changes"
-			DCMD_NOARGS="--no-deb --no-changes"
+			DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 		fi
 		dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
 		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
