@@ -82,9 +82,9 @@ rm -f ${packagename}-packageversion.properties
 
 # make source package
 cd linux
-./scripts/jenkins.sh "${packagename}" "\$DEBSIGNKEY"
+./scripts/jenkins.sh ${packagename} \$DEBSIGNKEY
 cd ..
-cd "${subdir_name}"
+cd ${subdir_name}
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
@@ -138,7 +138,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-master") {
 	}
 
 	Common.gitScm(delegate, /*url*/ onboard_repo, /*branch*/"\$BranchOrTagToBuild",
-			/*createTag*/ false, /*subdir*/ "", /*disableSubmodules*/ false,
+			/*createTag*/ false, /*subdir*/ "onboard-keyman", /*disableSubmodules*/ false,
 			/*commitAuthorInChangelog*/ true, /*scmName*/ "", /*refspec*/ "",
 			/*clean*/ false, /*credentials*/ "", /*fetchTags*/ true,
 			/*onlyTriggerFileSpec*/ "",
@@ -165,9 +165,8 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 # get orig.tar.gz
-cd ..
-apt-get source --download-only onboard=`dpkg-parse-changelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
-rm onboard_*.debian.tar.?z onboard_*.dsc
+onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
+wget http://deb.debian.org/debian/pool/main/o/onboard/onboard_\${onboard_version}.orig.tar.gz
 cd onboard-keyman
 
 # make source package
