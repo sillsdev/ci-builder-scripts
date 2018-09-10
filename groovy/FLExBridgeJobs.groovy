@@ -116,6 +116,7 @@ echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packag
 if [ "\$PackageBuildKind" = "Release" ]; then
 	upload_target='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	# Note: The ReleaseCandidate kind is not used for FB currently (20180910).
 	BUILD_PACKAGE_ARGS="--no-upload"
 fi
 
