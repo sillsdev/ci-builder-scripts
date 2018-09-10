@@ -120,6 +120,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $pbuilder_path/$dist/$arch/result
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
+			log "Uploading to llso:ubuntu/$dist$SUITE_NAME $arch"
 			dput $dput_simulate -U llso:ubuntu/$dist$SUITE_NAME ${source_package_name}_*.changes
 		fi
 	done
