@@ -84,7 +84,6 @@ export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	upload_target='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 	BUILD_PACKAGE_ARGS="--no-upload"
@@ -114,7 +113,7 @@ echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packag
 
 			shell("""#!/bin/bash -e
 if [ "\$PackageBuildKind" = "Release" ]; then
-	upload_target='main'
+	upload_suite='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	# Note: The ReleaseCandidate kind is not used for FB currently (20180910).
 	BUILD_PACKAGE_ARGS="--no-upload"
@@ -126,7 +125,7 @@ cd "${subdir_name}"
 	--arches "\$ArchesToPackage" \
 	--main-package-name "${packagename}" \
 	--supported-distros "${distros}" \
-	--suite-name "${upload_target}" \
+	--suite-name "\${upload_suite}" \
 	--debkeyid \$DEBSIGNKEY \
 	\$BUILD_PACKAGE_ARGS
 """)
