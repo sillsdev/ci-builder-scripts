@@ -171,7 +171,7 @@ cd onboard-keyman
 
 # make source package
 rm -rf onboard_*.{dsc,build,buildinfo,changes,tar.?z,log}
-dgit build-source
+dgit -wg build-source
 cp ../onboard_*.{dsc,build,buildinfo,changes,tar.?z,log} .
 for file in `ls *.dsc`; do log "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
 
