@@ -81,10 +81,8 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 		dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
 		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
 		if grep -q '.ddeb$' ${source_package_name}_*.changes ; then
-			# Unfortunately dcmd doesn't yet have a way to select .ddeb files...
-			ddebfile="$(dcmd --package ${DCMD_NOARGS} echo ${source_package_name}_*.changes)"
-			sha256sum ${ddebfile}*.ddeb
-			cp ${ddebfile}*.ddeb $WORKSPACE/results/
+			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*.changes || true
+			dcmd $DCMD_NOARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
 		fi
 		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
 			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
