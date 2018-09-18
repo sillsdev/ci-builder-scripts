@@ -24,7 +24,7 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
  */
 for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 	subdir_name = "linux/${packagename}"
-	branch = 'linux-buildsys'
+	branch = 'master'
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
 
@@ -183,7 +183,10 @@ for file in `ls *.dsc`; do log "Signing source package \$file"; debsign -k\$DEBS
 	--build-in-place \
 	\$BUILD_PACKAGE_ARGS
 
-echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ${packagename}-packageversion.properties
+buildret="\$?"
+
+if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
+exit \$buildret
 """)
 
 		environmentVariables {
