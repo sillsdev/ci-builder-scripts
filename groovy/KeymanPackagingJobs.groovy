@@ -185,7 +185,8 @@ for file in `ls *.dsc`; do log "Signing source package \$file"; debsign -k\$DEBS
 
 buildret="\$?"
 
-if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
+if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties; fi
+
 exit \$buildret
 """)
 
