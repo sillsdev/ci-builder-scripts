@@ -63,6 +63,8 @@ for (branch in ['develop']) {
 
 		triggers {
 			githubPush()
+			// Weekly on Saturday
+			cron("H H * * 6")
 		}
 
 		Common.gitScm(delegate, /* url: */ repo, /* branch: */ "\$BranchOrTagToBuild",
