@@ -158,5 +158,10 @@ multibranchPipelineJob('FLExBridge') {
 				numToKeep(10)
 			}
 		}
+
+		triggers {
+			// check once a day if not otherwise run
+			periodic(1440)
+		}
 	}
 }

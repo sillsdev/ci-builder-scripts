@@ -26,6 +26,11 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 					numToKeep(10)
 				}
 			}
+
+			triggers {
+				// check once a day if not otherwise run
+				periodic(1440)
+			}
 		}
 	}
 }
