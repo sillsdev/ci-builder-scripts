@@ -5,7 +5,7 @@
 //#include utilities/Common.groovy
 
 // Variables
-def distros_tobuild = 'xenial bionic'
+def distros_tobuild = "xenial bionic disco"
 def repo = 'git://github.com/keymanapp/keyman.git'
 def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
@@ -22,8 +22,14 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 /*
  * We are building multiple packages in this job
  */
-for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
-	subdir_name = "linux/${packagename}"
+for (packagename in ['keyman-keyboardprocessor', 'kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config', 'ibus-keyman']) {
+	if (packagename == 'keyman-keyboardprocessor') {
+		subdir_name = "common/engine/keyboardprocessor"
+		build_distros = 'bionic disco'
+	} else {
+		subdir_name = "linux/${packagename}"
+		build_distros = 'xenial bionic disco'
+	}
 	branch = 'master'
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 	package_version = """--package-version "${fullBuildNumber}" """
@@ -33,7 +39,7 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 		mainRepoDir = '.'
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_tobuild, email_recipients, branch, "amd64 i386", "xenial bionic", true, mainRepoDir,
+			build_distros, email_recipients, branch, "amd64 i386", build_distros, true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
 			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
@@ -51,11 +57,17 @@ for (packagename in ['kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config']) {
 			githubPush()
 		}
 
+		if (packagename == 'keyman-keyboardprocessor') {
+			onlyTriggerFileSpec = "common/engine/.*"
+		} else {
+			onlyTriggerFileSpec = "linux/.*\ncommon/engine/.*\nresources/.*"
+		}
+
 		Common.gitScm(delegate, /*url*/ repo, /*branch*/"\$BranchOrTagToBuild",
 			/*createTag*/ false, /*subdir*/ "", /*disableSubmodules*/ false,
 			/*commitAuthorInChangelog*/ true, /*scmName*/ "", /*refspec*/ "",
 			/*clean*/ false, /*credentials*/ "", /*fetchTags*/ true,
-			/*onlyTriggerFileSpec*/ "linux/.*",
+			/*onlyTriggerFileSpec*/ onlyTriggerFileSpec,
 			/*githubRepo*/ "keymanapp/keyman")
 
 		wrappers {

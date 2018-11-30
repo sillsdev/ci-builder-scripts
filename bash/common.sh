@@ -72,7 +72,7 @@ init()
 	done
 
 	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-trusty}"
-	DISTS_TO_PROCESS="${supported_distros_arg:-trusty xenial}"
+	DISTS_TO_PROCESS="${supported_distros_arg:-trusty xenial bionic}"
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
 	PACKAGING_ROOT="$HOME/packages"
