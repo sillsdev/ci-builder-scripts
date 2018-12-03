@@ -34,9 +34,9 @@ class lfMergeViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^LfMerge.*-any-(default|master)-release$|^FieldWorks.*', 'master branch jobs')
-					regexGroupingRule('^LfMerge.*-any-qa-release$', 'qa branch jobs')
-					regexGroupingRule('^LfMerge.*-any-live-release$', 'live branch jobs')
+					regexGroupingRule('^LfMerge.*-any-.*master-release$|^FieldWorks.*', 'master branch jobs')
+					regexGroupingRule('^LfMerge.*-any-.*qa-release$', 'qa branch jobs')
+					regexGroupingRule('^LfMerge.*-any-.*live-release$', 'live branch jobs')
 					regexGroupingRule('.*(Packaging).*', '')
 					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
 					regexGroupingRule('^GitHub.*-lfmerge-.*|^Gerrit.*', 'Pre-merge builds for libraries (lfmerge branch)')

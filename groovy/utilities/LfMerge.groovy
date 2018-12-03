@@ -46,9 +46,10 @@ class LfMerge {
 					git {
 						def xforgeSpec = spec
 						def xforgeSha1 = sha1
-						if ((branchName == 'qa' || branchName == 'live') && !isPr) {
-							xforgeSpec = "+refs/heads/lf-${branchName}:refs/remotes/origin/lf-${branchName}"
-							xforgeSha1 = "*/lf-${branchName}"
+						def branchSuffix = branchName.split('-').last()
+						if ((branchSuffix == 'qa' || branchSuffix == 'live') && !isPr) {
+							xforgeSpec = "+refs/heads/lf-${branchSuffix}:refs/remotes/origin/lf-${branchSuffix}"
+							xforgeSha1 = "*/lf-${branchSuffix}"
 						}
 						remote {
 							github("sillsdev/web-languageforge", "https")
@@ -80,7 +81,7 @@ class LfMerge {
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false, branchName = '') {
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false, branchName = '', prefix = '', msbuild = 'xbuild') {
 		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge, "sillsdev/LfMerge", 'lfmerge', isPr, branchName)
 		jobContext.with {
 			steps {
@@ -91,7 +92,7 @@ class LfMerge {
 
 				// Install dependencies
 				downstreamParameterized {
-					trigger('LfMerge_InstallDependencies-Linux-any-master-release') {
+					trigger("LfMerge_InstallDependencies-Linux-any-${prefix}master-release") {
 						block {
 							buildStepFailure('FAILURE')
 							failure('FAILURE')
@@ -105,11 +106,12 @@ class LfMerge {
 				}
 
 				// Set build number in Jenkins
-				shell('''#!/bin/bash -e
+				shell("""!/bin/bash -e
 . environ
-xbuild /t:RestorePackages build/LfMerge.proj
+${msbuild} /t:RestorePackages build/LfMerge.proj
 mkdir -p output/Release
-
+""" +
+'''
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
 
 . gitversion.properties
@@ -199,12 +201,12 @@ fi
 ''')
 				// Download dependencies
 				// We use mono 5 for that because it fails with mono 3 due to some async bugs
-				shell('''#!/bin/bash -e
+				shell("""#!/bin/bash -e
 echo "Downloading dependencies"
 export MONO_PREFIX=/opt/mono5-sil
 . environ
-xbuild /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
-''')
+${msbuild} /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
+""")
 
 				// Compile and run tests
 				shell('''#!/bin/bash -e
@@ -214,7 +216,7 @@ mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
 yes | certmgr -ssl https://nuget.org
-xbuild /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
+''' + msbuild + ''' /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
 result=$?
 
 # Jenkins has problems using jgit to remove LinkedFiles directory with

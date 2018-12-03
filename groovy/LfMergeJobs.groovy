@@ -16,102 +16,107 @@
  */
 
 def distro = 'xenial'
-def MinDbVersion = 7000068
-def MaxDbVersion = 7000070
-def MonoPrefix = '/opt/mono-sil'
-def MonoPrefixForPackaging = '/opt/mono4-sil'
 def buildAgent = 'ba-xenial-web-s2-138'
 
 // *********************************************************************************************
-freeStyleJob('LfMerge_InstallDependencies-Linux-any-master-release') {
-	LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
+for (prefix in [ '', 'fieldworks8-']) {
+	def MinDbVersion = prefix == '' ? 7000072 : 7000068
+	def MaxDbVersion = prefix == '' ? 7000072 : 7000070
+	def MonoPrefix = prefix == '' ? '/opt/mono5-sil' : '/opt/mono-sil'
+	def MonoPrefixForPackaging = prefix == '' ? '/opt/mono5-sil' : '/opt/mono4-sil'
+	def msbuild = prefix == '' ? 'msbuild' : 'xbuild'
 
-	description '''<p>Install dependency packages for LfMerge builds.<p>
+	freeStyleJob("LfMerge_InstallDependencies-Linux-any-${prefix}master-release") {
+		LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
+
+		description '''<p>Install dependency packages for LfMerge builds.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>'''
 
-	parameters {
-		stringParam("branch", "master",
-			"What to build, e.g. master or origin/pr/9/head")
-		stringParam("refspec", "refs/heads/master",
-			"Refspec to build")
-	}
+		parameters {
+			stringParam("branch", "${prefix}master",
+				"What to build, e.g. master or origin/pr/9/head")
+			stringParam("refspec", "refs/heads/${prefix}master",
+				"Refspec to build")
+		}
 
-	// will be triggered by other jobs
+		// will be triggered by other jobs
 
-	steps {
-		// Install packages
-		shell("""#!/bin/bash
+		steps {
+			// Install packages
+			shell("""#!/bin/bash
 set -e
 PATH=${MonoPrefix}/bin:\$PATH
 debian/PrepareSource
 cd build
 mozroots --import --sync
 ./install-deps""")
+		}
 	}
-}
 
-// *********************************************************************************************
-for (branchName in ['master', 'live', 'qa']) {
-	freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
-		LfMerge.commonLfMergeBuildJob(delegate,
-			/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
-			/* sha1: */ "*/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
-			/* isPr: */ false, /* branchName: */ branchName)
+	// *****************************************************************************************
+	for (branchNameSuffix in ['master', 'live', 'qa']) {
+		def branchName = prefix + branchNameSuffix
+		freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
+			LfMerge.commonLfMergeBuildJob(delegate,
+				/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
+				/* sha1: */ "*/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
+				/* isPr: */ false, /* branchName: */ branchName, /* prefix: */ prefix,
+				/* msbuild: */ msbuild)
 
-		description """<p>Linux builds of LfMerge ${branchName}.<p>
+			description """<p>Linux builds of LfMerge ${branchName}.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
 
-		triggers {
-			githubPush()
-		}
+			triggers {
+				githubPush()
+			}
 
-		steps {
-			downstreamParameterized {
-				trigger("LfMerge_Packaging-Linux-all-${branchName}-release")
+			steps {
+				downstreamParameterized {
+					trigger("LfMerge_Packaging-Linux-all-${branchName}-release")
+				}
 			}
 		}
-	}
 
-	freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
-		def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
+		freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
+			def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 
-		if (branchName == "live") {
-			BuildPackageArgs = "--suite-name main"
-			AdditionalDescription = "(Uploaded to main section of llso)"
-		} else if (branchName == "qa") {
-			BuildPackageArgs = "--suite-name proposed"
-			AdditionalDescription = "(Uploaded to -proposed section of llso)"
-		} else {
-			BuildPackageArgs = ""
-			AdditionalDescription = "(Uploaded to -experimental section of llso)"
-		}
+			if (branchNameSuffix == "live") {
+				BuildPackageArgs = "--suite-name main"
+				AdditionalDescription = "(Uploaded to main section of llso)"
+			} else if (branchNameSuffix == "qa") {
+				BuildPackageArgs = "--suite-name proposed"
+				AdditionalDescription = "(Uploaded to -proposed section of llso)"
+			} else {
+				BuildPackageArgs = ""
+				AdditionalDescription = "(Uploaded to -experimental section of llso)"
+			}
 
-		description """<p>Package builds of the LfMerge ${branchName} branch ${AdditionalDescription}.</p>
+			description """<p>Package builds of the LfMerge ${branchName} branch ${AdditionalDescription}.</p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>
 """
 
-		parameters {
-			stringParam("DistributionsToPackage", distro,
-				"The distributions to build packages for (separated by space)")
-		}
+			parameters {
+				stringParam("DistributionsToPackage", distro,
+					"The distributions to build packages for (separated by space)")
+			}
 
-		Common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
-			distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', false,
-			false, false, "finalresults")
+			Common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
+				distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', false,
+				false, false, "finalresults")
 
-		// will be triggered by other jobs
+			// will be triggered by other jobs
 
-		Common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
-			false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
-			true, 'github-sillsdevgerrit')
+			Common.gitScm(delegate, 'https://github.com/sillsdev/LfMerge.git', "refs/heads/${branchName}",
+				false, 'lfmerge', false, true, "", "+refs/heads/*:refs/remotes/origin/* +refs/pull/*:refs/remotes/origin/pr/*",
+				true, 'github-sillsdevgerrit')
 
-		steps {
-			shell("""#!/bin/bash -e
+			steps {
+				shell("""#!/bin/bash -e
 cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
 export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-xbuild /t:RestorePackages build/LfMerge.proj
+${msbuild} /t:RestorePackages build/LfMerge.proj
 mkdir -p output/Release
 
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
@@ -125,15 +130,15 @@ fi
 echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}" >> gitversion.properties
 
 echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}"
-				""")
+					""")
 
-			environmentVariables {
-				propertiesFile('lfmerge/gitversion.properties')
-			}
+				environmentVariables {
+					propertiesFile('lfmerge/gitversion.properties')
+				}
 
-			Common.addBuildNumber(delegate, 'PackageVersion')
+				Common.addBuildNumber(delegate, 'PackageVersion')
 
-			shell("""#!/bin/bash -e
+				shell("""#!/bin/bash -e
 echo -e "\\033[0;34mBuilding packages for version \${PackageVersion}\\033[0m"
 
 TRACE()
@@ -159,7 +164,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	git reset --hard
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
-	TRACE xbuild /t:PrepareSource /v:detailed build/LfMerge.proj
+	TRACE ${msbuild} /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	TRACE debian/PrepareSource \$curDbVersion
 
@@ -178,16 +183,17 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	mv results/* finalresults/
 done
 """)
-		}
+			}
 
-		if (branchName == "live") {
-			publishers {
-				git {
-					pushOnlyIfSuccess()
-					tag('origin', 'v$PackageVersion') {
-						message('Version $PackageVersion')
-						create()
-						update()
+			if (branchNameSuffix == "live") {
+				publishers {
+					git {
+						pushOnlyIfSuccess()
+						tag('origin', 'v$PackageVersion') {
+							message('Version $PackageVersion')
+							create()
+							update()
+						}
 					}
 				}
 			}
@@ -195,7 +201,7 @@ done
 	}
 }
 
-// *********************************************************************************************
+// ***********************************************************************************************
 freeStyleJob('LfMergeFDO_Packaging-Linux-all-lfmerge-release') {
 	def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 	def fwBranch = 'feature/lfmerge'
@@ -378,4 +384,3 @@ multibranchPipelineJob('lfmerge') {
 		}
 	}
 }
-
