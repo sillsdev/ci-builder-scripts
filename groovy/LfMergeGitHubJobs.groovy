@@ -10,17 +10,6 @@
 //#include utilities/LfMerge.groovy
 
 // *********************************************************************************************
-freeStyleJob('GitHub-LfMerge-Linux-any-master-release') {
-	LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}',
-		/* useTimeout: */ true, /* addLanguageForge: */ true, /* isPR: */ true)
-
-	description '''<p>Pre-merge Linux builds of master branch. Triggered by creating a PR on GitHub.<p>
-<p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>'''
-
-	Common.addGitHubParamAndTrigger(delegate, 'master')
-}
-
-// *********************************************************************************************
 freeStyleJob('GitHub-Chorus-Linux-any-lfmerge-release') {
 
 	description '''<p>Pre-merge Linux builds of lfmerge branch of Chorus. Triggered by creating a PR on GitHub.<p>
@@ -87,9 +76,9 @@ freeStyleJob('GitHub-FlexBridge-Linux-any-lfmerge-release') {
 BUILD=ReleaseMono
 . environ
 
-./download_dependencies_linux.sh
-
-xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$GIT_COMMIT /property:Configuration=$BUILD build/FLExBridge.proj''')
+./download_dependencies_linux.sh'master'
+'master'
+xbuild /t:Test /property:BUILD_NUMBER=0.0.$BUILD_NUMBER.0 /property:BUILD_VCS_NUMBER=$G'master'IT_COMMIT /property:Configuration=$BUILD build/FLExBridge.proj''')
 
 		environmentVariables {
 			propertiesFile('gitversion.properties')

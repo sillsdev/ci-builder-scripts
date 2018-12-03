@@ -54,8 +54,21 @@ mozroots --import --sync
 	}
 
 	// *****************************************************************************************
+	def branchName = prefix + 'master'
+	freeStyleJob("GitHub-LfMerge-Linux-any-${branchName}-release") {
+		LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}',
+			/* useTimeout: */ true, /* addLanguageForge: */ true, /* isPR: */ true,
+			/* branchName: */ branchName, /* prefix: */ prefix, /* msbuild: */ msbuild)
+
+		description """<p>Pre-merge Linux builds of ${branchName} branch. Triggered by creating a PR on GitHub.<p>
+<p>The job is created by the DSL plugin from <i>LfMergeGitHubJobs.groovy</i> script.</p>"""
+
+		Common.addGitHubParamAndTrigger(delegate, branchName)
+	}
+
+	// *****************************************************************************************
 	for (branchNameSuffix in ['master', 'live', 'qa']) {
-		def branchName = prefix + branchNameSuffix
+		branchName = prefix + branchNameSuffix
 		freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
 			LfMerge.commonLfMergeBuildJob(delegate,
 				/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
