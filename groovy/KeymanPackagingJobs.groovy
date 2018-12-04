@@ -5,7 +5,7 @@
 //#include utilities/Common.groovy
 
 // Variables
-def distros_tobuild = "xenial bionic disco"
+def distros_tobuild = "xenial bionic"
 def repo = 'git://github.com/keymanapp/keyman.git'
 def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
@@ -25,10 +25,14 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 for (packagename in ['keyman-keyboardprocessor', 'kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config', 'ibus-keyman']) {
 	if (packagename == 'keyman-keyboardprocessor') {
 		subdir_name = "common/engine/keyboardprocessor"
-		build_distros = 'bionic disco'
+		build_distros = 'bionic'
+	}
+	else if (packagename == 'ibus-keyman') {
+		subdir_name = "linux/ibus-keyman"
+		build_distros = 'bionic'
 	} else {
 		subdir_name = "linux/${packagename}"
-		build_distros = 'xenial bionic disco'
+		build_distros = 'xenial bionic'
 	}
 	branch = 'master'
 	extraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
