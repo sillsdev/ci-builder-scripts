@@ -398,7 +398,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 	static void addGitHubParamAndTrigger(jobContext, branch, os = 'linux', whitelistArgs = '') {
 		jobContext.with {
 			parameters {
-				stringParam("sha1", "refs/heads/master",
+				stringParam("sha1", "refs/heads/${branch}",
 					"What pull request to build, e.g. pr/9/merge")
 			}
 
@@ -416,7 +416,7 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 					whiteListTargetBranches([ branch ])
 					extensions {
 						commitStatus {
-							context("continuous-integration/jenkins-$os")
+							context("continuous-integration/jenkins-${os}")
 						}
 					}
 				}
