@@ -112,11 +112,13 @@ ${msbuild} /t:RestorePackages build/LfMerge.proj
 mkdir -p output/Release
 """ +
 '''
+export GIT_BRANCH=$GIT_BRANCH_0
 mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
 
 . gitversion.properties
 
 echo "BuildVersion=${GitVersion_SemVer}.${BUILD_NUMBER}" >> gitversion.properties
+echo "GIT_BRANCH=${GIT_BRANCH_0}" >> gitversion.properties
 				''')
 
 				environmentVariables {
