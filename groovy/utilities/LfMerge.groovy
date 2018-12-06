@@ -108,7 +108,7 @@ class LfMerge {
 				// Set build number in Jenkins
 				shell("""#!/bin/bash -e
 . environ
-${msbuild} /t:RestorePackages build/LfMerge.proj
+${msbuild} /t:RestoreBuildTasks build/LfMerge.proj
 mkdir -p output/Release
 """ +
 '''

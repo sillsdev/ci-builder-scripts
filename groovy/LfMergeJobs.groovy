@@ -129,7 +129,7 @@ cd lfmerge
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
 export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
-${msbuild} /t:RestorePackages build/LfMerge.proj
+${msbuild} /t:RestoreBuildTasks build/LfMerge.proj
 mkdir -p output/Release
 
 if [ -f packages/GitVersion.CommandLine/tools/GitVersion.exe ]; then
