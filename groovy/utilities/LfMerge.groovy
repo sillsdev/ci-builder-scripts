@@ -50,6 +50,8 @@ class LfMerge {
 						if ((branchSuffix == 'qa' || branchSuffix == 'live') && !isPr) {
 							xforgeSpec = "+refs/heads/lf-${branchSuffix}:refs/remotes/origin/lf-${branchSuffix}"
 							xforgeSha1 = "*/lf-${branchSuffix}"
+						} else if (!isPr) {
+							xforgeSha1 = "*/${branchSuffix}";
 						}
 						remote {
 							github("sillsdev/web-languageforge", "https")
