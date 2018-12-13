@@ -51,6 +51,7 @@ class LfMerge {
 							xforgeSpec = "+refs/heads/lf-${branchSuffix}:refs/remotes/origin/lf-${branchSuffix}"
 							xforgeSha1 = "*/lf-${branchSuffix}"
 						} else if (!isPr) {
+							xforgeSpec = "+refs/heads/${branchSuffix}:refs/remotes/origin/${branchSuffix}"
 							xforgeSha1 = "*/${branchSuffix}";
 						}
 						remote {
