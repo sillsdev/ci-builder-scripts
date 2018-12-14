@@ -216,6 +216,7 @@ export MONO_PREFIX=/opt/mono5-sil
 . environ
 ${msbuild} /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
 """)
+
 				if (branchName.split('-').first() == "fieldworks8") {
 					// Only needed for Mono 3.x
 					shell('''#!/bin/bash -e
@@ -231,15 +232,15 @@ yes | certmgr -ssl https://nuget.org''')
 				shell("""#!/bin/bash -e
 echo "Compiling LfMerge and running unit tests"
 BUILD=Release . environ
-echo "Using $(which mono)"
+echo "Using \$(which mono)"
 ${msbuild} /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
-result=$?
+result=\$?
 
 # Jenkins has problems using jgit to remove LinkedFiles directory with
 # non-ASCII characters in filenames, so we delete these here
 rm -rf data/testlangproj
 rm -rf data/testlangproj-modified
-exit $result
+exit \$result
 """)
 
 			}
