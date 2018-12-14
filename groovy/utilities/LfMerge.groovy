@@ -22,7 +22,7 @@ class LfMerge {
 				colorizeOutput()
 				if (useTimeout) {
 					timeout {
-						likelyStuck()
+						elastic()
 						abortBuild()
 						writeDescription("Build timed out after {0} minutes")
 					}
