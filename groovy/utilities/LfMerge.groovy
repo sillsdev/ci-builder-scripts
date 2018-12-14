@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 SIL International
+ * Copyright (c) 2016-2018 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 /*
@@ -216,16 +216,23 @@ export MONO_PREFIX=/opt/mono5-sil
 . environ
 ${msbuild} /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
 """)
-
-				// Compile and run tests
-				shell('''#!/bin/bash -e
+				if (branchName.split('-').first() == "fieldworks8") {
+					// Only needed for Mono 3.x
+					shell('''#!/bin/bash -e
 echo "Compiling LfMerge and running unit tests"
 BUILD=Release . environ
 mozroots --import --sync
 yes | certmgr -ssl https://go.microsoft.com
 yes | certmgr -ssl https://nugetgallery.blob.core.windows.net
-yes | certmgr -ssl https://nuget.org
-''' + msbuild + ''' /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
+yes | certmgr -ssl https://nuget.org''')
+				}
+
+				// Compile and run tests
+				shell("""#!/bin/bash -e
+echo "Compiling LfMerge and running unit tests"
+BUILD=Release . environ
+echo "Using $(which mono)"
+${msbuild} /t:Test /v:detailed /property:Configuration=Release build/LfMerge.proj
 result=$?
 
 # Jenkins has problems using jgit to remove LinkedFiles directory with
@@ -233,7 +240,7 @@ result=$?
 rm -rf data/testlangproj
 rm -rf data/testlangproj-modified
 exit $result
-''')
+""")
 
 			}
 
