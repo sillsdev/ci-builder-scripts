@@ -72,7 +72,7 @@ mozroots --import --sync
 		freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
 			LfMerge.commonLfMergeBuildJob(delegate,
 				/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
-				/* sha1: */ "*/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
+				/* sha1: */ "refs/remotes/origin/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
 				/* isPr: */ false, /* branchName: */ branchName, /* prefix: */ prefix,
 				/* msbuild: */ msbuild)
 
@@ -177,7 +177,7 @@ cd -
 for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion++)); do
 	echo -e "\\033[0;34mBuilding package for database version \${curDbVersion}\\033[0m"
 	cd lfmerge
-	git clean -dxf
+	git clean -dxf --exclude=packages/
 	git reset --hard
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
