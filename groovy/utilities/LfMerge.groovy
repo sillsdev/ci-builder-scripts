@@ -142,7 +142,7 @@ mkdir -p tmp_hg
 cd tmp_hg
 [ -d hg ] || hg clone http://selenic.com/hg
 cd hg
-hg checkout 3.0.1
+hg checkout 3.3
 make local
 cp -r mercurial ../../Mercurial/''')
 
