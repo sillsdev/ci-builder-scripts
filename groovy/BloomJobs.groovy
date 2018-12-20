@@ -18,6 +18,8 @@ change got merged and collects the results.</p>
 <p>The job is created by the DSL plugin from <i>BloomJobs.groovy</i> script.</p>
 '''
 
+	disabled(true)
+
 	properties {
 		priority(100)
 	}
