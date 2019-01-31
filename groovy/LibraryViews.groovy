@@ -18,7 +18,7 @@ class libraryViews {
 				filterExecutors false
 
 				jobs {
-					regex('(icu4c|icu-dotnet|SIL.BuildTasks)')
+					regex('(icu4c|icu-dotnet|SIL.BuildTasks|libpalaso)')
 				}
 
 				columns {
