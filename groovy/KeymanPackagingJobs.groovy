@@ -49,7 +49,7 @@ for (packagebasename in ['keyman-keyboardprocessor', 'kmflcomp', 'libkmfl', 'ibu
 				kind = 'stable'
 				break
 			case 'beta':
-				packagename = "${packagename}-beta'"
+				packagename = "${packagename}-beta"
 				kind = 'beta'
 				extraParameter = "${baseExtraParameter} --append-to-package -beta"
 				break
