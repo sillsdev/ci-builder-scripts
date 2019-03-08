@@ -23,11 +23,6 @@ pipelineJob('PBuilder_Update-Linux-all') {
 		cron("H H * * 0")
 	}
 
-	wrappers {
-		timestamps()
-		colorizeOutput()
-	}
-
 	definition {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
@@ -53,11 +48,6 @@ disk that are at least two days old.</p>
 		cron("H H * * *")
 	}
 
-	wrappers {
-		timestamps()
-		colorizeOutput()
-	}
-
 	definition {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
@@ -79,11 +69,6 @@ pipelineJob('PBuilder_Setup-Linux-all') {
 	parameters {
 		stringParam("Distributions", distros,
 			"The distributions to create")
-	}
-
-	wrappers {
-		timestamps()
-		colorizeOutput()
 	}
 
 	definition {

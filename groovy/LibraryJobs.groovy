@@ -29,7 +29,9 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks', 'libpalaso']) {
 
 			triggers {
 				// check once a day if not otherwise run
-				periodic(1440)
+				periodicFolderTrigger {
+					interval('1d')
+				}
 			}
 		}
 	}

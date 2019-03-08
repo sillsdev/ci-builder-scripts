@@ -13,30 +13,8 @@ pipelineJob('InstallFieldWorksDependencies-Linux') {
 			"What branch to build")
 	}
 
-	scm {
-		git {
-			remote {
-				url("git://gerrit.lsdev.sil.org/FieldWorks.git")
-				refspec('$GERRIT_REFSPEC')
-			}
-			branch('$GERRIT_BRANCH')
-			browser {
-				gitWeb("https://github.com/sillsdev/FieldWorks/")
-			}
-			extensions {
-				perBuildTag()
-				cleanAfterCheckout()
-				choosingStrategy {
-					gerritTrigger()
-				}
-				cloneOptions {
-					noTags(false)
-				}
-			}
-			configure { git ->
-				git / 'extensions' << 'hudson.plugins.git.extensions.impl.AuthorInChangelog'()
-			}
-		}
+	properties {
+		githubProjectUrl("https://github.com/sillsdev/FieldWorks/")
 	}
 
 	triggers {
@@ -46,11 +24,6 @@ pipelineJob('InstallFieldWorksDependencies-Linux') {
 				refUpdated()
 			}
 		}
-	}
-
-	wrappers {
-		timestamps()
-		colorizeOutput()
 	}
 
 	definition {

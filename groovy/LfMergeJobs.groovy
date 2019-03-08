@@ -397,7 +397,9 @@ multibranchPipelineJob('lfmerge') {
 
 		triggers {
 			// check once a day if not otherwise run
-			periodic(1440)
+			periodicFolderTrigger {
+				interval('1d')
+			}
 		}
 	}
 }
