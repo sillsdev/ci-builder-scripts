@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018 SIL International
+ * Copyright (c) 2016-2019 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
@@ -18,7 +18,7 @@ class libraryViews {
 				filterExecutors false
 
 				jobs {
-					regex('(icu4c|icu-dotnet|SIL.BuildTasks|libpalaso)')
+					regex('(icu4c|icu-dotnet|SIL.BuildTasks)')
 				}
 
 				columns {

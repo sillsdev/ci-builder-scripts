@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2016-2018 SIL International
+ * Copyright (c) 2016-2019 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
-for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks', 'libpalaso']) {
+for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 	multibranchPipelineJob(repo) {
 		description """<p>Builds of ${repo}</p>
 	<p>The job is created by the DSL plugin from <i>LibraryJobs.groovy</i> script.</p>"""
