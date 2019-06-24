@@ -125,12 +125,6 @@ exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + pac
 					pattern("results/*")
 				}
 
-				publishBuild {
-					publishFailed(true)
-					publishUnstable(true)
-					discardOldBuilds(365, 20, 10, 20)
-				}
-
 				allowBrokenBuildClaiming()
 
 				mailer(email)
