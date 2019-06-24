@@ -15,8 +15,7 @@
  * and commit and push the changes.
  */
 
-def distro = 'xenial'
-def buildAgent = 'ba-xenial-web-s2-138'
+def distro = 'xenial bionic'
 
 // *********************************************************************************************
 for (prefix in [ '', 'fieldworks8-']) {
