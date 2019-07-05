@@ -12,8 +12,8 @@ log()
 
 TRACE()
 {
-	echo $@
-	$@
+	echo "$@"
+	"$@"
 }
 
 init()
