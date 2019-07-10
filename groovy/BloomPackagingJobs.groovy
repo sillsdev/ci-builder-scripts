@@ -50,7 +50,7 @@ for (version in ['4.4', '4.5', 'master']) {
 
 	freeStyleJob("Bloom_Packaging-Linux-all-${version}-${kind}") {
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_thisjob, email_recipients, branch)
+			distros_thisjob, email_recipients, branch, "amd64")
 
 		description """
 <p>Automatic ("nightly") builds of the Bloom ${branch} branch.</p>
