@@ -383,6 +383,7 @@ multibranchPipelineJob('lfmerge') {
 
 	branchSources {
 		git {
+			id('lfmerge')
 			remote('https://github.com/sillsdev/LfMerge')
 			credentialsId('github-sillsdev')
 			excludes('tags/*')
