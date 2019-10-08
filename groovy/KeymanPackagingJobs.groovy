@@ -7,7 +7,7 @@
 // Variables
 def distros_tobuild = "xenial bionic"
 def repo = 'git://github.com/keymanapp/keyman.git'
-def email_recipients = 'eb1@sil.org dglassey@gmail.com'
+def email_recipients = 'eb1@sil.org dglassey@gmail.com darcy_wong@sil.org'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
@@ -41,11 +41,11 @@ for (packagebasename in ['keyman-keyboardprocessor', 'kmflcomp', 'libkmfl', 'ibu
 /*
  * We have multiple jobs on different branches for release, beta ('master') and alpha ('develop')
  */
-	for (branch in ['stable-11.0', 'beta', 'master']) {
+	for (branch in ['stable-12.0', 'beta', 'master']) {
 		packagename = "${packagebasename}"
 		extraParameter = "${baseExtraParameter}"
 		switch (branch) {
-			case 'stable-11.0':
+			case 'stable-12.0':
 				kind = 'stable'
 				break
 			case 'beta':
