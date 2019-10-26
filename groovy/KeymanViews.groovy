@@ -10,7 +10,7 @@
 
 /* Definition of views */
 
-class KeymanViews {
+class keymanViews {
 	static void KeymanViewAll(viewContext) {
 		viewContext.with {
 			categorizedJobsView('All') {
@@ -43,7 +43,7 @@ nestedView('Keyman') {
 		view / defaultView('All')
 	}
 	views {
-		KeymanViews.KeymanViewAll(delegate)
+		keymanViews.KeymanViewAll(delegate)
 		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-alpha', 'Alpha Package builds')
 		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-beta', 'Beta Package builds')
 		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-stable', 'Stable Package builds')
