@@ -7,10 +7,10 @@
  */
 
 class CommonViews {
-	static void addPackageBuildsListView(viewContext, projectName, regexString) {
+	static void addPackageBuildsListView(viewContext, projectName, regexString, listViewName = 'Package builds') {
 		viewContext.with {
-			listView('Package builds') {
-				description "Package builds of <b>${projectName}</b>"
+			listView(listViewName) {
+				description "${listViewName} of <b>${projectName}</b>"
 				filterBuildQueue false
 				filterExecutors false
 
