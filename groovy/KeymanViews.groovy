@@ -19,7 +19,7 @@ class keymanViews {
 				filterExecutors false
 
 				jobs {
-					regex('(^Keyman.*')
+					regex('^Keyman.*')
 				}
 
 				columns {
@@ -37,6 +37,43 @@ class keymanViews {
 			}
 		}
 	}
+
+	static void addPRPackageBuildsListView(viewContext) {
+		viewContext.with {
+			categorizedJobsView('PR package builds') {
+				description "Pre-merge package builds of <b>Keyman</b>"
+				filterBuildQueue false
+				filterExecutors false
+
+				jobs {
+					regex('^Keyman_Packaging-PR-Linux.*')
+				}
+
+				columns {
+					status()
+					weather()
+					name()
+					lastSuccess()
+					lastFailure()
+					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
+					buildButton()
+					lastBuildNode()
+					lastBuildConsole()
+					slaveOrLabel()
+				}
+
+				categorizationCriteria {
+					regexGroupingRule('^Keyman_Packaging-PR-Linux.*-alpha', 'PR Alpha Package builds')
+					regexGroupingRule('^Keyman_Packaging-PR-Linux.*-beta', 'PR Beta Package builds')
+					regexGroupingRule('^Keyman_Packaging-PR-Linux.*-stable', 'PR Stable Package builds')
+				}
+			}
+		}
+	}
+
 }
 nestedView('Keyman') {
 	configure { view ->
@@ -44,9 +81,10 @@ nestedView('Keyman') {
 	}
 	views {
 		keymanViews.KeymanViewAll(delegate)
-		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-alpha', 'Alpha Package builds')
-		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-beta', 'Beta Package builds')
-		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-.*-stable', 'Stable Package builds')
-		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux-onboard-keyman-', 'OnboardKeyboard Package builds')
+		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux.*-alpha', 'Alpha Package builds')
+		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux.*-beta', 'Beta Package builds')
+		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux.*-stable', 'Stable Package builds')
+		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux-onboard-keyman-.*', 'OnboardKeyboard Package builds')
+		keymanViews.addPRPackageBuildsListView(delegate)
 	}
 }
