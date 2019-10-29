@@ -93,8 +93,10 @@ for (branch in ['stable-12.0', 'beta', 'master']) {
 
 				triggers {
 					if (buildKind == 'regular') {
+						extraPackageArgs = ''
 						githubPush()
 					} else {
+						extraPackageArgs = '--no-upload'
 						githubPullRequest {
 							admin('ermshiperete')
 							useGitHubHooks(true)
@@ -151,7 +153,7 @@ cd ${subdir_name}
 	--supported-distros "${distros_tobuild}" \
 	--debkeyid \$DEBSIGNKEY \
 	--build-in-place \
-	\$BUILD_PACKAGE_ARGS
+	\$BUILD_PACKAGE_ARGS ${extraPackageArgs}
 
 buildret="\$?"
 
