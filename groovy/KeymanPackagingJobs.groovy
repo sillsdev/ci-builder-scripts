@@ -265,6 +265,12 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 	description """<p>Packaging builds of Keyman</p>
 <p>The job is created by the DSL plugin from <i>KeymanPackagingJobs.groovy</i> script.</p>"""
 
+	factory {
+		workflowBranchProjectFactory {
+			scriptPath('linux/Jenkinsfile')
+		}
+	}
+
 	branchSources {
 		github {
 			id('keyman')
