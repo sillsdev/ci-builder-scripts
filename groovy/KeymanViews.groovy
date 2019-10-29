@@ -74,7 +74,34 @@ class keymanViews {
 		}
 	}
 
+	static void addKeymanPipelineJobs(viewContext) {
+		viewContext.with {
+			categorizedJobsView('Pipeline') {
+				description 'All pipeline related keyman packaging jobs'
+				filterBuildQueue false
+				filterExecutors false
+
+				jobs {
+					regex('pipeline-keyman-packaging')
+				}
+
+				columns {
+					status()
+					weather()
+					categorizedJob()
+					lastSuccess()
+					lastFailure()
+					lastDuration()
+					lastBuildTriggerColumn {
+						causeDisplayType("icon")
+					}
+					buildButton()
+				}
+			}
+		}
+	}
 }
+
 nestedView('Keyman') {
 	configure { view ->
 		view / defaultView('All')
@@ -86,5 +113,6 @@ nestedView('Keyman') {
 		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux.*-stable', 'Stable Package builds')
 		CommonViews.addPackageBuildsListView(delegate, 'Keyman', '^Keyman_Packaging-Linux-onboard-keyman-.*', 'OnboardKeyboard Package builds')
 		keymanViews.addPRPackageBuildsListView(delegate)
+		keymanViews.addKeymanPipelineJobs(delegate)
 	}
 }

@@ -259,3 +259,36 @@ exit \$buildret
 		Common.addBuildNumber(delegate, 'PackageVersion')
 	}
 }
+
+// Experimental packaging jobs with Pipeline
+multibranchPipelineJob('pipeline-keyman-packaging') {
+	description """<p>Packaging builds of Keyman</p>
+<p>The job is created by the DSL plugin from <i>KeymanPackagingJobs.groovy</i> script.</p>"""
+
+	branchSources {
+		github {
+			id('keyman')
+			repoOwner('keymanapp')
+			repository('keyman')
+			scanCredentialsId('keymanapp')
+			buildOriginBranch(true)
+			buildOriginBranchWithPR(false)
+			buildOriginPRMerge(true)
+			buildForkPRMerge(true)
+		}
+
+		orphanedItemStrategy {
+			discardOldItems {
+				daysToKeep(60)
+				numToKeep(10)
+			}
+		}
+
+		triggers {
+			// check once a day if not otherwise run
+			periodicFolderTrigger {
+				interval('1d')
+			}
+		}
+	}
+}
