@@ -276,7 +276,7 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 			id('keyman')
 			repoOwner('keymanapp')
 			repository('keyman')
-			scanCredentialsId('keymanapp')
+			scanCredentialsId('github-sillsdevgerrit')
 			includes('master PR-*')
 			buildOriginBranch(true)
 			buildOriginBranchWithPR(false)
