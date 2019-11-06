@@ -277,6 +277,7 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 			repoOwner('keymanapp')
 			repository('keyman')
 			scanCredentialsId('keymanapp')
+			includes('master')
 			buildOriginBranch(true)
 			buildOriginBranchWithPR(false)
 			buildOriginPRMerge(true)
