@@ -4,7 +4,9 @@
  */
 //#include utilities/Common.groovy
 
-def distros_tobuild = "trusty xenial bionic focal devel"
+def distros_tobuild = ""
+def distros_tobuild_mono5 = "trusty xenial bionic focal devel"
+def distros_tobuild_mono3and4 = "trusty xenial bionic"
 def email = "eb1@sil.org"
 
 static String GetPackageName(repo, branchName) {
@@ -22,6 +24,11 @@ static String GetPackageName(repo, branchName) {
 
 for (repo in [ 'mono', 'gtk-sharp', 'libgdiplus', 'mono-basic']) {
 	for (branchName in ['develop', 'release/mono-sil-3.4', 'release/mono4-sil']) {
+		if (branchName == 'release/mono-sil-3.4' || branchName == 'release/mono4-sil') {
+			distros_tobuild = distros_tobuild_mono3and4;
+		} else {
+			distros_tobuild = distros_tobuild_mono5;
+		}
 		def packageName = GetPackageName(repo, branchName)
 
 		freeStyleJob("${repo.capitalize().replace('-', '')}_Packaging-Linux-all-${branchName.replace('/', '_').replace('-', '_')}-debug") {
