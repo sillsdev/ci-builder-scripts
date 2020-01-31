@@ -7,7 +7,7 @@
 // Variables
 def distros_tobuild = "xenial bionic"
 def repo = 'git://github.com/keymanapp/keyman.git'
-def email_recipients = 'eb1@sil.org dglassey@gmail.com darcy_wong@sil.org'
+def email_recipients = 'eb1@sil.org marc_durdin@sil.org dglassey@gmail.com darcy_wong@sil.org'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
@@ -86,9 +86,9 @@ for (branch in ['stable-12.0', 'beta', 'master']) {
 				authenticationToken(binding.variables.TriggerToken)
 
 				if (packagename == 'keyman-keyboardprocessor') {
-					onlyTriggerFileSpec = "common/engine/.*"
+					onlyTriggerFileSpec = "common/engine/.*\nTIER.md\nVERSION.md"
 				} else {
-					onlyTriggerFileSpec = "linux/.*\ncommon/engine/.*\nresources/.*"
+					onlyTriggerFileSpec = "linux/.*\ncommon/engine/.*\nresources/.*\nTIER.md\nVERSION.md"
 				}
 
 				triggers {
