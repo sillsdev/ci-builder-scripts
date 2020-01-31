@@ -3,13 +3,13 @@
 All changes to this repo should be uploaded to Gerrit. Please see below if
 you don't have an account on Gerrit yet.
 
-A recommended setup is (replace _gerritusername_ with your gerrit account
+A recommended setup is (replace _`<gerritusername>`_ with your gerrit account
 name):
 
 	git clone https://github.com/sillsdev/ci-builder-scripts.git
 	cd ci-builder-scripts
 	git config remote.origin.pushurl \
-		ssh://<gerritusername>@gerrit.lsdev.sil.org:59418/ci-builder-scripts.git
+		ssh://<gerritusername>@gerrit.lsdev.sil.org/ci-builder-scripts.git
 	git config remote.origin.push "+refs/heads/*:refs/for/master/*"
 
 You can push your changes to Gerrit by running:
@@ -26,7 +26,7 @@ workflow which differs in so far that all development is done on the
 
 To add a build job to Jenkins you can add a new groovy file. Take one of the
 existing files as a template. The documentation for the Jenkins Job DSL API
-can be found on the [server itself](https://jenkins.lsdev.sil.org:45192/plugin/job-dsl/api-viewer/index.html).
+can be found on the [server itself](https://jenkins.lsdev.sil.org/plugin/job-dsl/api-viewer/index.html).
 
 You can check the syntax of the script by
 running gradle (see [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example])).
@@ -41,7 +41,7 @@ only when a VM on Eberhard's desktop machine is running).
 If you don't have a gerrit account yet, you'll have to register with our
 Gerrit [code review server](https://gerrit.lsdev.sil.org/).
 
-Gerrit uses OpenID for authentication; you can use your existing Google
+Gerrit uses OpenID for authentication; you can use your existing Google or GitHub
 account for that, or create an account with another OpenID provider and
 enter the URL of your OpenID. If your OpenID provider supports it you
 should enter an https version of the URL otherwise you might get a warning
