@@ -10,7 +10,7 @@ init "$@"
 
 log "Preparing"
 mkdir -p "$repo_base_dir"
-mkdir -p "$pbuilder_path"
+mkdir -p "$RESULTBASE"
 
 # change package name
 timestamp=$(date -u +"%Y%m%dT%H%M%SZ")

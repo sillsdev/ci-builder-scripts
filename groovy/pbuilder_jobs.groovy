@@ -2,11 +2,11 @@
  * DSL script for package builder Jenkins jobs
  */
 
-def distros = "trusty xenial bionic"
+def distros = "trusty xenial bionic focal"
 
 pipelineJob('PBuilder_Update-Linux-all') {
 	description '''
-<p>Maintenance job that updates all chroot instances for pbuilder</p>
+<p>Maintenance job that updates all chroot instances for sbuild.</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
 '''
 
@@ -60,7 +60,7 @@ disk that are at least two days old.</p>
 
 pipelineJob('PBuilder_Setup-Linux-all') {
 	description '''
-<p>Maintenance job that creates chroot instances for pbuilder. To be triggered manually.</p>
+<p>Maintenance job that creates chroot instances for sbuild. To be triggered manually.</p>
 <p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
 '''
 
@@ -81,12 +81,10 @@ init "$@"
 
 for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
-			$HOME/FwSupportTools/packaging/pbuilder/setup.sh
+		DISTRIBUTIONS="$distribution" ARCHES="$arch" $HOME/ci-builder-scripts/bash/setup.sh
 	done
 done\'\'\')
-
-				runOnAllNodes(label: 'packager', command: '$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
+'''
 			)
 		}
 	}

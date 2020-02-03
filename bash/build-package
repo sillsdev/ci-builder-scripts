@@ -7,6 +7,7 @@ PROGRAM_NAME="$(basename "$0")"
 
 . $(dirname "$0")/common.sh
 init "$@"
+[ -f $(dirname "$0")/build-package.config ] && . $(dirname "$0")/build-package.config
 
 # Don't try to process 32-bit package products if they are all architectureless.
 grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" || {
@@ -18,26 +19,24 @@ log "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		rm $pbuilder_path/$dist/$arch/result/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
+		RESULT="$RESULTBASE/$DIST-$ARCH/result"
+		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
 		rm $WORKSPACE/results/* || true
 	done
 done
 
 log "Preparing for building binary package(s)"
 
-mkdir -p "$pbuilder_path"
+mkdir -p "$RESULTBASE"
 
-[ -f "${pbuilder_path}/sil-testing.gpg" ] || wget -q -O "${pbuilder_path}/sil-testing.gpg" http://linux.lsdev.sil.org/downloads/sil-testing.gpg
-[ -f "${pbuilder_path}/sil.gpg" ] || wget -q -O "${pbuilder_path}/sil.gpg" http://packages.sil.org/sil.gpg
-
-[ -f "$HOME/.pbuilderrc" ] || cp $PBUILDER_TOOLS_PATH/pbuilderrc $HOME/.pbuilderrc
+[ -f "${RESULTBASE}/sil-testing.gpg" ] || wget -q -O "${RESULTBASE}/sil-testing.gpg" http://linux.lsdev.sil.org/downloads/sil-testing.gpg
+[ -f "${RESULTBASE}/sil.gpg" ] || wget -q -O "${RESULTBASE}/sil.gpg" http://packages.sil.org/sil.gpg
 
 # Make sure base.tgz is in place for any distributions being used.
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		if [ ! -e "$pbuilder_path"/$distribution/$arch/base.tgz ]; then
-			PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
-				$PBUILDER_TOOLS_PATH/setup.sh
+		if [ ! -e "$SCHROOTDIR"/$distribution-$arch ]; then
+			DISTRIBUTIONS="$distribution" ARCHES="$arch" ./setup.sh
 		fi
 	done
 done
@@ -46,14 +45,16 @@ log "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc=$(ls ${source_package_name}_*.dsc)
-sudo HOME=~ PBUILDERDIR="$pbuilder_path" HOOKDIR="$PBUILDER_TOOLS_PATH/hooks" http_proxy="$http_proxy" no_proxy="$no_proxy" DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" FULL_BUILD_NUMBER="$FULL_BUILD_NUMBER" $PBUILDER_TOOLS_PATH/build-multi.sh "$packagedsc"
+DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" ./build-multi.sh "$packagedsc"
 
 log "Signing package(s)"
 
-cd "$pbuilder_path"
+cd "$RESULTBASE"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		cd $pbuilder_path/$dist/$arch/result
+		RESULT="$RESULTBASE/$DIST-$ARCH/result"
+		mkdir -p $RESULT
+		cd $RESULT
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
 			sed -i '10d' ${source_package_name}_*.changes
 			# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
@@ -67,7 +68,7 @@ done
 log "Package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		cd $pbuilder_path/$dist/$arch/result
+		cd $RESULTBASE/$dist-$arch/result
 		mkdir -p "$WORKSPACE/results"
 		if grep -q '.buildinfo$' ${source_package_name}_*.changes ; then
 			# Starting with Bionic the package contains a .buildinfo file that's required to
@@ -95,7 +96,7 @@ log "Results:"
 any_failures=false
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		RESULT="$pbuilder_path/$dist/$arch/result/${source_package_name}_*.status"
+		RESULT="$RESULTBASE/$dist-$arch/result/${source_package_name}_*.status"
 		echo $RESULT:
 		cat $RESULT
 		grep -q '^0$' $RESULT || any_failures=true
@@ -113,10 +114,10 @@ if [ -n "$no_upload" ]; then
 fi
 
 log "Upload packages"
-cd "$pbuilder_path"
+cd "$RESULTBASE"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		cd $pbuilder_path/$dist/$arch/result
+		cd $RESULTBASE/$dist-$arch/result
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
 			log "Uploading to llso:ubuntu/$dist$SUITE_NAME $arch"
 			dput $dput_simulate -U llso:ubuntu/$dist$SUITE_NAME ${source_package_name}_*.changes

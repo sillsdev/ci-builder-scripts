@@ -1,5 +1,5 @@
 #!/bin/bash
-# Update pbuilder chroots
+# Update sbuild chroots
 set -e
 
 PROGRAM_NAME="$(basename "$0")"
@@ -8,8 +8,7 @@ PROGRAM_NAME="$(basename "$0")"
 init "$@"
 
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
-    for arch in $ARCHES_TO_PACKAGE; do
-		PBUILDERDIR="$pbuilder_path" DISTRIBUTIONS="$distribution" ARCHES="$arch" \
-			$HOME/FwSupportTools/packaging/pbuilder/setup.sh --update
-    done
+	for arch in $ARCHES_TO_PACKAGE; do
+		DISTRIBUTIONS="$distribution" ARCHES="$arch" ./setup.sh --update
+	done
 done

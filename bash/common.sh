@@ -16,6 +16,41 @@ TRACE()
 	"$@"
 }
 
+general_init()
+{
+	# currently supported and future Ubuntu versions
+	UBUNTU_DISTROS="trusty xenial bionic eoan focal"
+	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
+	UBUNTU_OLDDISTROS=""
+	# We're no longer building packages for: precise quantal raring saucy utopic vivid wily yakkety zesty artful cosmic disco
+
+	# Debian versions
+	DEBIAN_DISTROS="wheezy jessie stretch buster bullseye"
+
+	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-bionic}"
+	DISTS_TO_PROCESS="${supported_distros_arg:-xenial bionic focal}"
+	DISTRIBUTIONS=${DISTRIBUTIONS:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
+	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
+	ARCHES_TO_PROCESS="amd64 i386"
+	PACKAGING_ROOT="$HOME/packages"
+	SCHROOTDIR=/var/lib/schroot/chroots
+
+	UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}
+	UBUNTU_OLDMIRROR=${UBUNTU_OLDMIRROR:-http://old-releases.ubuntu.com/ubuntu/}
+
+	if [ "$suite_name" = "main" ]; then
+		SUITE_NAME=""
+	else
+		SUITE_NAME="-${suite_name:-experimental}"
+	fi
+
+	RESULTBASE=${WORKSPACE:-$PACKAGING_ROOT}
+
+	RED='\033[0;31m'
+	GREEN='\033[0;32m'
+	NC='\033[0m' # No Color
+}
+
 init()
 {
 	# Process arguments.
@@ -71,19 +106,7 @@ init()
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2
 	done
 
-	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-trusty}"
-	DISTS_TO_PROCESS="${supported_distros_arg:-trusty xenial bionic}"
-	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
-	ARCHES_TO_PROCESS="amd64 i386"
-	PACKAGING_ROOT="$HOME/packages"
-	if [ "$suite_name" = "main" ]; then
-		SUITE_NAME=""
-	else
-		SUITE_NAME="-${suite_name:-experimental}"
-	fi
-	[ -z $PBUILDER_TOOLS_PATH ] && PBUILDER_TOOLS_PATH="$HOME/FwSupportTools/packaging/pbuilder"
-
-	pbuilder_path="${PBUILDERDIR:-$HOME/pbuilder}"
+	general_init
 
 	if [ -z "$no_package" ]; then
 		# set Debian/changelog environment
@@ -104,8 +127,4 @@ init()
 	else
 		VCS=git
 	fi
-
-	RED='\033[0;31m'
-	GREEN='\033[0;32m'
-	NC='\033[0m' # No Color
 }

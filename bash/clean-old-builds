@@ -7,12 +7,12 @@ PROGRAM_NAME="$(basename "$0")"
 . $(dirname "$0")/common.sh
 init "$@"
 
-if [ ! -d "$pbuilder_path" ]; then
-	echo "pbuilder directory $pbuilder_path doesn't exist"
+if [ ! -d "$RESULTBASE" ]; then
+	echo "Result base directory $RESULTBASE doesn't exist"
 	exit
 fi
 
-cd "$pbuilder_path"
+cd "$RESULTBASE"
 for f in $(find */*/result -mindepth 1 -maxdepth 1 -mtime +2); do
 	rm $f || true
 done
@@ -23,4 +23,3 @@ for oldbuild in $(find */*/build -mindepth 1 -maxdepth 1 -type d -mtime +2); do
 	sudo umount $oldbuild/dev 2>/dev/null || true
 	sudo rm -rf $oldbuild
 done
-
