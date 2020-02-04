@@ -19,7 +19,7 @@ log "Removing old packages"
 
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		RESULT="$RESULTBASE/$DIST-$ARCH/result"
+		RESULT="$RESULTBASE/$dist-$arch/result"
 		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
 		rm $WORKSPACE/results/* || true
 	done
@@ -52,7 +52,7 @@ log "Signing package(s)"
 cd "$RESULTBASE"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		RESULT="$RESULTBASE/$DIST-$ARCH/result"
+		RESULT="$RESULTBASE/$dist-$arch/result"
 		mkdir -p $RESULT
 		cd $RESULT
 		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
