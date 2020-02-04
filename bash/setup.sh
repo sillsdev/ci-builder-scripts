@@ -68,7 +68,7 @@ function checkAndInstallRequirements()
 		log "Getting version ${MKSBUILD_VERSION} of mk-sbuild"
 		mkdir -p $HOME/bin
 		rm -f $HOME/bin/mk-sbuild*
-		TRACE wget --output-document=$HOME/bin/mk-sbuild https://git.launchpad.net/ubuntu-dev-tools/tree/mk-sbuild?h=${MKSBUILD_VERSION}
+		TRACE wget --output-document=$HOME/bin/mk-sbuild https://git.launchpad.net/ubuntu-dev-tools/plain/mk-sbuild?h=${MKSBUILD_VERSION}
 		chmod +x $HOME/bin/mk-sbuild
 		touch $HOME/bin/mk-sbuild.v${MKSBUILD_VERSION}
 	fi
