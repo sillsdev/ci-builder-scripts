@@ -5,7 +5,7 @@ set -e
 PROGRAM_NAME="$(basename "$0")"
 
 . $(dirname "$0")/common.sh
-init "$@"
+general_init "$@"
 
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do

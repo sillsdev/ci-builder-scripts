@@ -5,7 +5,7 @@
 
 set -e -o pipefail
 
-. $(dirname $0)/common.sh
+. $(dirname "$0")/common.sh
 general_init
 
 # Process arguments.
@@ -18,7 +18,7 @@ while (( $# )); do
 	shift
 done
 
-function CheckOrLinkDebootstrapScript()
+function checkOrLinkDebootstrapScript()
 {
 	if [ ! -f /usr/share/debootstrap/scripts/$1 ]; then
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == "*$1*" ]]; then
@@ -43,9 +43,27 @@ $(echo $OTHERMIRROR | tr '|' '\n')
 EOF
 }
 
+function checkAndInstallRequirements()
+{
+	local TOINSTALL
+	if [ ! -x /usr/bin/mk-sbuild ]; then
+		TOINSTALL="$TOINSTALL ubuntu-dev-tools"
+	fi
+	if [ ! -x /usr/bin/sbuild ]; then
+		TOINSTALL="$TOINSTALL sbuild"
+	fi
+
+	if [ -n "$TOINSTALL" ]; then
+		sudo apt-get update
+		sudo apt-get -qy install $TOINSTALL
+	fi
+}
+
 WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
 
 cd "${WORKDIR}"
+
+checkAndInstallRequirements
 
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
@@ -85,7 +103,7 @@ do
 
 		OTHERMIRROR=""
 
-		CheckOrLinkDebootstrapScript $D
+		checkOrLinkDebootstrapScript $D
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
