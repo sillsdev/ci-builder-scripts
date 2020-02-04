@@ -36,7 +36,7 @@ mkdir -p "$RESULTBASE"
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		if [ ! -e "$SCHROOTDIR"/$distribution-$arch ]; then
-			DISTRIBUTIONS="$distribution" ARCHES="$arch" ./setup.sh
+			DISTRIBUTIONS="$distribution" ARCHES="$arch" $(dirname "$0")/setup.sh
 		fi
 	done
 done
@@ -45,7 +45,7 @@ log "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc=$(ls ${source_package_name}_*.dsc)
-DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" ./build-multi.sh "$packagedsc"
+DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $(dirname "$0")/build-multi.sh "$packagedsc"
 
 log "Signing package(s)"
 

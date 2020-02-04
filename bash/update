@@ -9,6 +9,6 @@ general_init "$@"
 
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		DISTRIBUTIONS="$distribution" ARCHES="$arch" ./setup.sh --update
+		DISTRIBUTIONS="$distribution" ARCHES="$arch" . $(dirname "$0")/setup.sh --update
 	done
 done
