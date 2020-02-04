@@ -51,12 +51,14 @@ function checkAndInstallRequirements()
 	fi
 	if [ ! -x /usr/bin/sbuild ]; then
 		TOINSTALL="$TOINSTALL sbuild"
+		touch ~/.sbuildrc
 	fi
 
 	if [ -n "$TOINSTALL" ]; then
 		sudo apt-get update
 		sudo apt-get -qy install $TOINSTALL
 	fi
+	newgrp sbuild
 }
 
 WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"

@@ -77,7 +77,7 @@ pipelineJob('SBuildChroots_Setup-Linux-all') {
 				runOnAllNodes(label: 'packager',
 					command: \'\'\'cd $HOME/ci-builder-scripts/bash
 . ./common.sh
-init --no-package "$@"
+general_init
 
 for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
