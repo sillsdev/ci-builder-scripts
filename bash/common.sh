@@ -19,13 +19,13 @@ TRACE()
 general_init()
 {
 	# currently supported and future Ubuntu versions
-	UBUNTU_DISTROS="trusty xenial bionic eoan focal"
+	UBUNTU_DISTROS="xenial bionic eoan focal"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
 	UBUNTU_OLDDISTROS=""
-	# We're no longer building packages for: precise quantal raring saucy utopic vivid wily yakkety zesty artful cosmic disco
+	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco
 
 	# Debian versions
-	DEBIAN_DISTROS="wheezy jessie stretch buster bullseye"
+	DEBIAN_DISTROS="stretch buster bullseye"
 
 	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-bionic}"
 	DISTS_TO_PROCESS="${supported_distros_arg:-xenial bionic focal}"

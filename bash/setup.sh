@@ -158,10 +158,17 @@ do
 
 		if [ -z "$update" ]; then
 			# Create a new chroot
+			log "Create new chroot for $D-$A"
+			if [ "$D-$A" != "focal-i386" ]; then
+				# eatmydata (or rather a package eatmydata depends on) is not available in
+				# 32bit starting with focal
+				OTHEROPTS=--eatmydata
+			fi
+
 			TRACE mk-sbuild $D --arch=$A \
-				--debootstrap-include="perl,gnupg" \
+				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
-				--eatmydata --type=directory
+				$OTHEROPTS --type=directory
 
 			[ -f $KEYRINGLLSO ] && sudo cp $KEYRINGLLSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
 			[ -f $KEYRINGPSO ] && sudo cp $KEYRINGPSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
@@ -172,6 +179,7 @@ do
 			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/sources.list.d/extra.list
 			rm $TMPFILE
 
+			log "Install packages in chroot for $D-$A"
 			TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
 				"apt-get -qq update && \
 				apt-get -qy upgrade && \
@@ -179,6 +187,7 @@ do
 				apt-get clean" < /dev/null
 		else
 			# Update chroot
+			log "Update chroot for $D-$A"
 			TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
 				"apt-get -qq update && apt-get -qy upgrade && apt-get clean" < /dev/null
 		fi
