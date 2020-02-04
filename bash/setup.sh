@@ -59,6 +59,17 @@ function checkAndInstallRequirements()
 		sudo apt-get -qy install $TOINSTALL
 	fi
 	newgrp sbuild
+
+	# We have to install a current version of mk-sbuild because trying to build newer dists
+	# on an older dist might have different requirements than the system provided version
+	# of mk-sbuild provides (e.g. on xenial when trying to build a bionic chroot).
+	if [ ! -f ~/bin/mk-sbuild -o ! -f ~/bin/mk-sbuild.v${MKSBUILD_VERSION} ]; then
+		mkdir -p ~/bin
+		rm -f ~/bin/mk-sbuild*
+		wget --output-file=~/bin/mk-sbuild https://git.launchpad.net/ubuntu-dev-tools/tree/mk-sbuild?h=${MKSBUILD_VERSION}
+		chmod +x ~/bin/mk-sbuild
+		touch ~/bin/mk-sbuild.v${MKSBUILD_VERSION}
+	fi
 }
 
 WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
@@ -165,7 +176,7 @@ do
 				OTHEROPTS=--eatmydata
 			fi
 
-			TRACE mk-sbuild $D --arch=$A \
+			TRACE ~/bin/mk-sbuild $D --arch=$A \
 				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
 				$OTHEROPTS --type=directory

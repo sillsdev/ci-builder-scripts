@@ -2,7 +2,7 @@
  * DSL script for package builder Jenkins jobs
  */
 
-def distros = "trusty xenial bionic focal"
+def distros = "xenial bionic focal"
 
 pipelineJob('SBuildChroots_Update-Linux-all') {
 	description '''

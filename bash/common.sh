@@ -46,6 +46,12 @@ general_init()
 
 	RESULTBASE=${WORKSPACE:-$PACKAGING_ROOT}
 
+	# The version of mk-sbuild we use. We need a current version of that script because trying
+	# to build newer dists might have different requirements than the system provided version
+	# provides.
+	# 0.175 is the version included in Focal
+	MKSBUILD_VERSION=0.175
+
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
 	NC='\033[0m' # No Color
