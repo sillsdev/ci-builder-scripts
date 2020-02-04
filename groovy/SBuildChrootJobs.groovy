@@ -4,10 +4,10 @@
 
 def distros = "trusty xenial bionic focal"
 
-pipelineJob('PBuilder_Update-Linux-all') {
+pipelineJob('SBuildChroots_Update-Linux-all') {
 	description '''
 <p>Maintenance job that updates all chroot instances for sbuild.</p>
-<p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>SBuildChrootJobs.groovy</i> script.</p>
 '''
 
 	logRotator(365, 100, 10, 10)
@@ -33,11 +33,11 @@ pipelineJob('PBuilder_Update-Linux-all') {
 	}
 }
 
-pipelineJob('PBuilder_Cleanup-Linux-all') {
+pipelineJob('SBuildChroots_Cleanup-Linux-all') {
 	description '''
 <p>Maintenance job that cleans out previously built binary packages and cancelled builds left on
 disk that are at least two days old.</p>
-<p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>SBuildChrootJobs.groovy</i> script.</p>
 '''
 
 	logRotator(365, 100, 10, 10)
@@ -58,10 +58,10 @@ disk that are at least two days old.</p>
 	}
 }
 
-pipelineJob('PBuilder_Setup-Linux-all') {
+pipelineJob('SBuildChroots_Setup-Linux-all') {
 	description '''
 <p>Maintenance job that creates chroot instances for sbuild. To be triggered manually.</p>
-<p>The job is created by the DSL plugin from <i>pbuilder-jobs.groovy</i> script.</p>
+<p>The job is created by the DSL plugin from <i>SBuildChrootJobs.groovy</i> script.</p>
 '''
 
 	logRotator(365, 100, 10, 10)
@@ -77,7 +77,7 @@ pipelineJob('PBuilder_Setup-Linux-all') {
 				runOnAllNodes(label: 'packager',
 					command: \'\'\'cd $HOME/ci-builder-scripts/bash
 . ./common.sh
-init "$@"
+init --no-package "$@"
 
 for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
