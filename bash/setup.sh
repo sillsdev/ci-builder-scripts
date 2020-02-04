@@ -51,10 +51,11 @@ function checkAndInstallRequirements()
 	fi
 	if [ ! -x /usr/bin/sbuild ]; then
 		TOINSTALL="$TOINSTALL sbuild"
-		touch ~/.sbuildrc
+		touch $HOME/.sbuildrc
 	fi
 
 	if [ -n "$TOINSTALL" ]; then
+		log "Installing prerequisites: $TOINSTALL"
 		sudo apt-get update
 		sudo apt-get -qy install $TOINSTALL
 	fi
@@ -63,12 +64,13 @@ function checkAndInstallRequirements()
 	# We have to install a current version of mk-sbuild because trying to build newer dists
 	# on an older dist might have different requirements than the system provided version
 	# of mk-sbuild provides (e.g. on xenial when trying to build a bionic chroot).
-	if [ ! -f ~/bin/mk-sbuild -o ! -f ~/bin/mk-sbuild.v${MKSBUILD_VERSION} ]; then
-		mkdir -p ~/bin
-		rm -f ~/bin/mk-sbuild*
-		wget --output-file=~/bin/mk-sbuild https://git.launchpad.net/ubuntu-dev-tools/tree/mk-sbuild?h=${MKSBUILD_VERSION}
-		chmod +x ~/bin/mk-sbuild
-		touch ~/bin/mk-sbuild.v${MKSBUILD_VERSION}
+	if [ ! -f $HOME/bin/mk-sbuild -o ! -f $HOME/bin/mk-sbuild.v${MKSBUILD_VERSION} ]; then
+		log "Getting version ${MKSBUILD_VERSION} of mk-sbuild"
+		mkdir -p $HOME/bin
+		rm -f $HOME/bin/mk-sbuild*
+		TRACE wget --output-file=$HOME/bin/mk-sbuild https://git.launchpad.net/ubuntu-dev-tools/tree/mk-sbuild?h=${MKSBUILD_VERSION}
+		chmod +x $HOME/bin/mk-sbuild
+		touch $HOME/bin/mk-sbuild.v${MKSBUILD_VERSION}
 	fi
 }
 
@@ -176,7 +178,7 @@ do
 				OTHEROPTS=--eatmydata
 			fi
 
-			TRACE ~/bin/mk-sbuild $D --arch=$A \
+			TRACE $HOME/bin/mk-sbuild $D --arch=$A \
 				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
 				$OTHEROPTS --type=directory
