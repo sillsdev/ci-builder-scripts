@@ -5,6 +5,8 @@
 
 set -e -o pipefail
 
+PROGRAM_NAME="$(basename "$0")"
+
 . $(dirname "$0")/common.sh
 general_init
 

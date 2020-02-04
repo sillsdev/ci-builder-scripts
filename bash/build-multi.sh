@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PROGRAM_NAME="$(basename "$0")"
+
 . $(dirname $0)/common.sh
 general_init
 
@@ -88,7 +90,10 @@ do
 			fi
 
 			CHANGES="$RESULT/${PACKAGE}_${ARCH}.changes"
-			if [ ! -e $CHANGES ]; then
+			log "CHANGES=$CHANGES"
+			ls -al $RESULT
+
+			if [ ! -e "$CHANGES" ]; then
 				CHANGES="$RESULT/${PACKAGE}+${DIST}1_${ARCH}.changes"
 			fi
 
