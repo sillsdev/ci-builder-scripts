@@ -116,12 +116,13 @@ do
 			OPTS=()
 
 			if [ $ARCH = amd64 ]; then
+				OPTS+=(--arch-all)
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					OPTS+=(--debbuildopt=-b)
 				fi
 			else
 				# Don't build arch-independent packages - that's done with amd64
-				OPTS+=(--no-arch-any)
+				OPTS+=(--no-arch-all)
 
 				# Don't build if not for this arch
 				if ! has_arch $ARCH $SRC
@@ -135,7 +136,7 @@ do
 				log "PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 					--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
-					--append-to-version=+${DIST}1 --binNMU=0 "${OPTS[@]}" $SRC
+					--append-to-version=+${DIST}1 --binNMU=0 --arch-any "${OPTS[@]}" $SRC
 				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				echo $? | $NOOP tee $RESULT/${PACKAGE}_$ARCH.status
 				$NOOP cp ${PACKAGE%_*}*${DIST}*${ARCH}* $RESULT
