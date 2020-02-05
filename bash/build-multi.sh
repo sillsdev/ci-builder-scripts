@@ -56,6 +56,20 @@ binaries()
 	get_field Binary $1 | sed 's/,//g'
 }
 
+function checkAndInstallRequirements()
+{
+	local TOINSTALL
+	if [ ! -x /usr/bin/unbuffer ]; then
+		TOINSTALL="$TOINSTALL expect"
+	fi
+
+	if [ -n "$TOINSTALL" ]; then
+		log "Installing prerequisites: $TOINSTALL"
+		sudo apt-get update
+		sudo apt-get -qy install $TOINSTALL
+	fi
+}
+
 if [ "$1" = "--no-source-package" -o "$1" = "-n" ]; then
 	NO_SOURCE_PACKAGE=true
 	log "Not saving distribution-specific source package."
@@ -90,9 +104,6 @@ do
 			fi
 
 			CHANGES="$RESULT/${PACKAGE}_${ARCH}.changes"
-			log "CHANGES=$CHANGES"
-			ls -al $RESULT
-
 			if [ ! -e "$CHANGES" ]; then
 				CHANGES="$RESULT/${PACKAGE}+${DIST}1_${ARCH}.changes"
 			fi
@@ -117,7 +128,7 @@ do
 
 			if [ $SRC -nt $CHANGES ]; then
 				log "PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
-				$NOOP setarch $(cpuarch $ARCH) sbuild --dist=$DIST --arch=$ARCH \
+				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 					--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
 					--append-to-version=+${DIST}1 --binNMU=0 "${OPTS[@]}" $SRC
 				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
