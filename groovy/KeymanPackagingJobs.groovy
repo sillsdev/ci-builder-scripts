@@ -114,7 +114,7 @@ for (branch in ['stable-12.0', 'beta', 'master']) {
 				Common.gitScm(delegate, /*url*/ repo, /*branch*/"\$BranchOrTagToBuild",
 					/*createTag*/ false, /*subdir*/ "", /*disableSubmodules*/ false,
 					/*commitAuthorInChangelog*/ true, /*scmName*/ "", /*refspec*/ "",
-					/*clean*/ false, /*credentials*/ "", /*fetchTags*/ true,
+					/*clean*/ true, /*credentials*/ "", /*fetchTags*/ true,
 					/*onlyTriggerFileSpec*/ onlyTriggerFileSpec,
 					/*githubRepo*/ "keymanapp/keyman")
 
