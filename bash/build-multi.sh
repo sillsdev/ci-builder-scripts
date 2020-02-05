@@ -15,6 +15,9 @@ if [ "$1" = "-n" ]; then
 elif [ "$1" = "-nn" ]; then
 	NOOP=echo
 	shift
+elif [ "$1" = "-nnn" ]; then
+	NOOP=TRACE
+	shift
 fi
 
 cpuarch()
@@ -135,7 +138,7 @@ do
 					--append-to-version=+${DIST}1 --binNMU=0 "${OPTS[@]}" $SRC
 				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				echo $? | $NOOP tee $RESULT/${PACKAGE}_$ARCH.status
-				$NOOP cp ${PACKAGE}*${DIST}*${ARCH}* $RESULT
+				$NOOP cp ${PACKAGE%_*}*${DIST}*${ARCH}* $RESULT
 
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					$NOOP rm -f $RESULT/${PACKAGE}.{dsc,{debian.,orig.,}tar.*}

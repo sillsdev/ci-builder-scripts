@@ -98,7 +98,7 @@ any_failures=false
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		RESULT="$RESULTBASE/$dist-$arch/result/${source_package_name}_*.status"
-		echo $RESULT:
+		echo -n "$(eval echo $RESULT): "
 		cat $RESULT
 		grep -q '^0$' $RESULT || any_failures=true
 	done
