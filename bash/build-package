@@ -66,10 +66,11 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 done
 
 log "Package files exist with the following sha256sums:"
+ARTIFACTSDIR=${WORKSPACE:-repo_base_dir}/results
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $RESULTBASE/$dist-$arch/result
-		mkdir -p "$WORKSPACE/results"
+		mkdir -p "$ARTIFACTSDIR"
 		if grep -q '.buildinfo$' ${source_package_name}_*.changes ; then
 			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
@@ -80,14 +81,14 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 		fi
 		dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
-		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
+		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $ARTIFACTSDIR/
 		if grep -q '.ddeb$' ${source_package_name}_*.changes ; then
 			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*.changes || true
-			dcmd $DCMD_NOARGS cp ${source_package_name}_*.changes $WORKSPACE/results/
+			dcmd $DCMD_NOARGS cp ${source_package_name}_*.changes $ARTIFACTSDIR/
 		fi
 		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
 			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
-			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $WORKSPACE/results/
+			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $ARTIFACTSDIR/
 		fi
 	done
 done

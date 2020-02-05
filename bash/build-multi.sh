@@ -56,7 +56,7 @@ binaries()
 	get_field Binary $1 | sed 's/,//g'
 }
 
-function checkAndInstallRequirements()
+checkAndInstallRequirements()
 {
 	local TOINSTALL
 	if [ ! -x /usr/bin/unbuffer ]; then
@@ -82,6 +82,8 @@ if [[ "$1" != *.dsc ]]; then
 	log "-n|--no-source-package\tdon't create distribution-specific source package"
 	exit 1
 fi
+
+checkAndInstallRequirements
 
 export DIST ARCH
 
@@ -133,7 +135,7 @@ do
 					--append-to-version=+${DIST}1 --binNMU=0 "${OPTS[@]}" $SRC
 				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				echo $? | $NOOP tee $RESULT/${PACKAGE}_$ARCH.status
-				$NOOP cp ${PACKAGE}*${DIST}*${ARCH} $RESULT
+				$NOOP cp ${PACKAGE}*${DIST}*${ARCH}* $RESULT
 
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					$NOOP rm -f $RESULT/${PACKAGE}.{dsc,{debian.,orig.,}tar.*}
