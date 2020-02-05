@@ -5,12 +5,13 @@
 //#include utilities/Common.groovy
 
 // Variables
-def distros_tobuild = "xenial bionic"
-def repo = 'git://github.com/keymanapp/keyman.git'
-def email_recipients = 'eb1@sil.org marc_durdin@sil.org dglassey@gmail.com darcy_wong@sil.org'
+final stable_branch = 'stable-12.0'
+final distros_tobuild = "xenial bionic"
+final repo = 'git://github.com/keymanapp/keyman.git'
+final email_recipients = 'eb1@sil.org marc_durdin@sil.org dglassey@gmail.com darcy_wong@sil.org'
 
-def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
-def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
+final revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
+final fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 
 /*
  * Definition of jobs
@@ -21,7 +22,7 @@ def fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 
 
 // We have multiple jobs on different branches for release, beta ('master') and alpha ('develop')
-for (branch in ['stable-12.0', 'beta', 'master']) {
+for (branch in [stable_branch, 'beta', 'master']) {
 	for (buildKind in ['regular', 'pr']) {
 		switch (buildKind) {
 			case 'regular':
@@ -50,7 +51,7 @@ for (branch in ['stable-12.0', 'beta', 'master']) {
 			packagename = "${packagebasename}"
 			extraParameter = "${baseExtraParameter}"
 			switch (branch) {
-				case 'stable-12.0':
+				case stable_branch:
 					kind = 'stable'
 					break
 				case 'beta':
