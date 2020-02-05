@@ -9,6 +9,8 @@ PROGRAM_NAME="$(basename "$0")"
 init "$@"
 [ -f $(dirname "$0")/build-package.config ] && . $(dirname "$0")/build-package.config
 
+ARTIFACTSDIR=${WORKSPACE:-$repo_base_dir}/results
+
 # Don't try to process 32-bit package products if they are all architectureless.
 grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" || {
 	log "All binary packages are listed as 'all' architecture. Resetting --arches to 'amd64'."
@@ -21,7 +23,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		RESULT="$RESULTBASE/$dist-$arch/result"
 		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
-		rm $WORKSPACE/results/* || true
+		rm ${ARTIFACTSDIR}/* || true
 	done
 done
 
@@ -36,6 +38,7 @@ mkdir -p "$RESULTBASE"
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		if [ ! -e "$SCHROOTDIR"/$distribution-$arch ]; then
+			log "$SCHROOTDIR/$distribution-$arch does not exist. Creating a new chroot for $distribution-$arch"
 			DISTRIBUTIONS="$distribution" ARCHES="$arch" $(dirname "$0")/setup.sh
 		fi
 	done
@@ -66,7 +69,6 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 done
 
 log "Package files exist with the following sha256sums:"
-ARTIFACTSDIR=${WORKSPACE:-repo_base_dir}/results
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $RESULTBASE/$dist-$arch/result
