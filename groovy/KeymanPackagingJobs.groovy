@@ -143,6 +143,9 @@ fi
 rm -f ${packagename}-packageversion.properties
 basedir=`pwd`
 
+# set Debian/changelog environment
+export DEBEMAIL='jenkins@sil.org'
+
 # make source package
 cd linux
 ./scripts/jenkins.sh ${packagename} \$DEBSIGNKEY
