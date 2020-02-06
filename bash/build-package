@@ -22,8 +22,8 @@ log "Removing old packages"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		RESULT="$RESULTBASE/$dist-$arch/result"
-		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,status,tar.*} || true
-		rm ${ARTIFACTSDIR}/* || true
+		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,status,tar.*} 2>/dev/null || true
+		rm ${ARTIFACTSDIR}/* 2>/dev/null || true
 	done
 done
 
@@ -82,7 +82,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			DCMD_ARGS="--deb --changes"
 			DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 		fi
-		dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
+		TRACE dcmd $DCMD_ARGS sha256sum ${source_package_name}_*.changes || true
 		dcmd $DCMD_ARGS cp ${source_package_name}_*.changes $ARTIFACTSDIR/
 		if grep -q '.ddeb$' ${source_package_name}_*.changes ; then
 			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*.changes || true
@@ -100,7 +100,7 @@ any_failures=false
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		RESULT="$RESULTBASE/$dist-$arch/result/${source_package_name}_*.status"
-		echo -n "$(eval echo $RESULT): "
+		echo -n "$(eval echo $(basename $RESULT)): "
 		cat $RESULT
 		grep -q '^0$' $RESULT || any_failures=true
 	done

@@ -137,12 +137,31 @@ do
 				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 					--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
 					--append-to-version=+${DIST}1 --binNMU=0 --arch-any "${OPTS[@]}" $SRC
-				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
-				echo $? | $NOOP tee $RESULT/${PACKAGE}_$ARCH.status
-				$NOOP cp ${PACKAGE%_*}*${DIST}*${ARCH}* $RESULT
+				$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
 
+				echo "Exit code from sbuild: $(cat $RESULT/${PACKAGE}_$ARCH.status)"
+				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
+
+				# Copy the files to the $RESULT directory
+				if grep -q '.buildinfo$' ${PACKAGE%}+*.changes ; then
+					# Starting with Bionic the package contains a .buildinfo file that's required
+					# to upload the package
+					DCMD_ARGS="--deb --changes --buildinfo"
+					DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc --no-buildinfo"
+				else
+					DCMD_ARGS="--deb --changes"
+					DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
+				fi
+				$NOOP dcmd $DCMD_ARGS cp ${PACKAGE%}+*.changes $RESULT/
+				if grep -q '.ddeb$' ${PACKAGE%}+*.changes ; then
+					$NOOP dcmd $DCMD_NOARGS cp ${PACKAGE%}+*.changes $RESULT/
+				fi
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					$NOOP rm -f $RESULT/${PACKAGE}.{dsc,{debian.,orig.,}tar.*}
+				else
+					if [ $( ls ${PACKAGE}.dsc 2> /dev/null | wc -l) -ge 1 ]; then
+						$NOOP dcmd --dsc --orig --debtar cp ${PACKAGE}.dsc $RESULT/
+					fi
 				fi
 			else
 				if [ -e $CHANGES ]; then
