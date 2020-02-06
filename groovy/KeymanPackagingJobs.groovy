@@ -159,7 +159,7 @@ cd ${subdir_name}
 
 buildret="\$?"
 
-if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(for file in `ls -1 ${packagename}*_source.build`;do basename \$file _source.build;done|cut -d "_" -f2|cut -d "-" -f1)" > \$basedir/${packagename}-packageversion.properties; fi
+if [ "\$buildret" == "0" ]; then echo "PackageVersion=\$(for file in `ls -1 ${packagebasename}*_source.build`;do basename \$file _source.build;done|cut -d "_" -f2|cut -d "-" -f1)" > \$basedir/${packagename}-packageversion.properties; fi
 exit \$buildret
 """)
 
