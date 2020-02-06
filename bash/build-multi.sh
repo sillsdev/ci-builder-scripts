@@ -140,10 +140,9 @@ do
 				$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
 
 				echo "Exit code from sbuild: $(cat $RESULT/${PACKAGE}_$ARCH.status)"
-				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 
-				# Copy the files to the $RESULT directory
-				if grep -q '.buildinfo$' ${PACKAGE%}+*.changes ; then
+				log "Copying files to $RESULT"
+				if grep -q '.buildinfo$' ${PACKAGE}+${DIST}1_${ARCH}.changes ; then
 					# Starting with Bionic the package contains a .buildinfo file that's required
 					# to upload the package
 					DCMD_ARGS="--deb --changes --buildinfo"
@@ -152,9 +151,9 @@ do
 					DCMD_ARGS="--deb --changes"
 					DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 				fi
-				$NOOP dcmd $DCMD_ARGS cp ${PACKAGE%}+*.changes $RESULT/
-				if grep -q '.ddeb$' ${PACKAGE%}+*.changes ; then
-					$NOOP dcmd $DCMD_NOARGS cp ${PACKAGE%}+*.changes $RESULT/
+				$NOOP dcmd $DCMD_ARGS cp ${PACKAGE}+${DIST}1_${ARCH}.changes $RESULT/
+				if grep -q '.ddeb$' ${PACKAGE}+${DIST}1_${ARCH}.changes ; then
+					$NOOP dcmd $DCMD_NOARGS cp ${PACKAGE}+${DIST}1_${ARCH}.changes $RESULT/
 				fi
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					$NOOP rm -f $RESULT/${PACKAGE}.{dsc,{debian.,orig.,}tar.*}
@@ -163,6 +162,7 @@ do
 						$NOOP dcmd --dsc --orig --debtar cp ${PACKAGE}.dsc $RESULT/
 					fi
 				fi
+				log "Done building: PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 			else
 				if [ -e $CHANGES ]; then
 					err "Not building $PACKAGE for $DIST/$ARCH because it already exists"
