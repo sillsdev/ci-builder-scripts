@@ -22,7 +22,7 @@ log "Removing old packages"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		RESULT="$RESULTBASE/$dist-$arch/result"
-		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,tar.*} || true
+		rm $RESULT/${source_package_name}_*.{changes,deb,dsc,status,tar.*} || true
 		rm ${ARTIFACTSDIR}/* || true
 	done
 done

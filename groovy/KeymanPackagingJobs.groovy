@@ -75,7 +75,8 @@ for (branch in [stable_branch, 'beta', 'master']) {
 					build_distros, email_recipients, branch, "amd64 i386", build_distros, true, mainRepoDir,
 					/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false,
 					/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
-					/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
+					/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber,
+					/* nodeLabel: */ 'packager && bionic')
 
 				description """
 <p>Automatic builds of the Keyman for Linux ${branch} branch.</p>
@@ -185,7 +186,8 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 			distros_tobuild, email_recipients, branch, "amd64 i386", "xenial bionic", true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
-			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
+			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber,
+			/* nodeLabel: */ 'packager && bionic')
 
 	description """
 <p>Automatic builds of the Onboard Keyboard for Linux ${branch} branch.</p>

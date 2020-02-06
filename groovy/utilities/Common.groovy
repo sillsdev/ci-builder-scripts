@@ -23,11 +23,12 @@ class Common {
 		resultsDir = "results",
 		extraSourceArgs = "",
 		extraBuildArgs = "",
-		fullBuildNumber = "0.0.\$BUILD_NUMBER.${revision}") {
+		fullBuildNumber = "0.0.\$BUILD_NUMBER.${revision}",
+		nodeLabel = 'packager') {
 
 		jobContext.with {
 
-			label('packager')
+			label(nodeLabel)
 
 			logRotator(365, 20, 365, 10)
 
