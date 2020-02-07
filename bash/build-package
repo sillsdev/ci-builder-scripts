@@ -27,7 +27,7 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	done
 done
 
-log "Preparing for building binary package(s)"
+log "Preparing for building binary package(s) for ${DISTRIBUTIONS_TO_PACKAGE}"
 
 mkdir -p "$RESULTBASE"
 
