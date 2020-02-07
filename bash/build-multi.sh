@@ -133,6 +133,18 @@ do
 			fi
 
 			if [ $SRC -nt $CHANGES ]; then
+				# Set the build profile. This allows to conditionally include build dependencies
+				# in the `control` file, e.g.
+				# Build-Depends: python3-qrcode <!pkg.keyman-config.xenial>
+				# See https://wiki.debian.org/BuildProfileSpec
+				export DEB_BUILD_PROFILES=pkg.${PACKAGE%_*}.${DIST}
+
+				# older Ubuntu versions (xenial) don't support extension profile names, therefore
+				# we skip that lintian check
+				if [ "$DIST" == "xenial" ]; then
+					OPTS+=(--lintian-opt="--suppress-tags=invalid-profile-name-in-source-relation")
+				fi
+
 				log "PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 					--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
