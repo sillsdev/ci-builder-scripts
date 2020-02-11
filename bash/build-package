@@ -18,7 +18,7 @@ grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" ||
 		ARCHES_TO_PACKAGE="amd64"
 	else
 		log "All binary packages are listed as 'all' architecture. Not building i386."
-		exit 0
+		exit 50
 	fi
 }
 
