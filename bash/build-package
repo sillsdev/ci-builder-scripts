@@ -13,8 +13,13 @@ ARTIFACTSDIR=${WORKSPACE:-$repo_base_dir}/results
 
 # Don't try to process 32-bit package products if they are all architectureless.
 grep "^Architecture: " "$debian_path"/control|grep -q -v "Architecture: all$" || {
-	log "All binary packages are listed as 'all' architecture. Resetting --arches to 'amd64'."
-	ARCHES_TO_PACKAGE="amd64"
+	if [[ $ARCHES_TO_PACKAGE == *"amd64"* ]]; then
+		log "All binary packages are listed as 'all' architecture. Resetting --arches to 'amd64'."
+		ARCHES_TO_PACKAGE="amd64"
+	else
+		log "All binary packages are listed as 'all' architecture. Not building i386."
+		exit 0
+	fi
 }
 
 log "Removing old packages"
