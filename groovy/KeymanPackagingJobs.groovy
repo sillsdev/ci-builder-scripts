@@ -300,3 +300,62 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 		}
 	}
 }
+
+// Experimental packaging jobs with Pipeline
+multibranchPipelineJob('pipeline-keyman-packaging-test') {
+	description """<p>Packaging builds of Keyman</p>
+<p>The job is created by the DSL plugin from <i>KeymanPackagingJobs.groovy</i> script.</p>"""
+
+	factory {
+		workflowBranchProjectFactory {
+			scriptPath('linux/Jenkinsfile')
+		}
+	}
+
+	branchSources {
+		branchSource {
+			source {
+				github {
+					id('keyman')
+					repoOwner('keymanapp')
+					repository('keyman')
+					repositoryUrl('https://github.com/keymanapp/keyman.git')
+					configuredByUrl(true)
+					credentialsId('github-sillsdevgerrit')
+					includes('master PR-*')
+					buildOriginBranch(true)
+					buildOriginBranchWithPR(false)
+					buildOriginPRMerge(true)
+					buildForkPRMerge(true)
+				}
+			}
+			strategy {
+				defaultBranchPropertyStrategy {
+					props {
+						noTriggerBranchProperty()
+					}
+				}
+			}
+		}
+
+		// see https://stackoverflow.com/a/56291979/487503
+		configure {
+			def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+			traits << 'jenkins.plugins.git.traits.BranchDiscoveryTrait' {}
+		}
+
+		orphanedItemStrategy {
+			discardOldItems {
+				daysToKeep(60)
+				numToKeep(10)
+			}
+		}
+
+		triggers {
+			// check once a day if not otherwise run
+			periodicFolderTrigger {
+				interval('1d')
+			}
+		}
+	}
+}
