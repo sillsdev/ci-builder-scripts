@@ -14,6 +14,9 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 				repoOwner('sillsdev')
 				repository(repo)
 				scanCredentialsId('github-sillsdevgerrit')
+				if (repo != 'icu4c') {
+					includes('master PR-*')
+				}
 				buildOriginBranch(true)
 				buildOriginBranchWithPR(false)
 				buildOriginPRMerge(true)
