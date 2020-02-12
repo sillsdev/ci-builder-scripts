@@ -314,6 +314,7 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 
 	branchSources {
 		branchSource {
+			// see https://stackoverflow.com/a/56291979/487503
 			source {
 				github {
 					id('keyman')
@@ -322,11 +323,18 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 					repositoryUrl('https://github.com/keymanapp/keyman.git')
 					configuredByUrl(true)
 					credentialsId('github-sillsdevgerrit')
-					includes('master PR-*')
-					buildOriginBranch(true)
-					buildOriginBranchWithPR(false)
-					buildOriginPRMerge(true)
-					buildForkPRMerge(true)
+					traits {
+						gitHubBranchDiscovery {
+							strategyId(0) // Exclude branches that are also filed as PRs
+						}
+						gitHubPullRequestDiscovery() {
+							strategyId(1) // Merging the pull request with the current target branch revision
+						}
+						headWildcardFilter {
+							includes('master PR-*')
+							excludes('')
+						}
+					}
 				}
 			}
 			strategy {
@@ -336,12 +344,6 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 					}
 				}
 			}
-		}
-
-		// see https://stackoverflow.com/a/56291979/487503
-		configure {
-			def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
-			traits << 'jenkins.plugins.git.traits.BranchDiscoveryTrait' {}
 		}
 
 		orphanedItemStrategy {

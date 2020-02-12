@@ -82,7 +82,7 @@ class keymanViews {
 				filterExecutors false
 
 				jobs {
-					regex('pipeline-keyman-packaging')
+					regex('pipeline-keyman-.*')
 				}
 
 				columns {
