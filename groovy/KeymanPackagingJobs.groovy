@@ -23,7 +23,7 @@ final fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 
 // We have multiple jobs on different branches for release, beta ('master') and alpha ('develop')
 for (branch in [stable_branch, 'beta', 'master']) {
-	for (buildKind in ['regular', 'pr']) {
+	for (buildKind in ['regular' /*, 'pr'*/]) {
 		switch (buildKind) {
 			case 'regular':
 				jobinfix = ''
@@ -36,15 +36,10 @@ for (branch in [stable_branch, 'beta', 'master']) {
 		for (packagebasename in ['keyman-keyboardprocessor', 'kmflcomp', 'libkmfl', 'ibus-kmfl', 'keyman-config', 'ibus-keyman']) {
 			if (packagebasename == 'keyman-keyboardprocessor') {
 				subdir_name = "common/engine/keyboardprocessor"
-				build_distros = 'bionic'
-			}
-			else if (packagebasename == 'ibus-keyman') {
-				subdir_name = "linux/ibus-keyman"
-				build_distros = 'bionic'
 			} else {
 				subdir_name = "linux/${packagebasename}"
-				build_distros = 'xenial bionic'
 			}
+			build_distros = 'xenial bionic'
 			baseExtraParameter = "--nightly-delimiter '~' --source-code-subdir ${subdir_name}"
 			package_version = """--package-version "${fullBuildNumber}" """
 
@@ -266,7 +261,7 @@ exit \$buildret
 	}
 }
 
-// Experimental packaging jobs with Pipeline
+// Packaging jobs with Pipeline
 multibranchPipelineJob('pipeline-keyman-packaging') {
 	description """<p>Packaging builds of Keyman</p>
 <p>The job is created by the DSL plugin from <i>KeymanPackagingJobs.groovy</i> script.</p>"""
