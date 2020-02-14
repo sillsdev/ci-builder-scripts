@@ -325,7 +325,7 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 					credentialsId('github-sillsdevgerrit')
 					traits {
 						gitHubBranchDiscovery {
-							strategyId(0) // Exclude branches that are also filed as PRs
+							strategyId(1) // Exclude branches that are also filed as PRs
 						}
 						gitHubPullRequestDiscovery() {
 							strategyId(1) // Merging the pull request with the current target branch revision
@@ -343,6 +343,14 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 						noTriggerBranchProperty()
 					}
 				}
+			}
+		}
+
+		configure {
+			def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+			traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
+				strategyId(1)
+				trust()
 			}
 		}
 
