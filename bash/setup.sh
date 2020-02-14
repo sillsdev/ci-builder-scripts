@@ -69,6 +69,7 @@ function checkAndInstallRequirements()
 		log "Calling $(basename ${ARGS[0]}) recursively"
 		sg sbuild $TEMPFILE
 		rm $TEMPFILE
+		exit
 	fi
 
 	# We have to install a current version of mk-sbuild because trying to build newer dists
