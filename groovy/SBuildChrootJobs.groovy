@@ -81,7 +81,7 @@ general_init
 
 for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		DISTRIBUTIONS="$distribution" ARCHES="$arch" $HOME/ci-builder-scripts/bash/setup.sh
+		$HOME/ci-builder-scripts/bash/setup.sh --dists="$distribution" --arches="$arch"
 	done
 done\'\'\')
 '''

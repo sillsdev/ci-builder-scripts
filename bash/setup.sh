@@ -5,20 +5,12 @@
 
 set -e -o pipefail
 
+PROGRAM=$(readlink -f "$0")
 PROGRAM_NAME="$(basename "$0")"
 
 . $(dirname "$0")/common.sh
-general_init
-
-# Process arguments.
-while (( $# )); do
-	case $1 in
-		# Process individual arguments here. Use shift and $1 to get an argument value.
-		--update) update=true ;;
-		*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
-	esac
-	shift
-done
+no_package=true
+init "$@"
 
 function checkOrLinkDebootstrapScript()
 {
@@ -47,7 +39,7 @@ EOF
 
 function checkAndInstallRequirements()
 {
-	local TOINSTALL
+	local TOINSTALL GROUP
 	if [ ! -x /usr/bin/mk-sbuild ]; then
 		TOINSTALL="$TOINSTALL ubuntu-dev-tools"
 	fi
@@ -61,7 +53,23 @@ function checkAndInstallRequirements()
 		sudo apt-get update
 		sudo apt-get -qy install $TOINSTALL
 	fi
-	newgrp sbuild
+
+	GROUP=$(groups | grep sbuild || true)
+	if [ -z "$GROUP" ]; then
+		sudo adduser $USER sbuild > /dev/null || true
+		local TEMPFILE=$(mktemp)
+		local ARGS=()
+		while (( $# )); do
+			ARGS+=("\"$1\"")
+			shift
+		done
+		echo "${ARGS[@]}" > $TEMPFILE
+		chmod +x $TEMPFILE
+
+		log "Calling $(basename ${ARGS[0]}) recursively"
+		sg sbuild $TEMPFILE
+		rm $TEMPFILE
+	fi
 
 	# We have to install a current version of mk-sbuild because trying to build newer dists
 	# on an older dist might have different requirements than the system provided version
@@ -80,7 +88,7 @@ WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
 
 cd "${WORKDIR}"
 
-checkAndInstallRequirements
+checkAndInstallRequirements $PROGRAM "$@"
 
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
@@ -109,9 +117,9 @@ if [ ! -f ${KEYRINGNODE} ]; then
 	rm -rf $(basedir $NODE_KEY)
 fi
 
-for D in ${DISTRIBUTIONS:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
+for D in ${dists_arg:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 do
-	for A in ${ARCHES-amd64 i386}
+	for A in ${arches_arg:-amd64 i386}
 	do
 		[ -e $SCHROOTDIR/$D-$A -a -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
 		[ ! -e $SCHROOTDIR/$D-$A -a -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
