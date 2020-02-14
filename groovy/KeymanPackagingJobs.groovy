@@ -330,6 +330,12 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 						gitHubPullRequestDiscovery() {
 							strategyId(1) // Merging the pull request with the current target branch revision
 						}
+						/* https://issues.jenkins-ci.org/browse/JENKINS-60874
+						gitHubForkDiscovery() {
+							strategyId(1) // Merging the pull request with the current target branch revision
+							trust(gitHubTrustPermissions())
+						}
+						*/
 						headWildcardFilter {
 							includes('master PR-*')
 							excludes('')
@@ -347,10 +353,10 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 		}
 
 		configure {
-			def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+			def traits = it / sources / data / 'jenkins.branch.BranchSource' / source (class: 'org.jenkinsci.plugins.github_branch_source.GitHubSCMSource') / traits
 			traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
 				strategyId(1)
-				trust()
+				trust(class: 'org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustPermission')
 			}
 		}
 
