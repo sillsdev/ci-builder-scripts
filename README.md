@@ -35,13 +35,7 @@ The tests can also be run by the included VS Code task.
 (see [job-dsl-gradle-example](https://github.com/sheehan/job-dsl-gradle-example)
 for additional information about the setup of gradle)
 
-### Ubuntu bionic and gradlew
-
-gradlew 3.4.1 requires openjdk 8
-`sudo apt install openjdk-8-jre-headless`
-
-if you already have openjdk 11 installed then
-`sudo update-alternatives --config java` to set openjdk 8 as the default java
+### Troubleshoot
 
 Sometimes gradlew claims success but doesn't run all the tests. Delete scripts
 that you aren't testing e.g. `groovy/Bloom* groovy/LfMerge* groovy/Mono*` and
