@@ -343,13 +343,6 @@ multibranchPipelineJob('pipeline-keyman-packaging-test') {
 					}
 				}
 			}
-			strategy {
-				defaultBranchPropertyStrategy {
-					props {
-						noTriggerBranchProperty()
-					}
-				}
-			}
 		}
 
 		configure {
