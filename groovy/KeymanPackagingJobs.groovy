@@ -5,7 +5,7 @@
 //#include utilities/Common.groovy
 
 // Variables
-final stable_branch = 'stable-12.0'
+final stable_branch = 'stable-13.0'
 final distros_tobuild = "xenial bionic"
 final repo = 'git://github.com/keymanapp/keyman.git'
 final email_recipients = 'eb1@sil.org marc_durdin@sil.org dglassey@gmail.com darcy_wong@sil.org'
