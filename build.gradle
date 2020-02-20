@@ -133,6 +133,7 @@ dependencies {
 	testPlugins 'org.jenkins-ci.plugins:cvs:2.14'
 	testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.11'
 	testPlugins 'org.jenkins-ci.plugins:description-setter:1.10'
+	testPlugins 'org.jenkins-ci.plugins:disable-github-multibranch-status:1.1'
 	testPlugins 'org.jenkins-ci.plugins:display-url-api:2.3.2'
 	testPlugins 'org.jenkins-ci.plugins:docker-commons:1.15'
 	testPlugins 'org.jenkins-ci.plugins:docker-workflow:1.19'

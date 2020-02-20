@@ -273,30 +273,60 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 	}
 
 	branchSources {
-		github {
-			id('keyman')
-			repoOwner('keymanapp')
-			repository('keyman')
-			scanCredentialsId('github-sillsdevgerrit')
-			includes('master PR-*')
-			buildOriginBranch(true)
-			buildOriginBranchWithPR(false)
-			buildOriginPRMerge(true)
-			buildForkPRMerge(true)
-		}
-
-		orphanedItemStrategy {
-			discardOldItems {
-				daysToKeep(60)
-				numToKeep(10)
+		branchSource {
+			// see https://stackoverflow.com/a/56291979/487503
+			source {
+				github {
+					id('keyman')
+					repoOwner('keymanapp')
+					repository('keyman')
+					repositoryUrl('https://github.com/keymanapp/keyman.git')
+					configuredByUrl(true)
+					credentialsId('github-sillsdevgerrit')
+					traits {
+						gitHubBranchDiscovery {
+							strategyId(1) // Exclude branches that are also filed as PRs
+						}
+						gitHubPullRequestDiscovery() {
+							strategyId(1) // Merging the pull request with the current target branch revision
+						}
+						/* https://issues.jenkins-ci.org/browse/JENKINS-60874
+						gitHubForkDiscovery() {
+							strategyId(1) // Merging the pull request with the current target branch revision
+							trust(gitHubTrustPermissions())
+						}
+						*/
+						headWildcardFilter {
+							includes('master PR-*')
+							excludes('')
+						}
+						disableStatusUpdateTrait()
+					}
+				}
 			}
 		}
+	}
 
-		triggers {
-			// check once a day if not otherwise run
-			periodicFolderTrigger {
-				interval('1d')
-			}
+	configure {
+		def traits = it / 'sources' / 'data' / 'jenkins.branch.BranchSource' / 'source' / 'traits'
+
+		traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
+			strategyId(1)
+			trust(class: 'org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustPermission')
+		}
+	}
+
+	orphanedItemStrategy {
+		discardOldItems {
+			daysToKeep(60)
+			numToKeep(10)
+		}
+	}
+
+	triggers {
+		// check once a day if not otherwise run
+		periodicFolderTrigger {
+			interval('1d')
 		}
 	}
 }
