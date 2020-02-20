@@ -297,7 +297,7 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 						}
 						*/
 						headWildcardFilter {
-							includes('master PR-*')
+							includes('master beta PR-*')
 							excludes('')
 						}
 						disableStatusUpdateTrait()
