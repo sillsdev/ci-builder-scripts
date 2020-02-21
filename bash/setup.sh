@@ -37,6 +37,15 @@ $(echo $OTHERMIRROR | tr '|' '\n')
 EOF
 }
 
+function enableBackports()
+{
+	cat > $1 <<EOF
+Package: *
+Pin: release a=$2-backports
+Pin-Priority: 500
+EOF
+}
+
 function checkAndInstallRequirements()
 {
 	local TOINSTALL GROUP
@@ -201,6 +210,11 @@ do
 			TMPFILE=$(mktemp)
 			createSources $TMPFILE
 			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/sources.list.d/extra.list
+			rm $TMPFILE
+
+			TMPFILE=$(mktemp)
+			enableBackports $TMPFILE $D
+			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/preferences.d/backports
 			rm $TMPFILE
 
 			log "Install packages in chroot for $D-$A"
