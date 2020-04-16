@@ -103,6 +103,8 @@ checkAndInstallRequirements $PROGRAM "$@"
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
 KEYRINGNODE="$WORKDIR/nodesource-keyring.gpg"
+KEYRINGMICROSOFT="$WORKDIR/microsoft.asc.gpg"
+KEYRING_MONO="$WORKDIR/mono-project.asc.gpg"
 
 if [ ! -f ${KEYRINGPSO} ]; then
 	wget --output-document=${KEYRINGPSO} https://packages.sil.org/keys/pso-keyring-2016.gpg
@@ -127,6 +129,19 @@ if [ ! -f ${KEYRINGNODE} ]; then
 	rm -rf $(basedir $NODE_KEY)
 fi
 
+if [ ! -f ${KEYRINGMICROSOFT} ]; then
+	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o ${KEYRINGMICROSOFT}
+fi
+
+if [ ! -f ${KEYRING_MONO} ]; then
+	TMP_KEYRING="$(mktemp)"
+	XAMARIN_KEY_FINGERPRINT="3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+	gpg --no-default-keyring --keyring "${TMP_KEYRING}" --recv-keys ${XAMARIN_KEY_FINGERPRINT}
+	gpg --no-default-keyring --keyring "${TMP_KEYRING}" --export > "${KEYRING_MONO}"
+	rm -f "${TMP_KEYRING}"
+fi
+
+
 for D in ${dists_arg:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 do
 	for A in ${arches_arg:-amd64 i386}
@@ -139,6 +154,10 @@ do
 		OTHERMIRROR=""
 
 		checkOrLinkDebootstrapScript $D
+
+		# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
+		MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+		MONO_APT="deb https://download.mono-project.com/repo/ubuntu vs-${D} main"
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
@@ -160,11 +179,14 @@ do
 			done
 			# There's no node repo for focal yet.
 			if [ $D != "precise" -a $D != "focal" ]; then
-				# allow to install current nodejs packages
+				# Allow to install current nodejs packages
 				if [ -n "$update" ]; then
-					# we can't use https when creating the chroot because apt-transport-https
-					# isn't available yet
+					# We can't use https when creating the chroot because apt-transport-https
+					# isn't available yet. This is so for Ubuntu 16.04, but beginning in Ubuntu 18.04 the capability is probably built-in.
+					# Adding apt-transport-https to pbuilder --debootstrapopts --include does not solve it.
 					addmirror "deb https://deb.nodesource.com/node_8.x $D main"
+					addmirror "${MICROSOFT_APT}"
+					addmirror "${MONO_APT}"
 				fi
 			fi
 		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
@@ -177,11 +199,13 @@ do
 			addmirror "deb $LLSO $D $COMPONENTS"
 			addmirror "deb $PSO $D $COMPONENTS"
 			if [ $D != "wheezy" ]; then
-				# allow to install current nodejs packages
+				# Allow to install current nodejs packages
 				if [ -n "$update" ]; then
-					# we can't use https when creating the chroot because apt-transport-https
-					# isn't available yet
+					# We can't use https when creating the chroot because apt-transport-https
+					# isn't available yet. This is so for Debian stretch, but beginning in Debian buster the capability is probably built-in.
 					addmirror "deb https://deb.nodesource.com/node_8.x $D main"
+					addmirror "${MICROSOFT_APT}"
+					addmirror "${MONO_APT}"
 				fi
 			fi
 		else
@@ -206,6 +230,9 @@ do
 			[ -f $KEYRINGLLSO ] && sudo cp $KEYRINGLLSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
 			[ -f $KEYRINGPSO ] && sudo cp $KEYRINGPSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
 			[ -f $KEYRINGNODE ] && sudo cp $KEYRINGNODE $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
+			[ -f $KEYRINGMICROSOFT ] && sudo cp $KEYRINGMICROSOFT $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
+			[ -f $KEYRING_MONO ] && sudo cp $KEYRING_MONO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
+
 
 			TMPFILE=$(mktemp)
 			createSources $TMPFILE
