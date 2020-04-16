@@ -8,6 +8,7 @@ def packagename = 'Bloom'
 def distros_tobuild = 'bionic xenial'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'stephen_mcconnel@sil.org'
+def packagingAgent = 'packager && xenial'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
@@ -50,7 +51,13 @@ for (version in ['4.6', '4.7', 'master']) {
 
 	freeStyleJob("Bloom_Packaging-Linux-all-${version}-${kind}") {
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_thisjob, email_recipients, branch, "amd64")
+			distros_thisjob, email_recipients, branch, "amd64",
+			/* supported_distros */ "bionic xenial trusty", /* blockDownstream */ true,
+			/* mainRepoDir */ '.',
+			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
+			/* resultsDir: */ "results", /* extraSourceArgs: */ "",
+			/* extraBuildArgs: */ '', /* fullBuildNumber: */ "0.0.\$BUILD_NUMBER.${revision}",
+			/* nodeLabel: */ packagingAgent)
 
 		description """
 <p>Automatic ("nightly") builds of the Bloom ${branch} branch.</p>
