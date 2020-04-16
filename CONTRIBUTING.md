@@ -9,7 +9,7 @@ name):
 	git clone https://github.com/sillsdev/ci-builder-scripts.git
 	cd ci-builder-scripts
 	git config remote.origin.pushurl \
-		ssh://<gerritusername>@gerrit.lsdev.sil.org/ci-builder-scripts.git
+		ssh://<gerritusername>@gerrit.lsdev.sil.org:59418/ci-builder-scripts.git
 	git config remote.origin.push "+refs/heads/*:refs/for/master/*"
 
 You can push your changes to Gerrit by running:
