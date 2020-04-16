@@ -125,8 +125,8 @@ if [ ! -f ${KEYRINGNODE} ]; then
 	# Export without --armor since gpg seems to have trouble inspecting an armor export keyring.
 	gpg --no-default-keyring --keyring ${TMP_KEYRING} --export > ${KEYRINGNODE}
 
-	rm -f $TMP_KEYRING
-	rm -rf $(basedir $NODE_KEY)
+	rm -f "${TMP_KEYRING}"
+	rm -rf "$(dirname "${NODE_KEY}")"
 fi
 
 if [ ! -f ${KEYRINGMICROSOFT} ]; then
