@@ -119,7 +119,7 @@ if [ -z "$preserve_changelog_arg" -o -n "${package_version}" ]; then
 	dch $NEWPACKAGENAME --newversion "${native_version}-1" --force-bad-version --nomultimaint "$changelog_message"
 fi
 
-TRACE debuild -S -sa -Zxz ${signing_opt} ${debuild_opts}
+TRACE debuild -S -sa -Zxz -d ${signing_opt} ${debuild_opts}
 
 log "Source package files exist with the following sha256sums:"
 if [ -z "$build_in_place" ]; then
