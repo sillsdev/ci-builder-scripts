@@ -94,6 +94,23 @@ function checkAndInstallRequirements()
 	fi
 }
 
+function copyInKeyrings()
+{
+	[ -f "${KEYRINGLLSO}" ] && sudo cp "${KEYRINGLLSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	[ -f "${KEYRINGPSO}" ] && sudo cp "${KEYRINGPSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	[ -f "${KEYRINGNODE}" ] && sudo cp "${KEYRINGNODE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	[ -f "${KEYRINGMICROSOFT}" ] && sudo cp "${KEYRINGMICROSOFT}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	[ -f "${KEYRING_MONO}" ] && sudo cp "${KEYRING_MONO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+}
+
+function addExtraRepositories()
+{
+	TMPFILE="$(mktemp)"
+	createSources "${TMPFILE}"
+	sudo cp "${TMPFILE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/sources.list.d/extra.list"
+	rm "${TMPFILE}"
+}
+
 WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
 
 cd "${WORKDIR}"
@@ -230,17 +247,8 @@ do
 				${PROXY:+--debootstrap-proxy=}$PROXY \
 				$OTHEROPTS --type=directory
 
-			[ -f $KEYRINGLLSO ] && sudo cp $KEYRINGLLSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
-			[ -f $KEYRINGPSO ] && sudo cp $KEYRINGPSO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
-			[ -f $KEYRINGNODE ] && sudo cp $KEYRINGNODE $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
-			[ -f $KEYRINGMICROSOFT ] && sudo cp $KEYRINGMICROSOFT $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
-			[ -f $KEYRING_MONO ] && sudo cp $KEYRING_MONO $SCHROOTDIR/$D-$A/etc/apt/trusted.gpg.d/
-
-
-			TMPFILE=$(mktemp)
-			createSources $TMPFILE
-			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/sources.list.d/extra.list
-			rm $TMPFILE
+			copyInKeyrings
+			addExtraRepositories
 
 			TMPFILE=$(mktemp)
 			enableBackports $TMPFILE $D
@@ -256,6 +264,8 @@ do
 		else
 			# Update chroot
 			log "Update chroot for $D-$A"
+			copyInKeyrings
+			addExtraRepositories
 			TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
 				"apt-get -qq update && apt-get -qy upgrade && apt-get clean" < /dev/null
 		fi
