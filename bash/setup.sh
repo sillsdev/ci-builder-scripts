@@ -121,8 +121,10 @@ if [ ! -f ${KEYRINGNODE} ]; then
 	# Use a temporary, intermediate keyring since it may be keybox format on Ubuntu 20.04, and we need it to be an older format for apt.
 	TMP_KEYRING=$(mktemp)
 	wget --output-document=${NODE_KEY} https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-	gpg --no-default-keyring --keyring ${TMP_KEYRING} --import ${NODE_KEY}
-	# Export without --armor since gpg seems to have trouble inspecting an armor export keyring.
+	gpg --trust-model always --no-default-keyring --keyring ${TMP_KEYRING} \
+		--import ${NODE_KEY}
+	# Export without --armor since gpg seems to have trouble inspecting an
+	# armor export keyring.
 	gpg --no-default-keyring --keyring ${TMP_KEYRING} --export > ${KEYRINGNODE}
 
 	rm -f "${TMP_KEYRING}"
@@ -136,7 +138,7 @@ fi
 if [ ! -f ${KEYRING_MONO} ]; then
 	TMP_KEYRING="$(mktemp)"
 	XAMARIN_KEY_FINGERPRINT="3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
-	gpg --no-default-keyring --keyring "${TMP_KEYRING}" \
+	gpg --trust-model always --no-default-keyring --keyring "${TMP_KEYRING}" \
 		--keyserver keyserver.ubuntu.com --recv-keys ${XAMARIN_KEY_FINGERPRINT}
 	gpg --no-default-keyring --keyring "${TMP_KEYRING}" --export > "${KEYRING_MONO}"
 	rm -f "${TMP_KEYRING}"
