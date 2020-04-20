@@ -177,8 +177,8 @@ do
 		checkOrLinkDebootstrapScript $D
 
 		# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-		MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
-		MONO_APT="deb https://download.mono-project.com/repo/ubuntu vs-${D} main"
+		MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+		MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${D} main"
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
@@ -198,17 +198,18 @@ do
 				addmirror "deb $LLSO $D$S $COMPONENTS"
 				addmirror "deb $PSO $D$S $COMPONENTS"
 			done
-			# There's no node repo for focal yet.
-			if [ $D != "precise" -a $D != "focal" ]; then
-				# Allow to install current nodejs packages
-				if [ -n "$update" ]; then
-					# We can't use https when creating the chroot because apt-transport-https
-					# isn't available yet. This is so for Ubuntu 16.04, but beginning in Ubuntu 18.04 the capability is probably built-in.
-					# Adding apt-transport-https to pbuilder --debootstrapopts --include does not solve it.
-					addmirror "deb https://deb.nodesource.com/node_8.x $D main"
-					addmirror "${MICROSOFT_APT}"
-					addmirror "${MONO_APT}"
-				fi
+
+			addmirror "${MICROSOFT_APT}"
+			if [ $D != "eoan" ]; then
+				addmirror "${MONO_APT}"
+			fi
+
+			# Allow to install current nodejs packages
+			if [ -n "$update" ]; then
+				# We can't use https when creating the chroot because apt-transport-https
+				# isn't available yet. This is so for Ubuntu 16.04, but beginning in Ubuntu 18.04 the capability is probably built-in.
+				# Adding apt-transport-https to pbuilder --debootstrapopts --include does not solve it.
+				addmirror "deb https://deb.nodesource.com/node_12.x $D main"
 			fi
 		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
 			MIRROR="${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}"
