@@ -94,6 +94,18 @@ function checkAndInstallRequirements()
 	fi
 }
 
+function passApiKeystoSbuild()
+{
+	# Pass certain environment variables thru to sbuild build environment.
+	SBUILDRC_PATH="${HOME}/.sbuildrc"
+	if ! grep CROWDIN_API_KEY "${SBUILDRC_PATH}"; then
+		tee -a "${SBUILDRC_PATH}" <<END
+use Dpkg::Build::Info;
+\$environment_filter = [Dpkg::Build::Info::get_build_env_whitelist(), 'CROWDIN_API_KEY'];
+END
+	fi
+}
+
 function copyInKeyrings()
 {
 	[ -f "${KEYRINGLLSO}" ] && sudo cp "${KEYRINGLLSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
@@ -116,6 +128,7 @@ WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
 cd "${WORKDIR}"
 
 checkAndInstallRequirements $PROGRAM "$@"
+passApiKeystoSbuild
 
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
