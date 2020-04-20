@@ -107,6 +107,7 @@ function addExtraRepositories()
 {
 	TMPFILE="$(mktemp)"
 	createSources "${TMPFILE}"
+	log "Content of extra.list: $(cat $TMPFILE)"
 	sudo cp "${TMPFILE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/sources.list.d/extra.list"
 	rm "${TMPFILE}"
 }
