@@ -256,18 +256,22 @@ do
 			rm $TMPFILE
 
 			log "Install packages in chroot for $D-$A"
-			TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
-				"apt-get -qq update && \
-				apt-get -qy upgrade && \
-				apt-get -qy install apt-utils devscripts lsb-release apt-transport-https ca-certificates tzdata && \
-				apt-get clean" < /dev/null
+			#TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
+			#	"apt-get -qq update && \
+			#	apt-get -qy upgrade && \
+			#	apt-get -qy install apt-utils devscripts lsb-release apt-transport-https ca-certificates tzdata && \
+			#	apt-get clean" < /dev/null
+			TRACE sudo sbuild-update --update --dist-upgrade --upgrade $D-$A
+			TRACE sudo sbuild-apt $D-$A apt-get install apt-utils devscripts lsb-release apt-transport-https ca-certificates tzdata
+			TRACE sudo sbuild-update --clean --autoclean --autoremove $D-$A
 		else
 			# Update chroot
 			log "Update chroot for $D-$A"
 			copyInKeyrings
 			addExtraRepositories
-			TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
-				"apt-get -qq update && apt-get -qy upgrade && apt-get clean" < /dev/null
+			#TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
+			#	"apt-get -qq update && apt-get -qy upgrade && apt-get clean" < /dev/null
+			TRACE sudo sbuild-update --update --dist-upgrade --upgrade --clean --autoclean --autoremove $D-$A
 		fi
 	done
 done
