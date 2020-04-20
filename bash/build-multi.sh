@@ -148,7 +148,8 @@ do
 				log "PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
 				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 					--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
-					--append-to-version=+${DIST}1 --binNMU=0 --arch-any "${OPTS[@]}" $SRC
+					--append-to-version=+${DIST}1 --binNMU=0 --arch-any "${OPTS[@]}" \
+					--purge=always $SRC
 				$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
 
 				echo "Exit code from sbuild: $(cat $RESULT/${PACKAGE}_$ARCH.status)"
