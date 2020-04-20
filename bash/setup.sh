@@ -176,11 +176,11 @@ do
 
 		checkOrLinkDebootstrapScript $D
 
-		# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-		MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
-		MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${D} main"
-
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
+			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
+			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${D} main"
+
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
 				MIRROR="${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}"
 			else
@@ -212,6 +212,10 @@ do
 				addmirror "deb https://deb.nodesource.com/node_12.x $D main"
 			fi
 		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
+			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
+			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
+			MONO_APT="deb http://download.mono-project.com/repo/debian vs-${D} main"
+
 			MIRROR="${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}"
 			COMPONENTS="main contrib non-free"
 			KEYRINGMAIN="/usr/share/keyrings/debian-archive-keyring.gpg"
@@ -220,15 +224,13 @@ do
 			PSO="http://packages.sil.org/debian/"
 			addmirror "deb $LLSO $D $COMPONENTS"
 			addmirror "deb $PSO $D $COMPONENTS"
-			if [ $D != "wheezy" ]; then
-				# Allow to install current nodejs packages
-				if [ -n "$update" ]; then
-					# We can't use https when creating the chroot because apt-transport-https
-					# isn't available yet. This is so for Debian stretch, but beginning in Debian buster the capability is probably built-in.
-					addmirror "deb https://deb.nodesource.com/node_8.x $D main"
-					addmirror "${MICROSOFT_APT}"
-					addmirror "${MONO_APT}"
-				fi
+			addmirror "${MICROSOFT_APT}"
+			addmirror "${MONO_APT}"
+			# Allow to install current nodejs packages
+			if [ -n "$update" ]; then
+				# We can't use https when creating the chroot because apt-transport-https
+				# isn't available yet. This is so for Debian stretch, but beginning in Debian buster the capability is probably built-in.
+				addmirror "deb https://deb.nodesource.com/node_12.x $D main"
 			fi
 		else
 			stderr "Unknown distribution $D. Please update the script $0."
