@@ -78,6 +78,9 @@ for (branch in ['develop']) {
 				abortBuild()
 				writeDescription("Build timed out after {0} minutes")
 			}
+			credentialsBinding {
+				string('CROWDIN_API_KEY', 'FieldWorks_Crowdin_API_Key')
+			}
 		}
 
 		steps {
