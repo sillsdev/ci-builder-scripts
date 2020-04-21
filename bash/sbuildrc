@@ -1,0 +1,31 @@
+# .sbuildrc file
+
+# *** VERIFY AND UPDATE $mailto and $maintainer_name BELOW ***
+
+# Mail address where logs are sent to (mandatory, no default!)
+$mailto = 'jenkins';
+
+# Name to use as override in .changes files for the Maintainer: field
+#$maintainer_name='jenkins <jenkins@localhost>';
+
+# Directory for chroot symlinks and sbuild logs.  Defaults to the
+# current directory if unspecified.
+#$build_dir='/home/jenkins/ubuntu/build';
+
+# Directory for writing build logs to
+$log_dir="/home/jenkins/ubuntu/logs";
+
+# don't remove this, Perl needs it:
+1;
+
+$environment_filter = [
+			 '^PATH$',
+			 '^DEB(IAN|SIGN)?_[A-Z_]+$',
+			 '^(C(PP|XX)?|LD|F)FLAGS(_APPEND)?$',
+			 '^USER(NAME)?$',
+			 '^LOGNAME$',
+			 '^HOME$',
+			 '^TERM$',
+			 '^SHELL$',
+			 '^CROWDIN_API_KEY$'
+			];

@@ -7,8 +7,9 @@ set -e -o pipefail
 
 PROGRAM=$(readlink -f "$0")
 PROGRAM_NAME="$(basename "$0")"
+PROGRAM_DIR="$(dirname "$0")"
 
-. $(dirname "$0")/common.sh
+. "${PROGRAM_DIR}"/common.sh
 no_package=true
 init "$@"
 
@@ -92,18 +93,20 @@ function checkAndInstallRequirements()
 		chmod +x $HOME/bin/mk-sbuild
 		touch $HOME/bin/mk-sbuild.v${MKSBUILD_VERSION}
 	fi
+
+	installFileSbuildrc
 }
 
-function passApiKeystoSbuild()
+function installFileSbuildrc()
 {
-	# Pass certain environment variables thru to sbuild build environment.
 	SBUILDRC_PATH="${HOME}/.sbuildrc"
-	if ! grep CROWDIN_API_KEY "${SBUILDRC_PATH}"; then
-		tee -a "${SBUILDRC_PATH}" <<END
-use Dpkg::Build::Info;
-\$environment_filter = [Dpkg::Build::Info::get_build_env_whitelist(), 'CROWDIN_API_KEY'];
-END
+	if diff "${SBUILDRC_PATH}" "${PROGRAM_DIR}"/sbuildrc; then
+		return
 	fi
+	log "Installing .sbuildrc"
+	# Temporarily backup any existing .sbuildrc, in case we are overwriting something good.
+	cp -v "${SBUILDRC_PATH}" /tmp/old-sbuildrc.XXXXXXXXXX || true
+	cp -v "${PROGRAM_DIR}"/sbuildrc "${SBUILDRC_PATH}"
 }
 
 function copyInKeyrings()
@@ -123,12 +126,11 @@ function addExtraRepositories()
 	rm "${TMPFILE}"
 }
 
-WORKDIR="${WORKSPACE:-$(realpath $(dirname "$0"))}"
+WORKDIR="${WORKSPACE:-$(realpath "${PROGRAM_DIR}")}"
 
 cd "${WORKDIR}"
 
 checkAndInstallRequirements $PROGRAM "$@"
-passApiKeystoSbuild
 
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
