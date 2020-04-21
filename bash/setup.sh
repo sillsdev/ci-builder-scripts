@@ -105,7 +105,7 @@ function installFileSbuildrc()
 	fi
 	log "Installing .sbuildrc"
 	# Temporarily backup any existing .sbuildrc, in case we are overwriting something good.
-	cp -v "${SBUILDRC_PATH}" /tmp/old-sbuildrc.XXXXXXXXXX || true
+	cp -v "${SBUILDRC_PATH}" $(mktemp /tmp/old-sbuildrc.XXXXXXXXXX) || true
 	cp -v "${PROGRAM_DIR}"/sbuildrc "${SBUILDRC_PATH}"
 }
 
