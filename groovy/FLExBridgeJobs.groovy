@@ -47,7 +47,7 @@ for (branch in ['develop']) {
 		mainRepoDir = '.'
 
 		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros, email_recipients, branch, "amd64 i386", distros, true, mainRepoDir,
+			distros, email_recipients, branch, "amd64", distros, true, mainRepoDir,
 			/* buildMasterBranch: */ false, /* addParameters: */ true, /* addSteps: */ false,
 			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
 			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
