@@ -39,12 +39,12 @@ mkdir -p "$RESULTBASE"
 [ -f "${RESULTBASE}/sil-testing.gpg" ] || wget -q -O "${RESULTBASE}/sil-testing.gpg" http://linux.lsdev.sil.org/downloads/sil-testing.gpg
 [ -f "${RESULTBASE}/sil.gpg" ] || wget -q -O "${RESULTBASE}/sil.gpg" http://packages.sil.org/sil.gpg
 
-# Make sure base.tgz is in place for any distributions being used.
+# Make sure chroot is in place for any distributions being used.
 for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		if [ ! -e "$SCHROOTDIR"/$distribution-$arch ]; then
 			log "$SCHROOTDIR/$distribution-$arch does not exist. Creating a new chroot for $distribution-$arch"
-			DISTRIBUTIONS="$distribution" ARCHES="$arch" $(dirname "$0")/setup.sh
+			$(dirname "$0")/setup.sh --dists "$distribution" --arches "$arch"
 		fi
 	done
 done
