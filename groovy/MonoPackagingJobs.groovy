@@ -111,7 +111,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 [ "$SimulateDput" = "true" ] && Simulate=--simulate-dput
 [ "$AppendNightlyToVersion" = "false" ] && PreserveChangelog=--preserve-changelog
 
-exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + packageName + ''' \\
+exec $HOME/ci-builder-scripts/bash/build-packages --main-package-name ''' + packageName + ''' \\
     --repository-committishes "''' + "mono-calgary=origin/$branchName,$repo=origin/$branchName" + '''" \\
     --dists "$DistsToBuild" \\
     --arches "$ArchesToBuild" \\
