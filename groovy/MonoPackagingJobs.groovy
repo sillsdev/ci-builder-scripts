@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016-2020 SIL International
+ * Copyright (c) 2016-2017 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 //#include utilities/Common.groovy
 
 def distros_tobuild = ""
-def distros_tobuild_mono5 = "xenial bionic focal"
-def distros_tobuild_mono3and4 = "xenial bionic"
+def distros_tobuild_mono5 = "trusty xenial bionic focal devel"
+def distros_tobuild_mono3and4 = "trusty xenial bionic"
 def email = "eb1@sil.org"
 
 static String GetPackageName(repo, branchName) {
@@ -111,7 +111,7 @@ using the version in debian/changelog. Turn off for making releasable packages.'
 [ "$SimulateDput" = "true" ] && Simulate=--simulate-dput
 [ "$AppendNightlyToVersion" = "false" ] && PreserveChangelog=--preserve-changelog
 
-exec $HOME/ci-builder-scripts/bash/build-package --main-package-name ''' + packageName + ''' \\
+exec $HOME/FwSupportTools/packaging/build-packages --main-package-name ''' + packageName + ''' \\
     --repository-committishes "''' + "mono-calgary=origin/$branchName,$repo=origin/$branchName" + '''" \\
     --dists "$DistsToBuild" \\
     --arches "$ArchesToBuild" \\
