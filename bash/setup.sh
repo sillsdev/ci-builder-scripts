@@ -7,7 +7,7 @@ set -e -o pipefail
 
 PROGRAM=$(readlink -f "$0")
 PROGRAM_NAME="$(basename "$0")"
-PROGRAM_DIR="$(dirname "$0")"
+PROGRAM_DIR="$(realpath $(dirname "$0"))"
 
 . "${PROGRAM_DIR}"/common.sh
 no_package=true
@@ -55,6 +55,8 @@ function checkAndInstallRequirements()
 	fi
 	if [ ! -x /usr/bin/sbuild ]; then
 		TOINSTALL="$TOINSTALL sbuild"
+		touch $HOME/.sbuildrc
+	elif [ ! -f $HOME/.sbuildrc ]; then
 		touch $HOME/.sbuildrc
 	fi
 
@@ -126,7 +128,7 @@ function addExtraRepositories()
 	rm "${TMPFILE}"
 }
 
-WORKDIR="${WORKSPACE:-$(realpath "${PROGRAM_DIR}")}"
+WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
 
