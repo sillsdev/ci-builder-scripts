@@ -278,7 +278,7 @@ do
 			PKGLIST="apt-utils devscripts lsb-release apt-transport-https ca-certificates tzdata"
 
 			log "Install packages in chroot for $D-$A"
-			if [ "$(lsb_release --codename --short)" == "xenial"]; then
+			if [ "$(lsb_release --codename --short)" == "xenial" ]; then
 				# Xenial has an older sbuild version that has a buggy sbuild-apt
 				TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
 					"apt-get -qq update && \
