@@ -49,8 +49,8 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# 0.175 is the version included in Focal
-	MKSBUILD_VERSION=0.175
+	# 0.176 is the version included in Focal
+	MKSBUILD_VERSION=0.176
 
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
