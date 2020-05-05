@@ -50,11 +50,20 @@ for (branch in ['release/1.6', 'master', 'develop']) {
 
 		mainRepoDir = '.'
 
-		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_tobuild, email_recipients, branch, "amd64 i386", "trusty xenial bionic", true, mainRepoDir,
-			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
-			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
-			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
+		Common.defaultPackagingJob(
+			jobContext: delegate,
+			packageName: packagename,
+			subdirName: subdir_name,
+			packageVersion: package_version,
+			revision: revision,
+			distrosToBuild: distros_tobuild,
+			email: email_recipients,
+			branch: branch,
+			supportedDistros: 'trusty xenial bionic',
+			mainRepoDir: mainRepoDir,
+			buildMasterBranch: false,
+			extraSourceArgs: extraParameter,
+			fullBuildNumber: fullBuildNumber)
 
 		description """
 <p>Automatic ("nightly") builds of the WeSay ${branch} branch.</p>

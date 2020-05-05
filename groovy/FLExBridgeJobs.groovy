@@ -46,11 +46,23 @@ for (branch in ['develop']) {
 
 		mainRepoDir = '.'
 
-		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros, email_recipients, branch, "amd64", distros, true, mainRepoDir,
-			/* buildMasterBranch: */ false, /* addParameters: */ true, /* addSteps: */ false,
-			/* resultsDir: */ "results", /* extraSourceArgs: */ extraParameter,
-			/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber)
+		Common.defaultPackagingJob(
+			jobContext: delegate,
+			packageName: packagename,
+			subdirName: subdir_name,
+			packageVersion: package_version,
+			revision: revision,
+			distrosToBuild: distros,
+			email: email_recipients,
+			branch: branch,
+			archesToBuild: 'amd64',
+			supportedDistros: distros,
+			mainRepoDir: mainRepoDir,
+			buildMasterBranch: false,
+			addParameters: true,
+			addSteps: false,
+			extraSourceArgs: extraParameter,
+			fullBuildNumber: fullBuildNumber)
 
 		description """
 <p>Automatic ("nightly") builds of the FLExBridge ${branch} branch.</p>

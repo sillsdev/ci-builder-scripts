@@ -50,14 +50,21 @@ for (version in ['4.6', '4.7', 'master']) {
 	}
 
 	freeStyleJob("Bloom_Packaging-Linux-all-${version}-${kind}") {
-		Common.defaultPackagingJob(delegate, packagename, subdir_name, package_version, revision,
-			distros_thisjob, email_recipients, branch, "amd64",
-			/* supported_distros */ "bionic xenial trusty", /* blockDownstream */ true,
-			/* mainRepoDir */ '.',
-			/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ true,
-			/* resultsDir: */ "results", /* extraSourceArgs: */ "",
-			/* extraBuildArgs: */ '', /* fullBuildNumber: */ "0.0.\$BUILD_NUMBER.${revision}",
-			/* nodeLabel: */ packagingAgent)
+
+		Common.defaultPackagingJob(
+			jobContext: delegate,
+			packageName: packagename,
+			subdirName: subdir_name,
+			packageVersion: package_version,
+			revision: revision,
+			distrosToBuild: distros_thisjob,
+			email: email_recipients,
+			branch: branch,
+			archesToBuild: 'amd64',
+			supportedDistros: 'bionic xenial trusty',
+			buildMasterBranch: false,
+			fullBuildNumber: "0.0.\$BUILD_NUMBER.${revision}",
+			nodeLabel: packagingAgent)
 
 		description """
 <p>Automatic ("nightly") builds of the Bloom ${branch} branch.</p>

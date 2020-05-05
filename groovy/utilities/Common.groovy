@@ -7,24 +7,27 @@
  * some common definitions that can be imported in other scripts
  */
 class Common {
-	static void defaultPackagingJob(jobContext, packagename, subdir_name,
-		package_version = "",
-		revision = "",
-		distros_tobuild = "bionic xenial trusty",
-		email = "eb1@sil.org",
-		branch = "master",
-		arches_tobuild = "amd64 i386",
-		supported_distros = "bionic xenial trusty",
-		blockDownstream = true,
-		mainRepoDir = '.',
-		buildMasterBranch = true,
-		addParameters = true,
-		addSteps = true,
-		resultsDir = "results",
-		extraSourceArgs = "",
-		extraBuildArgs = "",
-		fullBuildNumber = "0.0.\$BUILD_NUMBER.${revision}",
-		nodeLabel = 'packager') {
+	static void defaultPackagingJob(Map args) {
+		def jobContext = args.jobContext
+		def packageName = args.packageName
+		def subdirName = args.subdirName
+		def packageVersion = args.packageVersion ? args.packageVersion : ''
+		def revision = args.revision ? args.revision : ''
+		def distrosToBuild = args.distrosToBuild ? args.distrosToBuild : 'bionic xenial trusty'
+		def email = args.email ? args.email : 'eb1@sil.org'
+		def branch = args.branch ? args.branch : 'master'
+		def archesToBuild = args.archesToBuild ? args.archesToBuild : 'amd64 i386'
+		def supportedDistros = args.supportedDistros ? args.supportedDistros : 'bionic xenial trusty'
+		def blockDownstream = args.blockDownstream ? args.blockDownstream : true
+		def mainRepoDir = args.mainRepoDir ? args.mainRepoDir : '.'
+		def buildMasterBranch = args.buildMasterBranch ? args.buildMasterBranch : true
+		def addParameters = args.addParameters ? args.addParameters : true
+		def addSteps = args.addSteps ? args.addSteps : true
+		def resultsDir = args.resultsDir ? args.resultsDir : 'results'
+		def extraSourceArgs = args.extraSourceArgs ? args.extraSourceArgs : ''
+		def extraBuildArgs = args.extraBuildArgs ? args.extraBuildArgs : ''
+		def fullBuildNumber = args.fullBuildNumber ? args.fullBuildNumber : "0.0.\$BUILD_NUMBER.${revision}"
+		def nodeLabel = args.nodeLabel ? args.nodeLabel : 'packager'
 
 		jobContext.with {
 
@@ -34,9 +37,9 @@ class Common {
 
 			if (addParameters) {
 				parameters {
-					stringParam("DistributionsToPackage", distros_tobuild,
+					stringParam("DistributionsToPackage", distrosToBuild,
 						"The distributions to build packages for (separated by space)")
-					stringParam("ArchesToPackage", arches_tobuild,
+					stringParam("ArchesToPackage", archesToBuild,
 						"The architectures to build packages for (separated by space)")
 					choiceParam("PackageBuildKind",
 						["Nightly", "Release", "ReleaseCandidate"],
@@ -64,35 +67,30 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
-# we don't want to clean the results dir if caller set a different directory
-# e.g. LfMerge uses `finalresults` to collect and archive packages for all
-# database versions
-if [ "${resultsDir}" == "results" ]; then
-	rm -f ${resultsDir}/*
-fi
-rm -f ${subdir_name}_*
+rm -f ${resultsDir}/*
+rm -f ${subdirName}_*
 
-cd "${subdir_name}"
+cd "${subdirName}"
 \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
-	--main-package-name "${packagename}" \
-	--supported-distros "${supported_distros}" \
+	--main-package-name "${packageName}" \
+	--supported-distros "${supportedDistros}" \
 	--debkeyid \$DEBSIGNKEY \
 	--main-repo-dir ${mainRepoDir} \
-	${package_version} \
+	${packageVersion} \
 	${extraSourceArgs} \
 	\$MAKE_SOURCE_ARGS
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
-	--main-package-name "${packagename}" \
-	--supported-distros "${supported_distros}" \
+	--main-package-name "${packageName}" \
+	--supported-distros "${supportedDistros}" \
 	--debkeyid \$DEBSIGNKEY \
 	${extraBuildArgs} \
 	\$BUILD_PACKAGE_ARGS
 
 cd \$WORKSPACE
-mv ${subdir_name}_* ${resultsDir}""")
+mv ${subdirName}_* ${resultsDir}""")
 				}
 			}
 

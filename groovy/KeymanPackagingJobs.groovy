@@ -24,12 +24,20 @@ final branch = 'keymankb'
 freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 	mainRepoDir = '.'
 	packagename = "onboard"
-	Common.defaultPackagingJob(delegate, "onboard-keyman", "", "", revision,
-		distros_tobuild, email_recipients, branch, "amd64 i386", distros_tobuild, true, mainRepoDir,
-		/* buildMasterBranch: */ false, /* addParameters */ true, /* addSteps */ false,
-		/* resultsDir: */ "results", /* extraSourceArgs: */ "",
-		/* extraBuildArgs: */ '', /* fullBuildNumber: */ fullBuildNumber,
-		/* nodeLabel: */ 'packager && bionic')
+	Common.defaultPackagingJob(
+		jobContext: delegate,
+		packageName: 'onboard-keyman',
+		subdirName: '',
+		revision: revision,
+		distrosToBuild: distros_tobuild,
+		email: email_recipients,
+		branch: branch,
+		supportedDistros: distros_tobuild,
+		mainRepoDir: mainRepoDir,
+		buildMasterBranch: false,
+		addSteps: false,
+		fullBuildNumber: fullBuildNumber,
+		nodeLabel: 'packager && bionic')
 
 	description """
 <p>Automatic builds of the Onboard Keyboard for Linux ${branch} branch.</p>

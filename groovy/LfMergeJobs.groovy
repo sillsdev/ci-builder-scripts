@@ -112,9 +112,21 @@ mozroots --import --sync
 					"The distributions to build packages for (separated by space)")
 			}
 
-			Common.defaultPackagingJob(delegate, 'lfmerge', 'lfmerge', "not used", revision,
-				distro, 'eb1@sil.org', branchName, 'amd64', distro, false, '.', false,
-				false, false, "finalresults")
+			Common.defaultPackagingJob(
+				jobContext: delegate,
+				packageName: 'lfmerge',
+				subdirName: 'lfmerge',
+				revision: revision,
+				distrosToBuild: distro,
+				email: 'eb1@sil.org',
+				branch: branchName,
+				archesToBuild: 'amd64',
+				supportedDistros: distro,
+				blockDownstream: false,
+				buildMasterBranch: false,
+				addParameters: false,
+				addSteps: false,
+				resultsDir: 'finalresults')
 
 			// will be triggered by other jobs
 
@@ -197,6 +209,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 
 	cd -
 	mv results/* finalresults/
+	mv
 done
 """)
 			}
@@ -359,8 +372,21 @@ cd "lfmerge-fdo"
 echo "Successfully build package" """)
 	}
 
-	Common.defaultPackagingJob(delegate, 'lfmerge-fdo', 'lfmerge-fdo', 'unused', revision,
-		distro, 'eb1@sil.org', fwBranch, 'amd64', distro, false, 'fw', false, true, false)
+	Common.defaultPackagingJob(
+		jobContext: delegate,
+		packageName: 'lfmerge-fdo',
+		subdirName: 'lfmerge-fdo',
+		revision: revision,
+		distrosToBuild: distro,
+		email: 'eb1@sil.org',
+		branch: fwBranch,
+		archesToBuild: 'amd64',
+		supportedDistros: distro,
+		blockDownstream: false,
+		mainRepoDir: 'fw',
+		buildMasterBranch: false,
+		addParameters: true,
+		addSteps: false)
 
 	publishers {
 		flexiblePublish {
