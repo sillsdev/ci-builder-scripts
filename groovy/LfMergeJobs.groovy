@@ -369,12 +369,12 @@ cd "lfmerge-fdo"
 	--debkeyid \$DEBSIGNKEY \
 	\$BUILD_PACKAGE_ARGS
 
-RESULT=$?
+RESULT=\$?
 
-if [ "$RESULT" -eq "0" ]; then
+if [ "\$RESULT" -eq "0" ]; then
 	echo "Successfully build package"
 fi
-exit $RESULT
+exit \$RESULT
 """)
 	}
 
