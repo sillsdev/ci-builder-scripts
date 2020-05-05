@@ -64,6 +64,14 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
+# we don't want to clean the results dir if caller set a different directory
+# e.g. LfMerge uses `finalresults` to collect and archive packages for all
+# database versions
+if [ "${resultsDir}" == "results" ]; then
+	rm -f ${resultsDir}/*
+fi
+rm -f ${subdir_name}_*
+
 cd "${subdir_name}"
 \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
@@ -81,13 +89,16 @@ cd "${subdir_name}"
 	--supported-distros "${supported_distros}" \
 	--debkeyid \$DEBSIGNKEY \
 	${extraBuildArgs} \
-	\$BUILD_PACKAGE_ARGS""")
+	\$BUILD_PACKAGE_ARGS
+
+cd \$WORKSPACE
+mv ${subdir_name}_* ${resultsDir}""")
 				}
 			}
 
 			publishers {
 				archiveArtifacts {
-					pattern("${resultsDir}/*, ${subdir_name}*")
+					pattern("${resultsDir}/*")
 					allowEmpty(true)
 				}
 
