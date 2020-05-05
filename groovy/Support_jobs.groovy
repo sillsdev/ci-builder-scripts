@@ -16,11 +16,27 @@ for (job in [
 
 		quietPeriod(120 /*seconds*/)
 
-		triggers {
-			gerrit {
-				project(job.name, job.branch)
-				events {
-					refUpdated()
+		properties {
+			pipelineTriggers {
+				triggers {
+					gerrit {
+						gerritProjects {
+							gerritProject {
+								compareType('PLAIN')
+								pattern(job.name)
+								branches {
+									branch {
+										compareType('PLAIN')
+										pattern(job.branch)
+									}
+								}
+								disableStrictForbiddenFileVerification(false)
+							}
+						}
+						triggerOnEvents {
+							refUpdated()
+						}
+					}
 				}
 			}
 		}

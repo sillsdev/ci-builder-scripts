@@ -15,13 +15,26 @@ pipelineJob('InstallFieldWorksDependencies-Linux') {
 
 	properties {
 		githubProjectUrl("https://github.com/sillsdev/FieldWorks/")
-	}
-
-	triggers {
-		gerrit {
-			project('FieldWorks', '$GERRIT_BRANCH')
-			events {
-				refUpdated()
+		pipelineTriggers {
+			triggers {
+				gerrit {
+					gerritProjects {
+						gerritProject {
+							compareType('PLAIN')
+							pattern('FieldWorks')
+							branches {
+								branch {
+									compareType('PLAIN')
+									pattern('$GERRIT_BRANCH')
+								}
+							}
+							disableStrictForbiddenFileVerification(false)
+						}
+					}
+					triggerOnEvents {
+						refUpdated()
+					}
+				}
 			}
 		}
 	}

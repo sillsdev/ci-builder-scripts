@@ -17,10 +17,16 @@ pipelineJob('SBuildChroots_Update-Linux-all') {
 			"The distributions to update")
 	}
 
-	triggers {
-		// Run every Sunday
-		// Times are UTC
-		cron("H H * * 0")
+	properties {
+		pipelineTriggers {
+			triggers {
+				cron {
+					// Run every Sunday
+					// Times are UTC
+					spec("H H * * 0")
+				}
+			}
+		}
 	}
 
 	definition {
@@ -42,10 +48,16 @@ disk that are at least two days old.</p>
 
 	logRotator(365, 100, 10, 10)
 
-	triggers {
-		// Run once every day
-		// Times are UTC
-		cron("H H * * *")
+	properties {
+		pipelineTriggers {
+			triggers {
+				cron {
+					// Run once every day
+					// Times are UTC
+					spec("H H * * *")
+				}
+			}
+		}
 	}
 
 	definition {
