@@ -11,23 +11,23 @@ class Common {
 		def jobContext = args.jobContext
 		def packageName = args.packageName
 		def subdirName = args.subdirName
-		def packageVersion = args.packageVersion ? args.packageVersion : ''
-		def revision = args.revision ? args.revision : ''
-		def distrosToBuild = args.distrosToBuild ? args.distrosToBuild : 'bionic xenial trusty'
-		def email = args.email ? args.email : 'eb1@sil.org'
-		def branch = args.branch ? args.branch : 'master'
-		def archesToBuild = args.archesToBuild ? args.archesToBuild : 'amd64 i386'
-		def supportedDistros = args.supportedDistros ? args.supportedDistros : 'bionic xenial trusty'
-		def blockDownstream = args.blockDownstream ? args.blockDownstream : true
-		def mainRepoDir = args.mainRepoDir ? args.mainRepoDir : '.'
-		def buildMasterBranch = args.buildMasterBranch ? args.buildMasterBranch : true
-		def addParameters = args.addParameters ? args.addParameters : true
-		def addSteps = args.addSteps ? args.addSteps : true
-		def resultsDir = args.resultsDir ? args.resultsDir : 'results'
-		def extraSourceArgs = args.extraSourceArgs ? args.extraSourceArgs : ''
-		def extraBuildArgs = args.extraBuildArgs ? args.extraBuildArgs : ''
-		def fullBuildNumber = args.fullBuildNumber ? args.fullBuildNumber : "0.0.\$BUILD_NUMBER.${revision}"
-		def nodeLabel = args.nodeLabel ? args.nodeLabel : 'packager'
+		def packageVersion = args.containsKey('packageVersion') ? args.packageVersion : ''
+		def revision = args.containsKey('revision') ? args.revision : ''
+		def distrosToBuild = args.containsKey('distrosToBuild') ? args.distrosToBuild : 'bionic xenial trusty'
+		def email = args.containsKey('email') ? args.email : 'eb1@sil.org'
+		def branch = args.containsKey('branch') ? args.branch : 'master'
+		def archesToBuild = args.containsKey('archesToBuild') ? args.archesToBuild : 'amd64 i386'
+		def supportedDistros = args.containsKey('supportedDistros') ? args.supportedDistros : 'bionic xenial trusty'
+		def blockDownstream = args.containsKey('blockDownstream') ? args.blockDownstream : true
+		def mainRepoDir = args.containsKey('mainRepoDir') ? args.mainRepoDir : '.'
+		def buildMasterBranch = args.containsKey('buildMasterBranch') ? args.buildMasterBranch : true
+		def addParameters = args.containsKey('addParameters') ? args.addParameters : true
+		def addSteps = args.containsKey('addSteps') ? args.addSteps : true
+		def resultsDir = args.containsKey('resultsDir') ? args.resultsDir : 'results'
+		def extraSourceArgs = args.containsKey('extraSourceArgs') ? args.extraSourceArgs : ''
+		def extraBuildArgs = args.containsKey('extraBuildArgs') ? args.extraBuildArgs : ''
+		def fullBuildNumber = args.containsKey('fullBuildNumber') ? args.fullBuildNumber : "0.0.\$BUILD_NUMBER.${revision}"
+		def nodeLabel = args.containsKey('nodeLabel') ? args.nodeLabel : 'packager'
 
 		jobContext.with {
 
