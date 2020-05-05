@@ -89,8 +89,11 @@ cd "${subdirName}"
 	${extraBuildArgs} \
 	\$BUILD_PACKAGE_ARGS
 
+RESULT=$?
 cd \$WORKSPACE
-mv ${subdirName}_* ${resultsDir}""")
+mv ${subdirName}_* ${resultsDir}
+
+exit $RESULT""")
 				}
 			}
 
