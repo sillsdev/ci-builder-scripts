@@ -12,7 +12,7 @@ this documentation we assume you put your projects under `~/dev`.
 
 ```bash
 git clone https://github.com/username/project ~/dev/project
-cd ~/dev/
+cd ~/dev/project
 ```
 
 ## Creating source package
