@@ -5,6 +5,30 @@ set -e
 
 PROGRAM_NAME="$(basename "$0")"
 
+function helpScript() {
+	cat << EOF
+
+$PROGRAM_NAME --dists <distros> --arches <arches> [--build-in-place]
+		[--no-upload]
+
+Create binary packages.
+
+Arguments:
+	--dists <distros> - the distributions to build packages for
+	--arches <arches> - the architectures to build packages for
+	--debkeyid <keyid> - the GPG key used to sign the package
+	--build-in-place - use the current directory as build directory instead
+		of \$repo_base_dir/\$source_package_name
+	--no-upload - Don't upload the binary packages to llso
+
+There are more optional parameters that can be set. See common.sh.
+
+NOTE: This help is incomplete. Please add the description of more options
+that are useful and apply to this script.
+EOF
+	exit 0
+}
+
 . $(dirname "$0")/common.sh
 init "$@"
 [ -f $(dirname "$0")/build-package.config ] && . $(dirname "$0")/build-package.config

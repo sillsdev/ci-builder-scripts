@@ -108,6 +108,7 @@ init()
 			# use argument as delimiter that seperates the version number from the 'nightly' string
 			--nightly-delimiter) shift; nightlydelimeter=$1;;
 			--update) update=true;;
+			--help) helpScript; exit 0 ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;
 		esac
 		shift || (stderr "Error: The last argument is missing a value. Exiting."; false) || exit 2

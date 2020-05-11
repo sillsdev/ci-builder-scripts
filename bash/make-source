@@ -5,6 +5,25 @@
 PROGRAM_NAME="$(basename "$0")"
 PROGRAM_DIR="$(dirname "$0")"
 
+function helpScript() {
+	cat << EOF
+
+$PROGRAM_NAME [--build-in-place]
+
+Create a source package.
+
+Arguments:
+	--build-in-place - use the current directory as build directory instead
+		of \$repo_base_dir/\$source_package_name
+
+There are more optional parameters that can be set. See common.sh.
+
+NOTE: This help is incomplete. Please add the description of more options
+that are useful and apply to this script.
+EOF
+	exit 0
+}
+
 . ${PROGRAM_DIR}/common.sh
 init "$@"
 
