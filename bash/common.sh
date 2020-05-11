@@ -127,7 +127,7 @@ init()
 	fi
 
 	if [ -n "$build_in_place" ]; then
-		repo_base_dir=$PWD
+		repo_base_dir=$(readlink -f $PWD/..)
 	fi
 
 	if [ -d ".hg" ]; then
