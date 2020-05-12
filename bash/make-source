@@ -8,11 +8,13 @@ PROGRAM_DIR="$(dirname "$0")"
 function helpScript() {
 	cat << EOF
 
-$PROGRAM_NAME [--build-in-place]
+$PROGRAM_NAME [--debkeyid <keyid>] [--build-in-place]
 
 Create a source package.
 
 Arguments:
+	--debkeyid <keyid> - the GPG key to use to sign the package (instead of
+		trying to use Jenkins' GPG key)
 	--build-in-place - use the current directory as build directory instead
 		of \$repo_base_dir/\$source_package_name
 

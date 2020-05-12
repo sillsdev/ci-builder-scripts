@@ -21,7 +21,7 @@ Use `make-source` to create a source package:
 
 ```bash
 git clean -dxf && git reset --hard
-~/dev/ci-builder-scripts/bash/make-source --build-in-place
+~/dev/ci-builder-scripts/bash/make-source --debkeyid $MYKEYID --build-in-place
 ```
 
 **NOTE:** creating the source package modifies some files in the repo. Therefore

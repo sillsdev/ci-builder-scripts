@@ -8,15 +8,16 @@ PROGRAM_NAME="$(basename "$0")"
 function helpScript() {
 	cat << EOF
 
-$PROGRAM_NAME --dists <distros> --arches <arches> [--build-in-place]
-		[--no-upload]
+$PROGRAM_NAME --dists <distros> --arches <arches> [--debkeyid <keyid>]
+		[--build-in-place] [--no-upload]
 
 Create binary packages.
 
 Arguments:
 	--dists <distros> - the distributions to build packages for
 	--arches <arches> - the architectures to build packages for
-	--debkeyid <keyid> - the GPG key used to sign the package
+	--debkeyid <keyid> - the GPG key to use to sign the package (instead of
+		trying to use Jenkins' GPG key)
 	--build-in-place - use the current directory as build directory instead
 		of \$repo_base_dir/\$source_package_name
 	--no-upload - Don't upload the binary packages to llso
