@@ -4,3 +4,4 @@
 # UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}
 # DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}
 # PACKAGING_ROOT="$HOME/packages"
+# debkeyid=1234567890deadbeef
