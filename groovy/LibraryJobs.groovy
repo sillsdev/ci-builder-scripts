@@ -37,5 +37,13 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 				}
 			}
 		}
+
+		if (repo == 'icu4c') {
+			factory {
+				workflowBranchProjectFactory {
+					scriptPath('icu4c/Jenkinsfile')
+				}
+			}
+		}
 	}
 }
