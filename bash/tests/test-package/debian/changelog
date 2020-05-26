@@ -1,0 +1,5 @@
+test-package (0.0.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Eberhard Beilharz <eb1@sil.org>  Tue, 26 May 2020 11:27:00 +0200

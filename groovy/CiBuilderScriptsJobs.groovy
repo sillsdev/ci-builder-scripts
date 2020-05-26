@@ -63,6 +63,15 @@ freeStyleJob('Gerrit-CiBuilderScripts-preMerge') {
 			tasks('clean')
 			tasks('test')
 		}
+		shell("""#!/bin/bash
+if ! dpkg -l | grep -q shunit2; then
+	sudo apt update
+	sudo apt install shunit2
+fi
+
+cd bash/tests
+./*.tests.sh
+""")
 	}
 
 	publishers {
