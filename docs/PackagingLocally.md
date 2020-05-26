@@ -37,6 +37,7 @@ Use `build-package` to build the binary packages for the different distros and
 architectures.
 
 ```bash
+cd ..
 ~/dev/ci-builder-scripts/bash/build-package --dists "bionic focal"
 	--arches "amd64 i386" --debkeyid $MYKEYID --build-in-place --no-upload
 ```

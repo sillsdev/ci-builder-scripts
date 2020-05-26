@@ -127,7 +127,21 @@ init()
 	fi
 
 	if [ -n "$build_in_place" ]; then
-		repo_base_dir=$(readlink -f $PWD/..)
+		if [ ! -d debian ]; then
+			if [ -n "$main_package_name_arg" ]; then
+				debian_path=${main_package_name_arg}/debian
+			else
+				packagedsc=$(ls *.dsc)
+				if [ $(wc -l $packagedsc) -gt 1 ]; then
+					stderr "Error: More than one .dsc file in directory and --main-package-name not specified"
+					exit 3
+				fi
+				packagedsc=${packagedsc%%_*}
+				debian_path=${packagedsc}/debian
+			fi
+		fi
+		repo_base_dir=$(readlink -f $PWD)
+		source_package_name=$(cd $debian_path/.. && dpkg-parsechangelog |grep ^Source:|cut -d' ' -f2)
 	fi
 
 	if [ -d ".hg" ]; then
