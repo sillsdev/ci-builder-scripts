@@ -1,24 +1,15 @@
-#! /bin/sh
+#! /bin/bash
 
 BASEDIR=$(pwd)
 
+. common-funcs.sh
+
 setUp() {
-	cd $BASEDIR
-	rm -f test-package_*
-	cd test-package
-	git checkout -q debian/source/format
-	git checkout -q debian/changelog
-	rm -f debian/files
-	cd $BASEDIR
+	cleanup
 }
 
 tearDown() {
-	cd $BASEDIR
-	rm -f test-package_*
-	cd test-package
-	git checkout -q debian/source/format
-	git checkout -q debian/changelog
-	rm -f debian/files
+	cleanup
 }
 
 testMakeSource_CanBuildInPlace() {
@@ -28,6 +19,10 @@ testMakeSource_CanBuildInPlace() {
 	assertTrue "dsc does not exist" "[ -f test-package_0.0.1-1.nightly*.dsc ]"
 	assertTrue "orig.tar.xz does not exist" "[ -f test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 }
+
+echo -e "\033[0;32mRunning tests in $0...\033[0m"
+
+checkRequirements
 
 # Load shUnit2.
 . shunit2

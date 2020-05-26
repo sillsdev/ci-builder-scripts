@@ -18,7 +18,7 @@
 		{
 			"label": "bash tests",
 			"type": "shell",
-			"command": "cd bash/tests && ./*.tests.sh",
+			"command": "cd bash/tests && for f in *.tests.sh; do ./$f; done",
 			"group": {
 				"kind": "test",
 				"isDefault": true

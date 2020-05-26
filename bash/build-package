@@ -4,6 +4,7 @@
 set -e
 
 PROGRAM_NAME="$(basename "$0")"
+PROGRAM_DIR=$(readlink -f $(dirname "$0"))
 
 function helpScript() {
 	cat << EOF
@@ -30,9 +31,9 @@ EOF
 	exit 0
 }
 
-. $(dirname "$0")/common.sh
+. $PROGRAM_DIR/common.sh
 init "$@"
-[ -f $(dirname "$0")/build-package.config ] && . $(dirname "$0")/build-package.config
+[ -f $PROGRAM_DIR/build-package.config ] && . $PROGRAM_DIR/build-package.config
 
 ARTIFACTSDIR=${WORKSPACE:-$repo_base_dir}/results
 
@@ -69,7 +70,7 @@ for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		if [ ! -e "$SCHROOTDIR"/$distribution-$arch ]; then
 			log "$SCHROOTDIR/$distribution-$arch does not exist. Creating a new chroot for $distribution-$arch"
-			$(dirname "$0")/setup.sh --dists "$distribution" --arches "$arch"
+			$PROGRAM_DIR/setup.sh --dists "$distribution" --arches "$arch"
 		fi
 	done
 done
@@ -78,25 +79,30 @@ log "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc=$(ls ${source_package_name}_*.dsc)
-DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $(dirname "$0")/build-multi.sh "$packagedsc"
+DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $PROGRAM_DIR/build-multi.sh "$packagedsc"
 
-log "Signing package(s)"
+if [ -n "$debkeyid" ]; then
+	log "Signing package(s)"
 
-cd "$RESULTBASE"
-for dist in $DISTRIBUTIONS_TO_PACKAGE; do
-	for arch in $ARCHES_TO_PACKAGE; do
-		RESULT="$RESULTBASE/$dist-$arch/result"
-		mkdir -p $RESULT
-		cd $RESULT
-		if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
-			sed -i '10d' ${source_package_name}_*.changes
-			# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
-			perl -pi -e "s/UNRELEASED/$dist/" ${source_package_name}_*.changes
-			[ -z "$debkeyid" ] && stderr "Warning: debkeyid not set."
-			debsign -k$debkeyid --no-re-sign ${source_package_name}_*.changes
-		fi
+	cd "$RESULTBASE"
+	for dist in $DISTRIBUTIONS_TO_PACKAGE; do
+		for arch in $ARCHES_TO_PACKAGE; do
+			RESULT="$RESULTBASE/$dist-$arch/result"
+			mkdir -p $RESULT
+			cd $RESULT
+			if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
+				sed -i '10d' ${source_package_name}_*.changes
+				# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
+				perl -pi -e "s/UNRELEASED/$dist/" ${source_package_name}_*.changes
+				[ -z "$debkeyid" ] && stderr "Warning: debkeyid not set."
+				debsign -k$debkeyid --no-re-sign ${source_package_name}_*.changes
+			fi
+		done
 	done
-done
+else
+	log "Skip signing package(s)"
+	stderr "Warning: debkeyid not set."
+fi
 
 log "Package files exist with the following sha256sums:"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do

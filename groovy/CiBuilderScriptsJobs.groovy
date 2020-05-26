@@ -70,7 +70,9 @@ if ! dpkg -l | grep -q shunit2; then
 fi
 
 cd bash/tests
-./*.tests.sh
+for f in *.tests.sh; do
+	./\$f
+done
 """)
 	}
 
