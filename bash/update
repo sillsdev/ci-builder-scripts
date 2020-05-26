@@ -7,8 +7,4 @@ PROGRAM_NAME="$(basename "$0")"
 . $(dirname "$0")/common.sh
 general_init "$@"
 
-for distribution in $DISTRIBUTIONS_TO_PACKAGE; do
-	for arch in $ARCHES_TO_PACKAGE; do
-		DISTRIBUTIONS="$distribution" ARCHES="$arch" . $(dirname "$0")/setup.sh --update
-	done
-done
+. $(dirname "$0")/setup.sh --dists "$DISTRIBUTIONS_TO_PACKAGE" --arches "$ARCHES_TO_PACKAGE" --update

@@ -149,20 +149,10 @@ if [ ! -f ${KEYRINGLLSO} ]; then
 fi
 
 if [ ! -f ${KEYRINGNODE} ]; then
-	# Download node key and convert to keyring.
-
-	NODE_KEY="$(mktemp -d)/nodesource-key.asc"
-	# Use a temporary, intermediate keyring since it may be keybox format on Ubuntu 20.04, and we need it to be an older format for apt.
-	TMP_KEYRING=$(mktemp)
-	wget --output-document=${NODE_KEY} https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-	gpg --trust-model always --no-default-keyring --keyring ${TMP_KEYRING} \
-		--import ${NODE_KEY}
-	# Export without --armor since gpg seems to have trouble inspecting an
-	# armor export keyring.
-	gpg --no-default-keyring --keyring ${TMP_KEYRING} --export > ${KEYRINGNODE}
-
-	rm -f "${TMP_KEYRING}"
-	rm -rf "$(dirname "${NODE_KEY}")"
+	# https://askubuntu.com/a/759993
+	wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key  | sudo apt-key --keyring ${KEYRINGNODE} add -
+	sudo chown $USER ${KEYRINGNODE}
+	sudo rm ${KEYRINGNODE}~
 fi
 
 if [ ! -f ${KEYRINGMICROSOFT} ]; then
@@ -295,8 +285,8 @@ do
 			log "Update chroot for $D-$A"
 			copyInKeyrings
 			addExtraRepositories
-			#TRACE sudo schroot -c source:$D-$A -u root --directory=/ -- sh -c \
-			#	"apt-get -qq update && apt-get -qy upgrade && apt-get clean" < /dev/null
+
+			TRACE sudo sbuild-apt $D-$A apt-get update
 			TRACE sudo sbuild-update --update --dist-upgrade --upgrade --clean --autoclean --autoremove $D-$A
 		fi
 	done
