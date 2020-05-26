@@ -18,7 +18,7 @@
 		{
 			"label": "bash tests",
 			"type": "shell",
-			"command": "cd bash/tests && for f in *.tests.sh; do ./$f; done",
+			"command": "cd bash/tests && export SHUNIT_COLOR=always && for f in *.tests.sh; do ./$f; done",
 			"group": {
 				"kind": "test",
 				"isDefault": true
