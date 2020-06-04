@@ -64,7 +64,8 @@ for (version in ['4.7', '4.8', 'master']) {
 			supportedDistros: distros_thisjob,
 			buildMasterBranch: false,
 			fullBuildNumber: "0.0.\$BUILD_NUMBER.${revision}",
-			nodeLabel: packagingAgent)
+			nodeLabel: packagingAgent,
+			addSteps: false)
 
 		description """
 <p>Automatic ("nightly") builds of the Bloom ${branch} branch.</p>
@@ -85,5 +86,48 @@ for (version in ['4.7', '4.8', 'master']) {
 				writeDescription("Build timed out after {0} minutes")
 			}
 		}
+
+		steps {
+			shell("""#!/bin/bash
+export FULL_BUILD_NUMBER="0.0.\$BUILD_NUMBER.${revision}"
+
+if [ "\$PackageBuildKind" = "Release" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name main"
+elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
+	MAKE_SOURCE_ARGS="--preserve-changelog"
+	BUILD_PACKAGE_ARGS="--suite-name proposed"
+fi
+
+rm -f results/*
+rm -f ${subdir_name}_*
+
+cd "${subdir_name}"
+
+echo "export FULL_BUILD_NUMBER=\$FULL_BUILD_NUMBER" > build_number.env
+
+\$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${distros_thisjob}" \
+	--debkeyid \$DEBSIGNKEY \
+	--main-repo-dir '.' \
+	${package_version} \
+	\$MAKE_SOURCE_ARGS
+
+\$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
+	--arches "\$ArchesToPackage" \
+	--main-package-name "${packagename}" \
+	--supported-distros "${distros_thisjob}" \
+	--debkeyid \$DEBSIGNKEY \
+	\$BUILD_PACKAGE_ARGS
+
+RESULT=\$?
+cd \$WORKSPACE
+mv ${subdir_name}_* results/
+
+exit \$RESULT""")
+		}
+
 	}
 }
