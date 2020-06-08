@@ -30,42 +30,8 @@ class bloomViews {
 				}
 
 				categorizationCriteria {
-					regexGroupingRule('^Bloom-.*-(default|master)-release$', 'master branch compile jobs')
-					regexGroupingRule('^Bloom-.*-(default|master)-.*Tests$', 'master branch unit tests')
 					regexGroupingRule('.*(Packaging).*', '')
-					regexGroupingRule('.*-Trigger-.*', 'master branch builds')
-					regexGroupingRule('^GitHub.*-master-.*', 'Pre-merge builds of GitHub pull requests (master branch)')
-					regexGroupingRule('^GitHub.*-Version.*-.*', 'Pre-merge builds of GitHub pull requests (Release branch)')
 				}
-			}
-		}
-	}
-
-	static void BloomViewBuildPipeline(viewContext, viewName, branchName, selectedJobName,
-		preMerge) {
-		viewContext.with {
-			buildPipelineView(viewName) {
-
-				title "Builds of the `$branchName` branch"
-				if (preMerge)
-					description "Pre-merge builds of the $branchName branch of <b>Bloom</b>"
-				else
-					description "<b>Bloom</b> builds of the $branchName branch"
-
-				filterBuildQueue false
-				filterExecutors false
-
-				displayedBuilds 10
-				refreshFrequency 3
-
-				triggerOnlyLatestJob false
-				alwaysAllowManualTrigger true
-				showPipelineDefinitionHeader false
-				showPipelineParameters false
-				showPipelineParametersInHeaders true
-				consoleOutputLinkStyle OutputStyle.Lightbox
-
-				selectedJob selectedJobName
 			}
 		}
 	}
@@ -109,12 +75,6 @@ nestedView('Bloom') {
 	}
 	views {
 		bloomViews.BloomViewAll(delegate)
-		bloomViews.BloomViewBuildPipeline(delegate, "Build Pipeline master branch",
-			"master", 'Bloom-Wrapper-Trigger-release', false)
-		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline Version3.6",
-			"Version3.6", 'GitHub-Bloom-Wrapper-Version3.6-release', true)
-		bloomViews.BloomViewBuildPipeline(delegate, "PR pipeline master branch",
-			"master", 'GitHub-Bloom-Wrapper-master-release', true)
 		bloomViews.BloomViewPackageBuilds(delegate)
 	}
 }
