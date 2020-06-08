@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016-2019 SIL International
+ * Copyright (c) 2016-2020 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 
-for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
+for (repo in ['icu-dotnet', 'icu', 'SIL.BuildTasks']) {
 	multibranchPipelineJob(repo) {
 		description """<p>Builds of ${repo}</p>
-	<p>The job is created by the DSL plugin from <i>LibraryJobs.groovy</i> script.</p>"""
+			<p>The job is created by the DSL plugin from <i>LibraryJobs.groovy</i> script.</p>"""
 
 		branchSources {
 			github {
@@ -14,7 +14,7 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 				repoOwner('sillsdev')
 				repository(repo)
 				scanCredentialsId('github-sillsdevgerrit')
-				if (repo != 'icu4c') {
+				if (repo != 'icu') {
 					includes('master PR-*')
 				}
 				buildOriginBranch(true)
@@ -38,7 +38,7 @@ for (repo in ['icu-dotnet', 'icu4c', 'SIL.BuildTasks']) {
 			}
 		}
 
-		if (repo == 'icu4c') {
+		if (repo == 'icu') {
 			factory {
 				workflowBranchProjectFactory {
 					scriptPath('icu4c/Jenkinsfile')
