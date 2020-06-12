@@ -9,9 +9,6 @@ class LfMerge {
 	static void generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false,
 		githubRepo = "sillsdev/LfMerge", whereToRun = 'lfmerge', isPr = false, branchName = '') {
 		jobContext.with {
-			properties {
-				priority(100)
-			}
 
 			label whereToRun
 

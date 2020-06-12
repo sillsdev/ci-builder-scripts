@@ -25,10 +25,6 @@ for (type in ['', 'Gerrit']) {
 				description """<p>${isGerritBuild ? 'Gerrit build' : 'Build'} of <i>${branchName}</i> branch of custom ${repo} on Linux.<p>
 <p>The job is created by the DSL plugin from <i>MonoRelatedJobs.groovy</i> script.</p>"""
 
-				properties {
-					priority(100)
-				}
-
 				label 'linux'
 
 				logRotator(365, 100)

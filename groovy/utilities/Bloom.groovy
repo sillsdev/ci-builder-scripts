@@ -10,10 +10,6 @@
 class Bloom {
 	static void generalBloomBuildJob(jobContext, useTimeout = true) {
 		jobContext.with {
-			properties {
-				priority(100)
-			}
-
 			logRotator(365, 100)
 
 			wrappers {
