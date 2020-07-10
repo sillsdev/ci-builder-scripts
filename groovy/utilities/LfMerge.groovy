@@ -113,10 +113,10 @@ mkdir -p output/Release
 """ +
 '''
 export GIT_BRANCH=$GIT_BRANCH_0
-if [ -f packages/GitVersion.CommandLine/tools/GitVersion.exe ]; then
-	mono --debug packages/GitVersion.CommandLine/tools/GitVersion.exe -output buildserver
+if [ -f packages/GitVersion.CommandLine/tools/gitversion.exe ]; then
+	mono --debug packages/GitVersion.CommandLine/tools/gitversion.exe -output buildserver
 else
-	mono --debug packages/GitVersion.CommandLine*/tools/GitVersion.exe -output buildserver
+	mono --debug packages/GitVersion.CommandLine*/tools/gitversion.exe -output buildserver
 fi
 
 . gitversion.properties
