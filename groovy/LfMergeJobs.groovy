@@ -143,11 +143,8 @@ RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 ${msbuild} /t:RestoreBuildTasks build/LfMerge.proj
 mkdir -p output/Release
 
-if [ -f packages/GitVersion.CommandLine/tools/gitversion.exe ]; then
-	mono --debug packages/GitVersion.CommandLine/tools/gitversion.exe -output buildserver
-else
-	mono --debug packages/GitVersion.CommandLine*/tools/gitversion.exe -output buildserver
-fi
+dotnet tool restore
+dotnet gitversion -output buildserver
 
 . gitversion.properties
 
