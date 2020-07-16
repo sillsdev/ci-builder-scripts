@@ -182,7 +182,6 @@ mkdir -p finalresults
 rm -f finalresults/*
 
 cd lfmerge
-. gitversion.properties
 
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
 export MONO_PREFIX=${MonoPrefixForPackaging}
@@ -197,6 +196,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	git reset --hard
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
+	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
 	TRACE ${msbuild} /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	TRACE debian/PrepareSource \$curDbVersion
