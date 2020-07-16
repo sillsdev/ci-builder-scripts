@@ -213,6 +213,9 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
 
 	cd -
+	# copy source package
+	mv lfmerge-* finalresults/
+	# copy binary packages
 	mv results/* finalresults/
 done
 """)
