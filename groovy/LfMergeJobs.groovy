@@ -182,6 +182,8 @@ mkdir -p finalresults
 rm -f finalresults/*
 
 cd lfmerge
+. gitversion.properties
+
 # We need to set MONO_PREFIX because that's set to a mono 2.10 installation on the packaging machine!
 export MONO_PREFIX=${MonoPrefixForPackaging}
 RUNMODE="PACKAGEBUILD" BUILD=Release . environ
@@ -212,7 +214,6 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 
 	cd -
 	mv results/* finalresults/
-	mv
 done
 """)
 			}
