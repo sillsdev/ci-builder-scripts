@@ -224,10 +224,8 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 done
 
 cd finalresults
-for dist in \$DistributionsToPackage; do
-	echo -e "\\033[0;34mUploading to llso:ubuntu/\$dist${SuiteName} amd64\\033[0m"
-	dput -U llso:ubuntu/\$dist${SuiteName} lfmerge*\$dist*.changes
-done
+echo -e "\\033[0;34mUploading source package to llso:ubuntu/\${DistributionsToPackage#* }${SuiteName}\\033[0m"
+dput -U llso:ubuntu/\${DistributionsToPackage#* }${SuiteName} lfmerge*source.changes
 """)
 			}
 
