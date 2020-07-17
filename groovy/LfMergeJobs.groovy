@@ -225,7 +225,7 @@ done
 
 cd finalresults
 for dist in \$DistributionsToPackage; do
-	log "Uploading to llso:ubuntu/\$dist${SuiteName} amd64"
+	echo -e "\\033[0;34mUploading to llso:ubuntu/\$dist${SuiteName} amd64\\033[0m"
 	dput -U llso:ubuntu/\$dist${SuiteName} lfmerge*\$dist*.changes
 done
 """)
