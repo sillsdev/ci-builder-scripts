@@ -32,7 +32,7 @@ general_init()
 	DISTRIBUTIONS=${DISTRIBUTIONS:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
-	PACKAGING_ROOT="$HOME/packages"
+	PACKAGING_ROOT="${PACKAGING_ROOT:-$HOME/packages}"
 	SCHROOTDIR=/var/lib/schroot/chroots
 
 	UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}

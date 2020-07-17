@@ -81,9 +81,27 @@ cd "$repo_base_dir"
 packagedsc=$(ls ${source_package_name}_*.dsc)
 DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $PROGRAM_DIR/build-multi.sh "$packagedsc"
 
-if [ -n "$debkeyid" ]; then
-	log "Signing package(s)"
+function UpdateChangesFile() {
+	# $1 name of the .changes file
+	# $2 name of distribution to replace UNRELEASED
 
+	# REVIEW: What is line 10?
+	# ENHANCE: Explicitly search for the field name and delete the line
+	sed -i '10d' $1
+	# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
+	perl -pi -e "s/UNRELEASED/$2/" $1
+}
+
+if [ -n "$debkeyid" ]; then
+	# Source package
+	cd "$repo_base_dir"
+	if [ $(ls ${source_package_name}_*source.changes 2> /dev/null | wc -l) -ge 1 ]; then
+		log "Signing source package"
+		UpdateChangesFile ${source_package_name}_*source.changes ${DISTRIBUTIONS_TO_PACKAGE#* }
+		debsign -k$debkeyid --no-re-sign ${source_package_name}_*source.changes
+	fi
+
+	log "Signing package(s)"
 	cd "$RESULTBASE"
 	for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 		for arch in $ARCHES_TO_PACKAGE; do
@@ -91,10 +109,7 @@ if [ -n "$debkeyid" ]; then
 			mkdir -p $RESULT
 			cd $RESULT
 			if [ $(ls ${source_package_name}_*.changes 2> /dev/null | wc -l) -ge 1 ]; then
-				sed -i '10d' ${source_package_name}_*.changes
-				# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
-				perl -pi -e "s/UNRELEASED/$dist/" ${source_package_name}_*.changes
-				[ -z "$debkeyid" ] && stderr "Warning: debkeyid not set."
+				UpdateChangesFile ${source_package_name}_*.changes $dist
 				debsign -k$debkeyid --no-re-sign ${source_package_name}_*.changes
 			fi
 		done
@@ -105,10 +120,25 @@ else
 fi
 
 log "Package files exist with the following sha256sums:"
+# Source package
+cd "$repo_base_dir"
+mkdir -p "$ARTIFACTSDIR"
+if [ $(ls ${source_package_name}_*-1*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
+	if grep -q '.buildinfo$' ${source_package_name}_*-1*.dsc ; then
+		# Starting with Bionic the package contains a .buildinfo file that's required to
+		# upload the package
+		DCMD_ARGS="--orig --debtar --buildinfo"
+	else
+		DCMD_ARGS="--orig --debtar"
+	fi
+	dcmd --dsc $DCMD_ARGS sha256sum ${source_package_name}_*-1*.dsc || true
+	dcmd --dsc $DCMD_ARGS cp ${source_package_name}_*-1*.dsc $ARTIFACTSDIR/
+	cp ${source_package_name}_*source.changes $ARTIFACTSDIR
+fi
+# Binary packages
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $RESULTBASE/$dist-$arch/result
-		mkdir -p "$ARTIFACTSDIR"
 		if grep -q '.buildinfo$' ${source_package_name}_*+${dist}1_${arch}.changes ; then
 			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
@@ -153,6 +183,14 @@ if [ -n "$no_upload" ]; then
 fi
 
 log "Upload packages"
+# Upload source package
+cd "$ARTIFACTSDIR"
+if [ $(ls ${source_package_name}_*source.changes 2> /dev/null | wc -l) -ge 1 ]; then
+	dist=${DISTRIBUTIONS_TO_PACKAGE#* }
+	log "Uploading source package to llso:ubuntu/$dist$SUITE_NAME"
+	dput $dput_simulate -U llso:ubuntu/$dist$SUITE_NAME ${source_package_name}_*source.changes
+fi
+# Upload binary packages
 cd "$RESULTBASE"
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 	for arch in $ARCHES_TO_PACKAGE; do

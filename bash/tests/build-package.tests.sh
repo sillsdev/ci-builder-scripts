@@ -6,6 +6,7 @@ BASEDIR=$(pwd)
 
 setUp() {
 	cleanup
+	export PACKAGING_ROOT=$(mktemp -d)
 
 	cd test-package
 	../../make-source --build-in-place > /dev/null 2>&1
@@ -15,6 +16,7 @@ setUp() {
 
 tearDown() {
 	cleanup
+	rm -rf $PACKAGING_ROOT
 }
 
 testBuildPackage_CanBuildInPlace() {
@@ -27,18 +29,30 @@ testBuildPackage_CanBuildInPlace() {
 	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
 	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
 	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.changes ]"
+	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
+	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"
 }
 
 testBuildPackage_CanBuildInPlaceWithMainPackageName() {
 	# This scenario is used for most package builds on Jenkins
 
+	# Setup
+	export WORKSPACE=$PACKAGING_ROOT/workspace
+	mkdir -p $WORKSPACE
+	mv test-package_0.0.1* $WORKSPACE
+	cd test-package
+
 	# Execute
-	assertTrue "build-package failed" "../build-package --dists focal --arches amd64 --build-in-place --no-upload --main-package-name test-package"
+	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --no-upload --main-package-name test-package"
 
 	# Verify
-	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
-	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
-	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue ".deb does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
+	assertTrue ".changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
+	assertTrue ".buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*_source.changes ]"
+	assertTrue ".orig.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
+	assertTrue ".debian.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"
 }
 
 testBuildPackage_WorksWithDscInCurrentDir() {
@@ -55,6 +69,9 @@ testBuildPackage_WorksWithDscInCurrentDir() {
 	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
 	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
 	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.changes ]"
+	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
+	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"
 }
 
 echo -e "${GREEN}Running tests in $0...${NC}"
