@@ -98,7 +98,7 @@ if [ -n "$debkeyid" ]; then
 	if [ $(ls ${source_package_name}_*source.changes 2> /dev/null | wc -l) -ge 1 ]; then
 		log "Signing source package"
 		UpdateChangesFile ${source_package_name}_*source.changes ${DISTRIBUTIONS_TO_PACKAGE#* }
-		debsign -k$debkeyid --no-re-sign ${source_package_name}_*source.changes
+		debsign -k$debkeyid -S --re-sign ${source_package_name}_*source.changes
 	fi
 
 	log "Signing package(s)"
