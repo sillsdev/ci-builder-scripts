@@ -183,7 +183,7 @@ TRACE()
 
 mkdir -p finalresults
 rm -f finalresults/*
-rm lfmerge-*
+rm -f lfmerge-*
 
 cd lfmerge
 
