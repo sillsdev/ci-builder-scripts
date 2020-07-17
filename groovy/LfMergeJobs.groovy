@@ -214,12 +214,9 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	echo -e "\\033[0;34mBuild binary package\\033[0m"
 	TRACE \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
-		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY --no-upload ${BuildPackageArgs}
+		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
 
 	cd -
-	# copy source package
-	mv lfmerge-* finalresults/
-	# copy binary packages
 	mv results/* finalresults/
 done
 """)
