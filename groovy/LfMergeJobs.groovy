@@ -101,12 +101,15 @@ mozroots --import --sync
 			if (branchNameSuffix == "live") {
 				BuildPackageArgs = "--suite-name main"
 				AdditionalDescription = "(Uploaded to main section of llso)"
+				SuiteName = ''
 			} else if (branchNameSuffix == "qa") {
 				BuildPackageArgs = "--suite-name proposed"
 				AdditionalDescription = "(Uploaded to -proposed section of llso)"
+				SuiteName = '-proposed'
 			} else {
 				BuildPackageArgs = ""
 				AdditionalDescription = "(Uploaded to -experimental section of llso)"
+				SuiteName = '-experimental'
 			}
 
 			description """<p>Package builds of the LfMerge ${branchName} branch ${AdditionalDescription}.</p>
@@ -180,6 +183,7 @@ TRACE()
 
 mkdir -p finalresults
 rm -f finalresults/*
+rm lfmerge-*
 
 cd lfmerge
 
@@ -210,13 +214,19 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	echo -e "\\033[0;34mBuild binary package\\033[0m"
 	TRACE \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
-		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY ${BuildPackageArgs}
+		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY --no-upload ${BuildPackageArgs}
 
 	cd -
 	# copy source package
 	mv lfmerge-* finalresults/
 	# copy binary packages
 	mv results/* finalresults/
+done
+
+cd finalresults
+for dist in \$DistributionsToPackage; do
+	log "Uploading to llso:ubuntu/\$dist${SuiteName} amd64"
+	dput -U llso:ubuntu/\$dist${SuiteName} lfmerge*\$dist*.changes
 done
 """)
 			}
