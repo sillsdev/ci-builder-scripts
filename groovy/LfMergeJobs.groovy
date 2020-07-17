@@ -222,10 +222,6 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	# copy binary packages
 	mv results/* finalresults/
 done
-
-cd finalresults
-echo -e "\\033[0;34mUploading source package to llso:ubuntu/\${DistributionsToPackage#* }${SuiteName}\\033[0m"
-dput -U llso:ubuntu/\${DistributionsToPackage#* }${SuiteName} lfmerge*source.changes
 """)
 			}
 
