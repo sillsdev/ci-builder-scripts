@@ -186,7 +186,7 @@ log "Upload packages"
 # Upload source package
 cd "$ARTIFACTSDIR"
 if [ $(ls ${source_package_name}_*source.changes 2> /dev/null | wc -l) -ge 1 ]; then
-	dist=${DISTRIBUTIONS_TO_PACKAGE#* }
+	dist=${DISTRIBUTIONS_TO_PACKAGE##* }
 	log "Uploading source package to llso:ubuntu/$dist$SUITE_NAME"
 	dput $dput_simulate -U llso:ubuntu/$dist$SUITE_NAME ${source_package_name}_*source.changes
 fi
