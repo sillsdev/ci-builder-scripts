@@ -85,9 +85,6 @@ function UpdateChangesFile() {
 	# $1 name of the .changes file
 	# $2 name of distribution to replace UNRELEASED
 
-	# REVIEW: What is line 10?
-	# ENHANCE: Explicitly search for the field name and delete the line
-	sed -i '10d' $1
 	# .changes files can have their Distribution set to UNRELEASED sometimes. Fix it.
 	perl -pi -e "s/UNRELEASED/$2/" $1
 }
