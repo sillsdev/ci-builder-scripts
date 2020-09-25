@@ -26,9 +26,11 @@ testBuildPackage_CanBuildInPlace() {
 	assertTrue "build-package failed" "../build-package --dists focal --arches amd64 --build-in-place --no-upload"
 
 	# Verify
+	assertTrue ".dsc does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.dsc ]"
 	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
 	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
 	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"
@@ -47,9 +49,11 @@ testBuildPackage_CanBuildInPlaceWithMainPackageName() {
 	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --no-upload --main-package-name test-package"
 
 	# Verify
+	assertTrue ".dsc does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1.dsc ]"
 	assertTrue ".deb does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
 	assertTrue ".changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
 	assertTrue ".buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"
@@ -66,9 +70,11 @@ testBuildPackage_WorksWithDscInCurrentDir() {
 	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --build-in-place --no-upload"
 
 	# Verify
+	assertTrue ".dsc does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.dsc ]"
 	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.deb ]"
 	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.changes ]"
 	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*+focal1_amd64.buildinfo ]"
+	assertTrue "_source.buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.debian.tar.xz ]"

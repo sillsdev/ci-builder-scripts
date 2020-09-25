@@ -11,7 +11,7 @@ freeStyleJob('Gerrit-CiBuilderScripts-preMerge') {
 	description '''<p>Pre-merge builds of ci-builder-scripts.<p>
 <p>The job is created by the DSL plugin from <i>CiBuilderScriptsJobs.groovy</i> script.</p>'''
 
-	label 'packager'
+	label 'packager && bionic'
 
 	scm {
 		git {

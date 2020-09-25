@@ -121,16 +121,15 @@ log "Package files exist with the following sha256sums:"
 cd "$repo_base_dir"
 mkdir -p "$ARTIFACTSDIR"
 if [ $(ls ${source_package_name}_*-1*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
-	if grep -q '.buildinfo$' ${source_package_name}_*-1*.dsc ; then
+	if grep -q '.buildinfo$' ${source_package_name}_*-1_source.changes ; then
 		# Starting with Bionic the package contains a .buildinfo file that's required to
 		# upload the package
-		DCMD_ARGS="--orig --debtar --buildinfo"
+		DCMD_ARGS="--orig --debtar --changes --buildinfo"
 	else
-		DCMD_ARGS="--orig --debtar"
+		DCMD_ARGS="--orig --debtar --changes"
 	fi
-	dcmd --dsc $DCMD_ARGS sha256sum ${source_package_name}_*-1*.dsc || true
-	dcmd --dsc $DCMD_ARGS cp ${source_package_name}_*-1*.dsc $ARTIFACTSDIR/
-	cp ${source_package_name}_*source.changes $ARTIFACTSDIR
+	dcmd --dsc $DCMD_ARGS sha256sum ${source_package_name}_*-1_source.changes || true
+	dcmd --dsc $DCMD_ARGS cp ${source_package_name}_*-1_source.changes $ARTIFACTSDIR/
 fi
 # Binary packages
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
