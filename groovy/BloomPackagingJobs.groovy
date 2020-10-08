@@ -5,7 +5,7 @@
 
 // Variables
 def packagename = 'Bloom'
-def distros_tobuild = 'focal bionic xenial'
+def distros_tobuild = 'focal bionic'
 def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'stephen_mcconnel@sil.org'
 def packagingAgent = 'packager'
@@ -27,16 +27,16 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * of shifting the previous alpha to beta.  Except for alpha on the master branch, the other jobs all
  * shift branches as new releases are made.
  */
-for (version in ['4.7', '4.8', 'master']) {
+for (version in ['4.8', '4.9', 'master']) {
 	switch (version) {
-		case '4.7':
-			branch = 'Version4.7'
+		case '4.8':
+			branch = 'Version4.8'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
-		case '4.8':
-			branch = 'Version4.8'
+		case '4.9':
+			branch = 'Version4.9'
 			subdir_name = 'bloom-desktop-beta'
 			kind = 'beta'
 			distros_thisjob = distros_tobuild
