@@ -30,7 +30,7 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
 for (version in ['4.8', '4.9', 'master']) {
 	switch (version) {
 		case '4.8':
-			branch = 'Version4.8'
+			branch = 'Version4.8_CS'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
