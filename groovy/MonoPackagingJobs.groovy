@@ -5,8 +5,8 @@
 //#include utilities/Common.groovy
 
 def distros_tobuild = ""
-def distros_tobuild_mono5 = "trusty xenial bionic focal devel"
-def distros_tobuild_mono3and4 = "trusty xenial bionic"
+def distros_tobuild_mono5 = "xenial bionic focal groovy devel"
+def distros_tobuild_mono3and4 = "xenial bionic"
 def email = "eb1@sil.org"
 
 static String GetPackageName(repo, branchName) {
