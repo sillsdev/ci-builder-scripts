@@ -250,7 +250,7 @@ do
 		if [ -z "$update" ]; then
 			# Create a new chroot
 			log "Create new chroot for $D-$A"
-			if [ "$D-$A" != "focal-i386" ]; then
+			if [ "$D-$A" != "focal-i386" -a "$D-$A" != "groovy-i386" ]; then
 				# eatmydata (or rather a package eatmydata depends on) is not available in
 				# 32bit starting with focal
 				OTHEROPTS=--eatmydata
