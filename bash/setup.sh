@@ -183,9 +183,15 @@ do
 		checkOrLinkDebootstrapScript $D
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
+			if [[ "$UBUNTU_LTS_DISTROS" == *$D* ]];
+				LTSDIST=$D
+			else
+				LTSARRAY=(${UBUNTU_LTS_DISTROS})
+				LTSDIST=${LTSARRAY[${#LTSARRAY[@]}-1]}
+			fi
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
 			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
-			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${D} main"
+			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${LTSDIST} main"
 
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
 				MIRROR="${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}"
@@ -206,9 +212,7 @@ do
 			done
 
 			addmirror "${MICROSOFT_APT}"
-			if [ $D != "eoan" ]; then
-				addmirror "${MONO_APT}"
-			fi
+			addmirror "${MONO_APT}"
 
 			# Allow to install current nodejs packages
 			if [ -n "$update" ]; then
@@ -252,10 +256,11 @@ do
 				OTHEROPTS=--eatmydata
 			fi
 
+			# Build chroot - if that fails remove it
 			TRACE $HOME/bin/mk-sbuild $D --arch=$A \
 				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
-				$OTHEROPTS --type=directory
+				$OTHEROPTS --type=directory || sudo rm -rf $SCHROOTDIR/$D-$A
 
 			copyInKeyrings
 			addExtraRepositories
