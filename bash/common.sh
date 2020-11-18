@@ -20,6 +20,8 @@ general_init()
 {
 	# currently supported and future Ubuntu versions
 	UBUNTU_DISTROS="xenial bionic focal groovy"
+	# currently supported LTS versions
+	UBUNTU_LTS_DISTROS="xenial bionic focal"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
 	UBUNTU_OLDDISTROS=""
 	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco eoan
