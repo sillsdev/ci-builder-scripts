@@ -183,7 +183,7 @@ do
 		checkOrLinkDebootstrapScript $D
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
-			if [[ "$UBUNTU_LTS_DISTROS" == *$D* ]];
+			if [[ "$UBUNTU_LTS_DISTROS" == *$D* ]]; then
 				LTSDIST=$D
 			else
 				LTSARRAY=(${UBUNTU_LTS_DISTROS})
