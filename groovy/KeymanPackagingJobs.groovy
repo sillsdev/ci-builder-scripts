@@ -88,7 +88,7 @@ cd onboard-keyman
 rm -rf onboard_*.{dsc,build,buildinfo,changes,tar.?z,log}
 dgit -wg build-source
 cp ../onboard_*.{dsc,build,buildinfo,changes,tar.?z,log} .
-for file in `ls *.dsc`; do log "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
+for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
