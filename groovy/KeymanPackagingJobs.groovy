@@ -5,8 +5,8 @@
 //#include utilities/Common.groovy
 
 // Variables
-final distros_tobuild = "xenial bionic"
-final email_recipients = 'eb1@sil.org marc_durdin@sil.org dglassey@gmail.com darcy_wong@sil.org'
+final distros_tobuild = "bionic focal groovy"
+final email_recipients = 'eb1@sil.org marc_durdin@sil.org darcy_wong@sil.org'
 
 final revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 final fullBuildNumber="0.0.0+\$BUILD_NUMBER"
