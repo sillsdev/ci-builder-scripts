@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 SIL International
+ * Copyright (c) 2017-2020 SIL International
  * File copied from https://github.com/sheehan/job-dsl-gradle-example
  * This file is licensed under the Apache License 2.0 (http://www.apache.org/licenses/)
  */
@@ -19,6 +19,7 @@ import org.junit.ClassRule
 import org.jvnet.hudson.test.JenkinsRule
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Timeout
 import spock.lang.Unroll
 
 /**
@@ -37,6 +38,7 @@ class JobScriptsSpec extends Specification {
 		outputDir.deleteDir()
 	}
 
+	@Timeout(300)
 	@Unroll
 	void 'test script #file.name'(File file) {
 		given:
