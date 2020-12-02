@@ -23,10 +23,10 @@ final branch = 'keymankb'
 
 freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 	mainRepoDir = '.'
-	packagename = "onboard"
+	packagename = "onboard-keyman"
 	Common.defaultPackagingJob(
 		jobContext: delegate,
-		packageName: 'onboard-keyman',
+		packageName: packagename,
 		subdirName: '',
 		revision: revision,
 		distrosToBuild: distros_tobuild,
@@ -79,20 +79,29 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
-# get orig.tar.gz
-onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
-wget http://deb.debian.org/debian/pool/main/o/onboard/onboard_\${onboard_version}.orig.tar.gz
+# create .orig.tar.gz
+rm -rf onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log}
+
 cd onboard-keyman
+git clean -dxf
+cd ..
+
+onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
+cp -a onboard-keyman onboard-keyman-\${onboard_version}
+rm -rf onboard-keyman-\${onboard_version}/debian
+rm -rf onboard-keyman-\${onboard_version}/.git
+tar -czf onboard-keyman_\${onboard_version}.orig.tar.gz onboard-keyman-\${onboard_version}
 
 # make source package
-rm -rf onboard_*.{dsc,build,buildinfo,changes,tar.?z,log}
-dgit -wg build-source
-cp ../onboard_*.{dsc,build,buildinfo,changes,tar.?z,log} .
+cd onboard-keyman
+
+debuild -S -sa -Zxz --source-option=--tar-ignore
+cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} .
 for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
 
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
-	--main-package-name "onboard" \
+	--main-package-name "onboard-keyman" \
 	--supported-distros "${distros_tobuild}" \
 	--debkeyid \$DEBSIGNKEY \
 	--build-in-place \
