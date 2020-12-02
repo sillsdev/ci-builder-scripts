@@ -81,12 +81,14 @@ fi
 
 # create .orig.tar.gz
 rm -rf onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log}
+rm -rf onboard-keyman-*
 
 cd onboard-keyman
 git clean -dxf
 cd ..
 
 onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
+echo "Base version: \${onboard_version}, package version: \${dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version}"
 cp -a onboard-keyman onboard-keyman-\${onboard_version}
 rm -rf onboard-keyman-\${onboard_version}/debian
 rm -rf onboard-keyman-\${onboard_version}/.git
@@ -95,10 +97,12 @@ tar -czf onboard-keyman_\${onboard_version}.orig.tar.gz onboard-keyman-\${onboar
 # make source package
 cd onboard-keyman
 
+echo "Make source package"
 debuild -S -sa -Zxz --source-option=--tar-ignore
 cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} .
 for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
 
+echo "Building binary packages"
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
 	--main-package-name "onboard-keyman" \
