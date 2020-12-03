@@ -68,7 +68,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 	}
 
 	steps {
-		shell("""#!/bin/bash
+		shell("""#!/bin/bash -e
 export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
@@ -100,7 +100,7 @@ cd onboard-keyman
 echo "Make source package"
 debuild -S -sa -Zxz --source-option=--tar-ignore
 cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} .
-for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -k\$DEBSIGNKEY \$file; done
+for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -S -k\$DEBSIGNKEY \$file; done
 
 echo "Building binary packages"
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
