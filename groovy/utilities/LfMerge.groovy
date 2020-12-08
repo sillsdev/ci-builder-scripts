@@ -202,13 +202,15 @@ if [ "$COMPOSERJSON" != "$COMPOSERJSON_PREV" ]; then
 fi
 ''')
 				// Download dependencies
-				// We use mono 5 for that because it fails with mono 3 due to some async bugs
-				shell("""#!/bin/bash -e
+				if (prefix != '') {
+					// We use mono 5 for that because it fails with mono 3 due to some async bugs
+					shell("""#!/bin/bash -e
 echo "Downloading dependencies"
 export MONO_PREFIX=/opt/mono5-sil
 . environ
 ${msbuild} /t:DownloadDependencies /p:KeepJobsFile=false build/LfMerge.proj
 """)
+				}
 
 				if (branchName.split('-').first() == "fieldworks8") {
 					// Only needed for Mono 3.x
