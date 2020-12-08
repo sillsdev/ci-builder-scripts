@@ -81,7 +81,7 @@ class LfMerge {
 		}
 	}
 
-	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false, branchName = '', prefix = '', msbuild = 'xbuild') {
+	static void commonLfMergeBuildJob(jobContext, spec, sha1, useTimeout = true, addLanguageForge = false, isPr = false, branchName = '', prefix = '', msbuild = 'xbuild', useNUnit3 = true) {
 		generalLfMergeBuildJob(jobContext, spec, sha1, useTimeout, addLanguageForge, "sillsdev/LfMerge", 'lfmerge', isPr, branchName)
 		jobContext.with {
 			steps {
@@ -241,7 +241,9 @@ exit \$result
 			Common.buildPublishers(delegate, 365, 100)
 
 			publishers {
-				Common.addNUnitPublisher(delegate, '**/TestResults.xml')
+				Common.addNUnitPublisher(delegate, /* results: */ '**/TestResults.xml',
+					/* failIfNotPresent: */ true, /* failedThresholdsClosure: */ null,
+					/* skippedThresholdsClosure: */ null, /* useNUnit3: */ useNUnit3)
 			}
 		}
 	}

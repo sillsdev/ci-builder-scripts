@@ -24,6 +24,7 @@ for (prefix in [ '', 'fieldworks8-']) {
 	def MonoPrefix = prefix == '' ? '/opt/mono5-sil' : '/opt/mono-sil'
 	def MonoPrefixForPackaging = prefix == '' ? '/opt/mono5-sil' : '/opt/mono4-sil'
 	def msbuild = prefix == '' ? 'msbuild' : 'xbuild'
+	def useNUnit3 = prefix == '';
 
 	freeStyleJob("LfMerge_InstallDependencies-Linux-any-${prefix}master-release") {
 		LfMerge.generalLfMergeBuildJob(delegate, '${refspec}', '${branch}', false, false)
@@ -60,9 +61,11 @@ mozroots --import --sync
 
 		def branchName = prefix + branchNameSuffix
 		freeStyleJob("GitHub-LfMerge-Linux-any-${branchName.replace('/', '_')}-release") {
-			LfMerge.commonLfMergeBuildJob(delegate, '+refs/pull/*:refs/remotes/origin/pr/*', '${sha1}',
+			LfMerge.commonLfMergeBuildJob(delegate,
+				/* spec: */ '+refs/pull/*:refs/remotes/origin/pr/*', /* sha1: */ '${sha1}',
 				/* useTimeout: */ true, /* addLanguageForge: */ true, /* isPR: */ true,
-				/* branchName: */ branchName, /* prefix: */ prefix, /* msbuild: */ msbuild)
+				/* branchName: */ branchName, /* prefix: */ prefix, /* msbuild: */ msbuild,
+				/* useNUnit3: */ useNUnit3)
 
 			description """<p>Pre-merge Linux builds of ${branchName} branch. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
@@ -77,9 +80,9 @@ mozroots --import --sync
 		freeStyleJob("LfMerge-Linux-any-${branchName}-release") {
 			LfMerge.commonLfMergeBuildJob(delegate,
 				/* spec: */ "+refs/heads/${branchName}:refs/remotes/origin/${branchName}",
-				/* sha1: */ "refs/remotes/origin/${branchName}", /* useTimeout: */ true, /* addLanguageForge: */ true,
-				/* isPr: */ false, /* branchName: */ branchName, /* prefix: */ prefix,
-				/* msbuild: */ msbuild)
+				/* sha1: */ "refs/heads/${branchName}",  /* useTimeout: */ true,
+				/* addLanguageForge: */ true, /* isPr: */ false, /* branchName: */ branchName,
+				/* prefix: */ prefix, /* msbuild: */ msbuild, /* useNUnit3: */ useNUnit3)
 
 			description """<p>Linux builds of LfMerge ${branchName}.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
