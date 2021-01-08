@@ -161,6 +161,7 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 							trust(gitHubTrustPermissions())
 						}
 						*/
+						gitHubTagDiscovery()
 						headWildcardFilter {
 							includes('master beta PR-*')
 							excludes('')
