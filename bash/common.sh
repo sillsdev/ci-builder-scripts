@@ -19,7 +19,7 @@ TRACE()
 general_init()
 {
 	# currently supported and future Ubuntu versions
-	UBUNTU_DISTROS="xenial bionic focal groovy"
+	UBUNTU_DISTROS="xenial bionic focal groovy hirsute"
 	# currently supported LTS versions
 	UBUNTU_LTS_DISTROS="xenial bionic focal"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
