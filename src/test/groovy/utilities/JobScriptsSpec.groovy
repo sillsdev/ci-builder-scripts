@@ -36,9 +36,10 @@ class JobScriptsSpec extends Specification {
 
 	def setupSpec() {
 		outputDir.deleteDir()
+		jenkinsRule.timeout = 3000
 	}
 
-	@Timeout(300)
+	@Timeout(400)
 	@Unroll
 	void 'test script #file.name'(File file) {
 		given:
