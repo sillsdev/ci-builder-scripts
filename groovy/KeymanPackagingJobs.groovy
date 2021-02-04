@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 SIL International
+ * Copyright (c) 2018-2021 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 //#include utilities/Common.groovy
 
 // Variables
-final distros_tobuild = "bionic focal groovy"
+final distros_tobuild = "bionic focal groovy hirsute"
 final email_recipients = 'eb1@sil.org marc_durdin@sil.org darcy_wong@sil.org'
 
 final revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
