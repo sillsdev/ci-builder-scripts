@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 SIL International
+ * Copyright (c) 2017-2021 SIL International
  * This software is licensed under the MIT license (http://opensource.org/licenses/MIT)
  */
 //#include utilities/Common.groovy
@@ -103,7 +103,7 @@ if [ "\$PackageBuildKind" = "Release" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	MAKE_SOURCE_ARGS="--preserve-changelog"
-	BUILD_PACKAGE_ARGS="--no-upload"
+	# FLEx Bridge uses "ReleaseCandidate" to mean releasing a stable when a higher-versioned Beta has already shipped
 fi
 
 cd "${subdir_name}"
@@ -132,8 +132,7 @@ echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packag
 if [ "\$PackageBuildKind" = "Release" ]; then
 	upload_suite='main'
 elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
-	# Note: The ReleaseCandidate kind is not used for FB currently (20180910).
-	BUILD_PACKAGE_ARGS="--no-upload"
+	upload_suite='updates'
 fi
 
 cd "${subdir_name}"
