@@ -27,20 +27,20 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * of shifting the previous alpha to beta.  Except for alpha on the master branch, the other jobs all
  * shift branches as new releases are made.
  */
-for (version in ['4.8', '4.9', 'master']) {
+for (version in ['4.9', /*'5.0',*/ 'master']) {
 	switch (version) {
-		case '4.8':
-			branch = 'Version4.8_CS'
+		case '4.9':
+			branch = 'Version4.9'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
-		case '4.9':
-			branch = 'Version4.9'
-			subdir_name = 'bloom-desktop-beta'
-			kind = 'beta'
-			distros_thisjob = distros_tobuild
-			break
+		/*case '5.0':
+		 *	branch = 'Version5.0'
+		 *	subdir_name = 'bloom-desktop-beta'
+		 *	kind = 'beta'
+		 *	distros_thisjob = distros_tobuild
+		 *	break */
 		case 'master':
 			branch = 'master'
 			subdir_name = 'bloom-desktop-alpha'
