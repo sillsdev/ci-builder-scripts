@@ -19,9 +19,9 @@ TRACE()
 general_init()
 {
 	# currently supported and future Ubuntu versions
-	UBUNTU_DISTROS="xenial bionic focal groovy hirsute"
+	UBUNTU_DISTROS="bionic focal groovy hirsute impish"
 	# currently supported LTS versions
-	UBUNTU_LTS_DISTROS="xenial bionic focal"
+	UBUNTU_LTS_DISTROS="bionic focal"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
 	UBUNTU_OLDDISTROS=""
 	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco eoan
@@ -29,8 +29,8 @@ general_init()
 	# Debian versions
 	DEBIAN_DISTROS="stretch buster bullseye"
 
-	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-bionic}"
-	DISTS_TO_PROCESS="${supported_distros_arg:-xenial bionic focal}"
+	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-bionic focal}"
+	DISTS_TO_PROCESS="${supported_distros_arg:-bionic focal}"
 	DISTRIBUTIONS=${DISTRIBUTIONS:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
@@ -51,8 +51,8 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# 0.177 is the version included in Groovy
-	MKSBUILD_VERSION=0.177
+	# 0.180 is the version included in Hirsute
+	MKSBUILD_VERSION=0.180
 
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
