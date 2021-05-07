@@ -99,7 +99,7 @@ cd onboard-keyman
 
 echo "Make source package"
 debuild -S -sa -Zxz --source-option=--tar-ignore
-cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} .
+cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} . || true
 for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -S -k\$DEBSIGNKEY \$file; done
 
 echo "Building binary packages"
