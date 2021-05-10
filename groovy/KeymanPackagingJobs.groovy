@@ -37,7 +37,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 		buildMasterBranch: false,
 		addSteps: false,
 		fullBuildNumber: fullBuildNumber,
-		nodeLabel: 'packager && bionic')
+		nodeLabel: 'packager && bionic && docker')
 
 	description """
 <p>Automatic builds of the Onboard Keyboard for Linux ${branch} branch.</p>
@@ -79,27 +79,34 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
-# create .orig.tar.gz
-rm -rf onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log}
-rm -rf onboard-keyman-*
+echo "Building Docker image..."
+docker build -t pkgbuild \$HOME/ci-builder-scripts/docker/
 
 cd onboard-keyman
+onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
+echo "Base version: \${onboard_version}, package version: \${dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version}"
 git clean -dxf
 cd ..
 
-onboard_version=`dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version | cut -d '-' -f 1`
-echo "Base version: \${onboard_version}, package version: \${dpkg-parsechangelog -l onboard-keyman/debian/changelog --show-field=Version}"
-cp -a onboard-keyman onboard-keyman-\${onboard_version}
-rm -rf onboard-keyman-\${onboard_version}/debian
-rm -rf onboard-keyman-\${onboard_version}/.git
-tar -czf onboard-keyman_\${onboard_version}.orig.tar.gz onboard-keyman-\${onboard_version}
+# create .orig.tar.gz
+if [ -f onboard-keyman_\${onboard_version}.orig.tar.gz ]; then
+	echo "Using exisiting onboard-keyman_\${onboard_version}.orig.tar.gz file"
+else
+	echo "Creating onboard-keyman_\${onboard_version}.orig.tar.gz ..."
+	rm -rf onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log}
+	rm -rf onboard-keyman-*
+
+	cp -a onboard-keyman onboard-keyman-\${onboard_version}
+	rm -rf onboard-keyman-\${onboard_version}/debian
+	rm -rf onboard-keyman-\${onboard_version}/.git
+	tar -czf onboard-keyman_\${onboard_version}.orig.tar.gz onboard-keyman-\${onboard_version}
+fi
 
 # make source package
 cd onboard-keyman
 
 echo "Make source package"
-debuild -S -sa -Zxz --source-option=--tar-ignore
-cp ../onboard-keyman_*.{dsc,build,buildinfo,changes,tar.?z,log} . || true
+docker run --rm -v \$(pwd):/pkgbuild/source -v \$(pwd)/..:/pkgbuild/orig pkgbuild
 for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -S -k\$DEBSIGNKEY \$file; done
 
 echo "Building binary packages"
