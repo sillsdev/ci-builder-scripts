@@ -69,8 +69,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 
 	steps {
 		shell("""#!/bin/bash -e
-GREEN='\033[0;32m'
-NC='\033[0m' # No Color
+. \$HOME/ci-builder-scripts/bash/common.sh
 export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then
@@ -81,12 +80,12 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 	BUILD_PACKAGE_ARGS="--suite-name proposed"
 fi
 
-echo -e "\${GREEN}Building Docker image...\${NC}"
+log "Building Docker image..."
 docker build -t pkgbuild \$HOME/ci-builder-scripts/docker/
 
 cd onboard-keyman
 onboard_version=`dpkg-parsechangelog -l debian/changelog --show-field=Version | cut -d '-' -f 1`
-echo -e "\${GREEN}Base version: \${onboard_version}, package version: \${dpkg-parsechangelog -l debian/changelog --show-field=Version}\${NC}"
+log "Base version: \${onboard_version}, package version: \${dpkg-parsechangelog -l debian/changelog --show-field=Version}"
 git clean -dxf
 cd ..
 
@@ -107,11 +106,11 @@ fi
 # make source package
 cd onboard-keyman
 
-echo -e "\${GREEN}Make source package\${NC}"
+log "Make source package"
 docker run --rm -v \$(pwd):/pkgbuild/source -v \$(pwd)/..:/pkgbuild/orig pkgbuild
 for file in `ls *.dsc`; do echo "Signing source package \$file"; debsign -S -k\$DEBSIGNKEY \$file; done
 
-echo -e "\${GREEN}Building binary packages\${NC}"
+log "Building binary packages"
 \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \
 	--arches "\$ArchesToPackage" \
 	--main-package-name "onboard-keyman" \
