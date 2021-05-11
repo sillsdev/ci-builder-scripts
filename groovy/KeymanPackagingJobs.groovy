@@ -65,6 +65,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 			abortBuild()
 			writeDescription("Build timed out after {0} minutes")
 		}
+		colorizeOutput()
 	}
 
 	steps {
