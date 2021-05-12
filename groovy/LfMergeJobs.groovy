@@ -91,11 +91,12 @@ mozroots --import --sync
 				githubPush()
 			}
 
-			steps {
-				downstreamParameterized {
-					trigger("LfMerge_Packaging-Linux-all-${branchName}-release")
-				}
-			}
+			// Don't trigger packaging jobs just now while build is being adjusted. - 2021-05 RM
+			// steps {
+			// 	downstreamParameterized {
+			// 		trigger("LfMerge_Packaging-Linux-all-${branchName}-release")
+			// 	}
+			// }
 		}
 
 		freeStyleJob("LfMerge_Packaging-Linux-all-${branchName}-release") {
