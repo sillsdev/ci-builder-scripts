@@ -37,7 +37,8 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 		buildMasterBranch: false,
 		addSteps: false,
 		fullBuildNumber: fullBuildNumber,
-		nodeLabel: 'packager && bionic && docker')
+		nodeLabel: 'packager && bionic && docker',
+		archesToBuild: 'amd64')
 
 	description """
 <p>Automatic builds of the Onboard Keyboard for Linux ${branch} branch.</p>
