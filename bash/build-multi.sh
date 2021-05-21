@@ -148,21 +148,29 @@ do
 				# We have to use the `aptitude` build-dep-resolver - the default `apt` one
 				# always takes the first dependency of alternative build dependencies.
 				log "PACKAGE=$PACKAGE DIST=$DIST ARCH=$ARCH"
-				PKGNAME=${PACKAGE%%_*}
-				PKGVERSION=${PACKAGE##*_}
-				set -f # don't expand wildcards
-				CHANGELOG=$(mktemp)
-				echo "${PKGNAME} (${PKGVERSION}+${DIST}1) ${DIST}; urgency=medium" > $CHANGELOG
-				echo "" >> $CHANGELOG
-				echo "  * Build for ${DIST}" >> $CHANGELOG
-				echo "" >> $CHANGELOG
-				echo " -- Package Builder <jenkins@sil.org>  $(date -R)" >> $CHANGELOG
-				$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
-					--binNMU-changelog="$(cat ${CHANGELOG})" --build-dep-resolver=aptitude \
-					--arch-any "${OPTS[@]}" --purge=always $SRC
-				rm $CHANGELOG
-				set +f
-				$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
+				if [ "$(lsb_release -c -s)" == "xenial" ]; then
+					$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
+						--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
+						--append-to-version=+${DIST}1 --binNMU=0 --build-dep-resolver=aptitude \
+						--arch-any "${OPTS[@]}" --purge=always $SRC
+					$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
+				else
+					PKGNAME=${PACKAGE%%_*}
+					PKGVERSION=${PACKAGE##*_}
+					set -f # don't expand wildcards
+					CHANGELOG=$(mktemp)
+					echo "${PKGNAME} (${PKGVERSION}+${DIST}1) ${DIST}; urgency=medium" > $CHANGELOG
+					echo "" >> $CHANGELOG
+					echo "  * Build for ${DIST}" >> $CHANGELOG
+					echo "" >> $CHANGELOG
+					echo " -- Package Builder <jenkins@sil.org>  $(date -R)" >> $CHANGELOG
+					$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
+						--binNMU-changelog="$(cat ${CHANGELOG})" --build-dep-resolver=aptitude \
+						--arch-any "${OPTS[@]}" --purge=always $SRC
+					$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
+					rm $CHANGELOG
+					set +f
+				fi
 
 				echo "Exit code from sbuild: $(cat $RESULT/${PACKAGE}_$ARCH.status)"
 
