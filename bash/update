@@ -5,6 +5,6 @@ set -e
 PROGRAM_NAME="$(basename "$0")"
 
 . $(dirname "$0")/common.sh
-general_init "$@"
+init "$@"
 
 . $(dirname "$0")/setup.sh --dists "$DISTRIBUTIONS_TO_PACKAGE" --arches "$ARCHES_TO_PACKAGE" --update
