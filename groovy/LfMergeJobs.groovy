@@ -21,8 +21,8 @@ def distro = 'xenial bionic'
 for (prefix in [ '', 'fieldworks8-']) {
 	def MinDbVersion = prefix == '' ? 7000072 : 7000068
 	def MaxDbVersion = prefix == '' ? 7000072 : 7000070
-	def MonoPrefix = prefix == '' ? '/opt/mono5-sil' : '/opt/mono-sil'
-	def MonoPrefixForPackaging = prefix == '' ? '/opt/mono5-sil' : '/opt/mono4-sil'
+	def MonoPrefix = prefix == '' ? '/opt/mono5-sil' : '/opt/mono5-sil'
+	def MonoPrefixForPackaging = prefix == '' ? '/opt/mono5-sil' : '/opt/mono5-sil'
 	def msbuild = prefix == '' ? 'msbuild' : 'xbuild'
 	def useNUnit3 = prefix == '';
 
