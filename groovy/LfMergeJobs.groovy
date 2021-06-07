@@ -48,7 +48,6 @@ set -e
 PATH=${MonoPrefix}/bin:\$PATH
 debian/PrepareSource
 cd build
-mozroots --import --sync
 ./install-deps""")
 		}
 	}
