@@ -15,7 +15,7 @@
  * and commit and push the changes.
  */
 
-def distro = 'xenial bionic'
+def distro = 'bionic'
 
 // *********************************************************************************************
 for (prefix in [ '', 'fieldworks8-']) {
