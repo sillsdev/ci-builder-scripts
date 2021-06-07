@@ -165,7 +165,7 @@ if [ "\${GitVersion_PreReleaseLabel}" != "" ]; then
 	PreReleaseTag="~\${GitVersion_PreReleaseLabel}.\${GitVersion_PreReleaseNumber}"
 fi
 
-echo "PackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}" >> gitversion.properties
+echo "DebPackageVersion=\${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}" >> gitversion.properties
 
 echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseTag}.\${BUILD_NUMBER}"
 					""")
@@ -174,10 +174,10 @@ echo "Building packages for version \${GitVersion_MajorMinorPatch}\${PreReleaseT
 					propertiesFile('lfmerge/gitversion.properties')
 				}
 
-				Common.addBuildNumber(delegate, 'PackageVersion')
+				Common.addBuildNumber(delegate, 'DebPackageVersion')
 
 				shell("""#!/bin/bash -e
-echo -e "\\033[0;34mBuilding packages for version \${PackageVersion}\\033[0m"
+echo -e "\\033[0;34mBuilding packages for version \${DebPackageVersion}\\033[0m"
 
 TRACE()
 {
@@ -213,7 +213,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	TRACE \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
 		--arches "amd64" --main-package-name "lfmerge" \\
 		--supported-distros "${distro}" --debkeyid \$DEBSIGNKEY \\
-		--source-code-subdir "lfmerge" --package-version "\$PackageVersion" --preserve-changelog
+		--source-code-subdir "lfmerge" --package-version "\$DebPackageVersion" --preserve-changelog
 
 	echo -e "\\033[0;34mBuild binary package\\033[0m"
 	TRACE \$HOME/ci-builder-scripts/bash/build-package --dists "\$DistributionsToPackage" \\
@@ -230,8 +230,8 @@ done
 				publishers {
 					git {
 						pushOnlyIfSuccess()
-						tag('origin', 'v$PackageVersion') {
-							message('Version $PackageVersion')
+						tag('origin', 'v$DebPackageVersion') {
+							message('Version $DebPackageVersion')
 							create()
 							update()
 						}
