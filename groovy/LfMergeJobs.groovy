@@ -209,7 +209,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	TRACE debian/PrepareSource \$curDbVersion
 
 	# PrepareSource creates obj subdirectories which we don't want, so run git clean again
-	git clean -dxf --exclude=packages/ --exclude=lib/ --exclude=debian/ --exclude=build/
+	git clean -dxf --exclude=packages/ --exclude=lib/ --exclude=debian/ --exclude=build/ --exclude=Mercurial/ --exclude=MercurialExtensions/
 
 	echo -e "\\033[0;34mBuild source package\\033[0m"
 	TRACE \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \\
