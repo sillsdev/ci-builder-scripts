@@ -77,6 +77,6 @@ done
 				reportName('Test results')
 			}
 		}
-		archiveJunit('build/test-results/**/*.xml')
+		// archiveJunit('build/test-results/**/*.xml')
 	}
 }
