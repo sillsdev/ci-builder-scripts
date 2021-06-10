@@ -38,6 +38,7 @@ class LfMerge {
 							cloneOptions {
 								noTags(false)
 							}
+							localBranch(branchName)
 						}
 					}
 					git {
@@ -74,6 +75,7 @@ class LfMerge {
 							cloneOptions {
 								noTags(false)
 							}
+							localBranch(branchName)
 						}
 					}
 				}
