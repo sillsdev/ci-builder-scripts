@@ -238,6 +238,7 @@ done
 							update()
 						}
 					}
+					buildDescription('', '<span style="background-color: yellow">$DebPackageVersion</span>')
 				}
 			}
 		}
