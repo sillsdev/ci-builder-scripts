@@ -192,6 +192,7 @@ exit \$RESULT""")
 						if (onlyTriggerFileSpec != "") {
 							disableRemotePoll()
 						}
+						localBranch()
 					}
 
 					if (commitAuthorInChangelog_ || onlyTriggerFileSpec != "") {
