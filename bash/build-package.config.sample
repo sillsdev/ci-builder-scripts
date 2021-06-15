@@ -1,5 +1,5 @@
 # Some variables that can be set in this file:
-# DISTRIBUTIONS=${DISTRIBUTIONS:-xenial bionic focal stretch buster}
+# DISTRIBUTIONS=${DISTRIBUTIONS:-bionic focal stretch buster}
 # ARCHES=${ARCHES:-amd64 i386}
 # UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}
 # DEBIAN_MIRROR=${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}

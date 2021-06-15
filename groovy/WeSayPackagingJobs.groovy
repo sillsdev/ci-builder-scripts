@@ -6,7 +6,7 @@
 
 // Variables
 def packagename = 'WeSay'
-def distros_tobuild = 'trusty xenial bionic'
+def distros_tobuild = 'bionic'
 def repo = 'git://github.com/sillsdev/wesay.git'
 def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
@@ -59,7 +59,7 @@ for (branch in ['release/1.6', 'master', 'develop']) {
 			distrosToBuild: distros_tobuild,
 			email: email_recipients,
 			branch: branch,
-			supportedDistros: 'trusty xenial bionic',
+			supportedDistros: 'bionic',
 			mainRepoDir: mainRepoDir,
 			buildMasterBranch: false,
 			extraSourceArgs: extraParameter,

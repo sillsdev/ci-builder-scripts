@@ -13,11 +13,11 @@ class Common {
 		def subdirName = args.subdirName
 		def packageVersion = args.containsKey('packageVersion') ? args.packageVersion : ''
 		def revision = args.containsKey('revision') ? args.revision : ''
-		def distrosToBuild = args.containsKey('distrosToBuild') ? args.distrosToBuild : 'focal bionic xenial'
+		def distrosToBuild = args.containsKey('distrosToBuild') ? args.distrosToBuild : 'focal bionic'
 		def email = args.containsKey('email') ? args.email : 'eb1@sil.org'
 		def branch = args.containsKey('branch') ? args.branch : 'master'
 		def archesToBuild = args.containsKey('archesToBuild') ? args.archesToBuild : 'amd64 i386'
-		def supportedDistros = args.containsKey('supportedDistros') ? args.supportedDistros : 'focal bionic xenial'
+		def supportedDistros = args.containsKey('supportedDistros') ? args.supportedDistros : 'focal bionic'
 		def blockDownstream = args.containsKey('blockDownstream') ? args.blockDownstream : true
 		def mainRepoDir = args.containsKey('mainRepoDir') ? args.mainRepoDir : '.'
 		def buildMasterBranch = args.containsKey('buildMasterBranch') ? args.buildMasterBranch : true
