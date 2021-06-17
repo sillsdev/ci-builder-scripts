@@ -107,6 +107,7 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 cd "${subdir_name}"
+
 make vcs_version
 
 \$HOME/ci-builder-scripts/bash/make-source --dists "\$DistributionsToPackage" \
@@ -119,11 +120,11 @@ make vcs_version
 	${extraParameter} \
 	\$MAKE_SOURCE_ARGS
 
-echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" > ../${packagename}-packageversion.properties
+echo "PackageVersion=\$(dpkg-parsechangelog --show-field=Version)" >> gitversion.properties
 """)
 
 			environmentVariables {
-				propertiesFile("${packagename}-packageversion.properties")
+				propertiesFile("${subdir_name}/gitversion.properties")
 			}
 
 			Common.addBuildNumber(delegate, 'PackageVersion')
