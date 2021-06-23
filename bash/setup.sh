@@ -190,7 +190,11 @@ do
 				LTSDIST=${LTSARRAY[${#LTSARRAY[@]}-1]}
 			fi
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+			if [ "$D" == "$UBUNTU_PRE_RELEASE" ]; then
+				MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${UBUNTU_LAST_RELEASE}-prod ${UBUNTU_LAST_RELEASE} main"
+			else
+				MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+			fi
 			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${LTSDIST} main"
 
 			if [[ $UBUNTU_DISTROS == *$D* ]]; then
