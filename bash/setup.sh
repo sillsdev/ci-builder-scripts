@@ -128,6 +128,15 @@ function addExtraRepositories()
 	rm "${TMPFILE}"
 }
 
+function doesChrootExist()
+{
+	local dist=$1
+	local arch=$2
+
+	sudo schroot --list | grep -q source:${dist}-${arch} && \
+		sudo schroot --list | grep -q chroot:${dist}-${arch}
+}
+
 WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
@@ -171,10 +180,10 @@ fi
 
 for D in ${dists_arg:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 do
-	for A in ${arches_arg:-amd64 i386}
+	for A in ${arches_arg:-$ARCHES_TO_PROCESS}
 	do
-		[ -e $SCHROOTDIR/$D-$A -a -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
-		[ ! -e $SCHROOTDIR/$D-$A -a -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
+		doesChrootExist $D $A && [ -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
+		! doesChrootExist $D $A && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
 		log "Processing $D-$A"
 
