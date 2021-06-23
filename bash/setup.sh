@@ -187,6 +187,11 @@ do
 
 		log "Processing $D-$A"
 
+		if ! doesChrootExist $D $A; then
+			# Remove remnants of failed build
+			[ -e $SCHROOTDIR/$D-$A ] && sudo rm -rf $SCHROOTDIR/$D-$A
+		fi
+
 		OTHERMIRROR=""
 
 		checkOrLinkDebootstrapScript $D
