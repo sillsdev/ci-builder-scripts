@@ -193,8 +193,8 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 
 	orphanedItemStrategy {
 		discardOldItems {
-			daysToKeep(60)
-			numToKeep(10)
+			daysToKeep(7)
+			numToKeep(5)
 		}
 	}
 
