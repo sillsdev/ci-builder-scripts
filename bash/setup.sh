@@ -234,10 +234,10 @@ do
 
 			# Allow to install current nodejs packages
 			if [ -n "$update" ]; then
-				# We can't use https when creating the chroot because apt-transport-https
-				# isn't available yet. This is so for Ubuntu 16.04, but beginning in Ubuntu 18.04 the capability is probably built-in.
-				# Adding apt-transport-https to pbuilder --debootstrapopts --include does not solve it.
-				addmirror "deb https://deb.nodesource.com/node_12.x $D main"
+				if [ "$D" == "bionic" -o "$D" == "focal" ]; then
+					# Starting with Groovy (Ubuntu 20.10) Node 12 is available as Debian packages
+					addmirror "deb https://deb.nodesource.com/node_12.x $D main"
+				fi
 			fi
 		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
@@ -256,9 +256,10 @@ do
 			addmirror "${MONO_APT}"
 			# Allow to install current nodejs packages
 			if [ -n "$update" ]; then
-				# We can't use https when creating the chroot because apt-transport-https
-				# isn't available yet. This is so for Debian stretch, but beginning in Debian buster the capability is probably built-in.
-				addmirror "deb https://deb.nodesource.com/node_12.x $D main"
+				if [ "$D" != "bullseye" ]; then
+					# Starting with Bullseye Node 12 is available as Debian packages
+					addmirror "deb https://deb.nodesource.com/node_12.x $D main"
+				fi
 			fi
 		else
 			stderr "Unknown distribution $D. Please update the script $0."
