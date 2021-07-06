@@ -180,6 +180,13 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 					}
 				}
 			}
+			strategy {
+				allBranchesSame {
+					props {
+						suppressAutomaticTriggering()
+					}
+				}
+			}
 		}
 	}
 
