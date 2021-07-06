@@ -176,7 +176,6 @@ multibranchPipelineJob('pipeline-keyman-packaging') {
 							excludes('')
 						}
 						disableStatusUpdateTrait()
-						noTriggerBranchProperty()
 					}
 				}
 			}
