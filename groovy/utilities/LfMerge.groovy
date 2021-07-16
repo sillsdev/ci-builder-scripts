@@ -37,8 +37,10 @@ class LfMerge {
 						extensions {
 							cloneOptions {
 								noTags(false)
+								honorRefspec(true)
 							}
-							localBranch(branchName)
+							localBranch('**')
+							pruneBranches()
 						}
 					}
 					git {
@@ -74,8 +76,10 @@ class LfMerge {
 						extensions {
 							cloneOptions {
 								noTags(false)
+								honorRefspec(true)
 							}
-							localBranch(branchName)
+							localBranch('**')
+							pruneBranches()
 						}
 					}
 				}
