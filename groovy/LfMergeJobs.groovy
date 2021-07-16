@@ -21,7 +21,7 @@ def distro = 'bionic'
 for (prefix in [ '', 'fieldworks8-']) {
 	def MinDbVersion = prefix == '' ? 7000072 : 7000068
 	def MaxDbVersion = prefix == '' ? 7000072 : 7000070
-	def MonoPrefix = '/opt/mono5-sil'
+	def MonoPrefix = prefix == '' ? '/usr' : '/opt/mono5-sil'
 	def MonoPrefixForPackaging = '/opt/mono5-sil'
 	def msbuild = prefix == '' ? 'msbuild' : 'xbuild'
 	def useNUnit3 = prefix == '';
@@ -69,7 +69,7 @@ cd build
 			description """<p>Pre-merge Linux builds of ${branchName} branch. Triggered by creating a PR on GitHub.<p>
 <p>The job is created by the DSL plugin from <i>LfMergeJobs.groovy</i> script.</p>"""
 
-			Common.addGitHubParamAndTrigger(delegate, branchName)
+			Common.addGitHubPushTrigger(delegate, branchName)
 		}
 	}
 

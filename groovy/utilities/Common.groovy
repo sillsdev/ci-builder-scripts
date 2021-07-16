@@ -439,6 +439,19 @@ echo %UPSTREAM_BUILD_TAG% > %WORKSPACE%\\magic.txt
 		}
 	}
 
+	static void addGitHubPushTrigger(jobContext, branch) {
+		jobContext.with {
+			parameters {
+				stringParam("sha1", "refs/heads/${branch}",
+					"What pull request to build, e.g. pr/9/merge")
+			}
+
+			triggers {
+				githubPush()
+			}
+		}
+	}
+
 	static void addBuildNumber(stepContext, envVariableName) {
 		stepContext.with {
 			systemGroovyCommand("""
