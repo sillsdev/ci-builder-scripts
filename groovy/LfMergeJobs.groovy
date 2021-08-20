@@ -155,6 +155,7 @@ RUNMODE="PACKAGEBUILD" BUILD=Release . environ
 ${msbuild} /t:RestoreBuildTasks build/LfMerge.proj
 mkdir -p output/Release
 
+export IGNORE_NORMALISATION_GIT_HEAD_MOVE=1
 dotnet tool restore
 dotnet gitversion -output buildserver
 
