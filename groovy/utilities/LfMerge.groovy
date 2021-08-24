@@ -123,7 +123,7 @@ mkdir -p output/Release
 export IGNORE_NORMALISATION_GIT_HEAD_MOVE=1
 
 dotnet tool restore
-dotnet gitversion -output buildserver
+dotnet gitversion -output buildserver -nonormalize
 
 . gitversion.properties
 

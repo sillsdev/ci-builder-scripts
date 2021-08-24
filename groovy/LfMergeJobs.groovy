@@ -157,7 +157,7 @@ mkdir -p output/Release
 
 export IGNORE_NORMALISATION_GIT_HEAD_MOVE=1
 dotnet tool restore
-dotnet gitversion -output buildserver
+dotnet gitversion -output buildserver -nonormalize
 
 . gitversion.properties
 
@@ -204,7 +204,7 @@ for ((curDbVersion=${MinDbVersion}; curDbVersion<=${MaxDbVersion}; curDbVersion+
 	git reset --hard
 
 	echo -e "\\033[0;34mPrepare source\\033[0m"
-	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo
+	TRACE dotnet gitversion -EnsureAssemblyInfo -UpdateAssemblyInfo -nonormalize
 	TRACE ${msbuild} /t:PrepareSource /v:detailed build/LfMerge.proj
 
 	TRACE debian/PrepareSource \$curDbVersion
