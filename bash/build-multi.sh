@@ -73,16 +73,24 @@ checkAndInstallRequirements()
 	fi
 }
 
-if [ "$1" = "--no-source-package" -o "$1" = "-n" ]; then
-	NO_SOURCE_PACKAGE=true
-	log "Not saving distribution-specific source package."
-	shift
-fi
+while (( $# )); do
+	case $1 in
+		--no-source-package|-n)
+			NO_SOURCE_PACKAGE=true
+			log "Not saving distribution-specific source package."
+			shift
+			;;
+		# pre-release tag to add to version number, e.g. ~PR-1234
+		--prerelease-tag) shift; prerelease_tag=$1; shift;;
+		*) break;;
+	esac
+done
 
 if [[ "$1" != *.dsc ]]; then
-	log "Usage: $0 [-n|--no-source-package] <package>.dsc [<package2>.dsc ...]"
+	log "Usage: $0 [-n|--no-source-package] [--prerelease-tag <tag>] <package>.dsc [<package2>.dsc ...]"
 	log "Options:"
 	log "-n|--no-source-package\tdon't create distribution-specific source package"
+	log "--prerelease-tag <tag>\tappend <tag> to version number, e.g. '--prerelease-tag ~PR-1234'"
 	exit 1
 fi
 
@@ -108,9 +116,15 @@ do
 				continue
 			fi
 
+			if [ -n "${prerelease_tag}" ]; then
+				DISTVERSION="${prerelease_tag}+${DIST}${BUILD_NUMBER:-1}"
+			else
+				DISTVERSION="+${DIST}1"
+			fi
+
 			CHANGES="$RESULT/${PACKAGE}_${ARCH}.changes"
 			if [ ! -e "$CHANGES" ]; then
-				CHANGES="$RESULT/${PACKAGE}+${DIST}1_${ARCH}.changes"
+				CHANGES="$RESULT/${PACKAGE}${DISTVERSION}_${ARCH}.changes"
 			fi
 
 			OPTS=()
@@ -151,7 +165,7 @@ do
 				if [ "$(lsb_release -c -s)" == "xenial" ]; then
 					$NOOP setarch $(cpuarch $ARCH) unbuffer sbuild --dist=$DIST --arch=$ARCH \
 						--make-binNMU="Build for $DIST" -m "Package Builder <jenkins@sil.org>" \
-						--append-to-version=+${DIST}1 --binNMU=0 --build-dep-resolver=aptitude \
+						--append-to-version=${DISTVERSION} --binNMU=0 --build-dep-resolver=aptitude \
 						--arch-any "${OPTS[@]}" --purge=always $SRC
 					$NOOP echo $? > $RESULT/${PACKAGE}_$ARCH.status
 				else
@@ -159,7 +173,7 @@ do
 					PKGVERSION=${PACKAGE##*_}
 					set -f # don't expand wildcards
 					CHANGELOG=$(mktemp)
-					echo "${PKGNAME} (${PKGVERSION}+${DIST}1) ${DIST}; urgency=medium" > $CHANGELOG
+					echo "${PKGNAME} (${PKGVERSION}${DISTVERSION}) ${DIST}; urgency=medium" > $CHANGELOG
 					echo "" >> $CHANGELOG
 					echo "  * Build for ${DIST}" >> $CHANGELOG
 					echo "" >> $CHANGELOG
@@ -175,7 +189,7 @@ do
 				echo "Exit code from sbuild: $(cat $RESULT/${PACKAGE}_$ARCH.status)"
 
 				log "Copying files to $RESULT"
-				if grep -q '.buildinfo$' ${PACKAGE}+${DIST}1_${ARCH}.changes ; then
+				if grep -q '.buildinfo$' ${PACKAGE}${DISTVERSION}_${ARCH}.changes ; then
 					# Starting with Bionic the package contains a .buildinfo file that's required
 					# to upload the package
 					DCMD_ARGS="--deb --changes --buildinfo"
@@ -184,9 +198,9 @@ do
 					DCMD_ARGS="--deb --changes"
 					DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 				fi
-				$NOOP dcmd $DCMD_ARGS cp ${PACKAGE}+${DIST}1_${ARCH}.changes $RESULT/
-				if grep -q '.ddeb$' ${PACKAGE}+${DIST}1_${ARCH}.changes ; then
-					$NOOP dcmd $DCMD_NOARGS cp ${PACKAGE}+${DIST}1_${ARCH}.changes $RESULT/
+				$NOOP dcmd $DCMD_ARGS cp ${PACKAGE}${DISTVERSION}_${ARCH}.changes $RESULT/
+				if grep -q '.ddeb$' ${PACKAGE}${DISTVERSION}_${ARCH}.changes ; then
+					$NOOP dcmd $DCMD_NOARGS cp ${PACKAGE}${DISTVERSION}_${ARCH}.changes $RESULT/
 				fi
 				if [ -n "$NO_SOURCE_PACKAGE" ]; then
 					$NOOP rm -f $RESULT/${PACKAGE}.{dsc,{debian.,orig.,}tar.*}

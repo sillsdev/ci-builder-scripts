@@ -113,6 +113,8 @@ init()
 			--build-in-place) build_in_place=true ;;
 			# use argument as delimiter that seperates the version number from the 'nightly' string
 			--nightly-delimiter) shift; nightlydelimeter=$1;;
+			# pre-release tag to add to version number, e.g. ~PR-1234
+			--prerelease-tag) shift; prerelease_tag=$1;;
 			--update) update=true;;
 			--help) helpScript; exit 0 ;;
 			*) stderr "Error: Unexpected argument \"$1\". Exiting." ; exit 1 ;;

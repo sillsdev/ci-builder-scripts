@@ -22,6 +22,7 @@ Arguments:
 	--build-in-place - use the current directory as build directory instead
 		of \$repo_base_dir/\$source_package_name
 	--no-upload - Don't upload the binary packages to llso
+	--prerelease-tag <tag> - append <tag> to version number, e.g. '--prerelease-tag ~PR-1234'
 
 There are more optional parameters that can be set. See common.sh.
 
@@ -79,7 +80,12 @@ log "Building binary package(s)"
 
 cd "$repo_base_dir"
 packagedsc=$(ls ${source_package_name}_*.dsc)
-DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $PROGRAM_DIR/build-multi.sh "$packagedsc"
+if [ -n "${prerelease_tag}" ]; then
+	prerelease_cmd="--prerelease-tag ${prerelease_tag}"
+else
+	prerelease_cmd=""
+fi
+DISTRIBUTIONS="$DISTRIBUTIONS_TO_PACKAGE" ARCHES="$ARCHES_TO_PACKAGE" $PROGRAM_DIR/build-multi.sh ${prerelease_cmd} "$packagedsc"
 
 function UpdateChangesFile() {
 	# $1 name of the .changes file
@@ -120,22 +126,28 @@ log "Package files exist with the following sha256sums:"
 # Source package
 cd "$repo_base_dir"
 mkdir -p "$ARTIFACTSDIR"
-if [ $(ls ${source_package_name}_*-1*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
-	if grep -q '.buildinfo$' ${source_package_name}_*-1_source.changes ; then
+if [ $(ls ${source_package_name}_*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
+	if grep -q '.buildinfo$' ${source_package_name}_*_source.changes ; then
 		# Starting with Bionic the package contains a .buildinfo file that's required to
 		# upload the package
 		DCMD_ARGS="--orig --debtar --changes --buildinfo"
 	else
 		DCMD_ARGS="--orig --debtar --changes"
 	fi
-	dcmd --dsc $DCMD_ARGS sha256sum ${source_package_name}_*-1_source.changes || true
-	dcmd --dsc $DCMD_ARGS cp ${source_package_name}_*-1_source.changes $ARTIFACTSDIR/
+	dcmd --dsc $DCMD_ARGS sha256sum ${source_package_name}_*_source.changes || true
+	dcmd --dsc $DCMD_ARGS cp ${source_package_name}_*_source.changes $ARTIFACTSDIR/
 fi
+
 # Binary packages
 for dist in $DISTRIBUTIONS_TO_PACKAGE; do
+	if [ -n "${prerelease_tag}" ]; then
+		DISTVERSION="${prerelease_tag}+${dist}${BUILD_NUMBER:-1}"
+	else
+		DISTVERSION="+${dist}1"
+	fi
 	for arch in $ARCHES_TO_PACKAGE; do
 		cd $RESULTBASE/$dist-$arch/result
-		if grep -q '.buildinfo$' ${source_package_name}_*+${dist}1_${arch}.changes ; then
+		if grep -q '.buildinfo$' ${source_package_name}_*${DISTVERSION}_${arch}.changes ; then
 			# Starting with Bionic the package contains a .buildinfo file that's required to
 			# upload the package
 			DCMD_ARGS="--deb --changes --buildinfo"
@@ -144,15 +156,15 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			DCMD_ARGS="--deb --changes"
 			DCMD_NOARGS="--no-deb --no-changes --no-orig --no-debtar --no-dsc"
 		fi
-		TRACE dcmd $DCMD_ARGS sha256sum ${source_package_name}_*+${dist}1_${arch}.changes || true
-		dcmd $DCMD_ARGS cp ${source_package_name}_*+${dist}1_${arch}.changes $ARTIFACTSDIR/
-		if grep -q '.ddeb$' ${source_package_name}_*+${dist}1_${arch}.changes ; then
-			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*+${dist}1_${arch}.changes || true
-			dcmd $DCMD_NOARGS cp ${source_package_name}_*+${dist}1_${arch}.changes $ARTIFACTSDIR/
+		TRACE dcmd $DCMD_ARGS sha256sum ${source_package_name}_*${DISTVERSION}_${arch}.changes || true
+		dcmd $DCMD_ARGS cp ${source_package_name}_*${DISTVERSION}_${arch}.changes $ARTIFACTSDIR/
+		if grep -q '.ddeb$' ${source_package_name}_*${DISTVERSION}_${arch}.changes ; then
+			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*${DISTVERSION}_${arch}.changes || true
+			dcmd $DCMD_NOARGS cp ${source_package_name}_*${DISTVERSION}_${arch}.changes $ARTIFACTSDIR/
 		fi
-		if [ $( ls ${source_package_name}_*-1+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
-			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*-1+*.dsc || true
-			dcmd --dsc --orig --debtar cp ${source_package_name}_*-1+*.dsc $ARTIFACTSDIR/
+		if [ $( ls ${source_package_name}_*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
+			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*.dsc || true
+			dcmd --dsc --orig --debtar cp ${source_package_name}_*.dsc $ARTIFACTSDIR/
 		fi
 	done
 done
