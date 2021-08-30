@@ -162,9 +162,9 @@ for dist in $DISTRIBUTIONS_TO_PACKAGE; do
 			dcmd $DCMD_NOARGS sha256sum ${source_package_name}_*${DISTVERSION}_${arch}.changes || true
 			dcmd $DCMD_NOARGS cp ${source_package_name}_*${DISTVERSION}_${arch}.changes $ARTIFACTSDIR/
 		fi
-		if [ $( ls ${source_package_name}_*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
-			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*.dsc || true
-			dcmd --dsc --orig --debtar cp ${source_package_name}_*.dsc $ARTIFACTSDIR/
+		if [ $( ls ${source_package_name}_*+*.dsc 2> /dev/null | wc -l) -ge 1 ]; then
+			dcmd --dsc --orig --debtar sha256sum ${source_package_name}_*+*.dsc || true
+			dcmd --dsc --orig --debtar cp ${source_package_name}_*+*.dsc $ARTIFACTSDIR/
 		fi
 	done
 done
