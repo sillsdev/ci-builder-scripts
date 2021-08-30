@@ -35,6 +35,11 @@ testBuildPackage_CanBuildInPlace() {
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.debian.tar.xz ]"
+	assertTrue "wrong checksum for a file in *_source.changes" "dscverify --noconf --nosigcheck results/test-package*_source.changes"
+	assertTrue "wrong checksum for a file in *_amd64.changes" "dscverify --noconf --nosigcheck results/test-package*_amd64.changes"
+	assertTrue "wrong checksum for a file in *.dsc" "dscverify --noconf --nosigcheck results/test-package*.dsc"
+	assertTrue "wrong checksum for a file in *_source.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_source.buildinfo"
+	assertTrue "wrong checksum for a file in *_amd64.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_amd64.buildinfo"
 }
 
 testBuildPackage_CanBuildInPlaceWithMainPackageName() {
@@ -58,6 +63,11 @@ testBuildPackage_CanBuildInPlaceWithMainPackageName() {
 	assertTrue "_source.changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1.debian.tar.xz ]"
+	assertTrue "wrong checksum for a file in *_source.changes" "dscverify --noconf --nosigcheck $WORKSPACE/results/test-package*_source.changes"
+	assertTrue "wrong checksum for a file in *_amd64.changes" "dscverify --noconf --nosigcheck $WORKSPACE/results/test-package*_amd64.changes"
+	assertTrue "wrong checksum for a file in *.dsc" "dscverify --noconf --nosigcheck $WORKSPACE/results/test-package*.dsc"
+	assertTrue "wrong checksum for a file in *_source.buildinfo" "dscverify --noconf --nosigcheck $WORKSPACE/results/test-package*_source.buildinfo"
+	assertTrue "wrong checksum for a file in *_amd64.buildinfo" "dscverify --noconf --nosigcheck $WORKSPACE/results/test-package*_amd64.buildinfo"
 }
 
 testBuildPackage_WorksWithDscInCurrentDir() {
@@ -79,6 +89,11 @@ testBuildPackage_WorksWithDscInCurrentDir() {
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.debian.tar.xz ]"
+	assertTrue "wrong checksum for a file in *_source.changes" "dscverify --noconf --nosigcheck results/test-package*_source.changes"
+	assertTrue "wrong checksum for a file in *_amd64.changes" "dscverify --noconf --nosigcheck results/test-package*_amd64.changes"
+	assertTrue "wrong checksum for a file in *.dsc" "dscverify --noconf --nosigcheck results/test-package*.dsc"
+	assertTrue "wrong checksum for a file in *_source.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_source.buildinfo"
+	assertTrue "wrong checksum for a file in *_amd64.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_amd64.buildinfo"
 }
 
 testBuildPackage_WorksForPrs() {
@@ -90,7 +105,6 @@ testBuildPackage_WorksForPrs() {
 
 	export BUILD_NUMBER=987
 
-	../../build-package --dists focal --arches amd64 --build-in-place --no-upload --prerelease-tag ~PR-1234
 	# Execute
 	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --build-in-place --no-upload --prerelease-tag ~PR-1234"
 
@@ -103,6 +117,11 @@ testBuildPackage_WorksForPrs() {
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
 	assertTrue ".debian.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.debian.tar.xz ]"
+	assertTrue "wrong checksum for a file in *_source.changes" "dscverify --noconf --nosigcheck results/test-package*_source.changes"
+	assertTrue "wrong checksum for a file in *_amd64.changes" "dscverify --noconf --nosigcheck results/test-package*_amd64.changes"
+	assertTrue "wrong checksum for a file in *.dsc" "dscverify --noconf --nosigcheck results/test-package*.dsc"
+	assertTrue "wrong checksum for a file in *_source.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_source.buildinfo"
+	assertTrue "wrong checksum for a file in *_amd64.buildinfo" "dscverify --noconf --nosigcheck results/test-package*_amd64.buildinfo"
 }
 
 echo -e "${GREEN}Running tests in $0...${NC}"
