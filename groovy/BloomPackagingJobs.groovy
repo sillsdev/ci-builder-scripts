@@ -25,18 +25,19 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * beta (eg, 'Version4.2'), and release (eg, 'Version4.1').
  * betainternal is used periodically when a new release is almost ready and we are in the process
  * of shifting the previous alpha to beta.  Except for alpha on the master branch, the other jobs all
- * shift branches as new releases are made.
+ * shift branches as new releases are made, with a new job created for betainternal (or beta if we skip
+ * that step).
  */
-for (version in ['4.9', '5.0', 'master']) {
+for (version in ['5.0', '5.1', 'master']) {
 	switch (version) {
-		case '4.9':
-			branch = 'Version4.9'
+		case '5.0':
+			branch = 'Version5.0'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
-		case '5.0':
-			branch = 'Version5.0'
+		case '5.1':
+			branch = 'Version5.1'
 			subdir_name = 'bloom-desktop-beta'
 			kind = 'beta'
 			distros_thisjob = distros_tobuild
