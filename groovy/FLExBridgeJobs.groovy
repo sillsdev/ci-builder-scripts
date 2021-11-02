@@ -7,7 +7,7 @@
 // Variables
 def packagename = 'flexbridge'
 def distros = 'focal bionic'
-def repo = 'git://github.com/sillsdev/flexbridge.git'
+def repo = 'https://github.com/sillsdev/flexbridge.git'
 def email_recipients = 'eb1@sil.org'
 def subdir_name = 'flexbridge'
 

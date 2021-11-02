@@ -7,7 +7,7 @@
 // Variables
 def packagename = 'WeSay'
 def distros_tobuild = 'bionic'
-def repo = 'git://github.com/sillsdev/wesay.git'
+def repo = 'https://github.com/sillsdev/wesay.git'
 def email_recipients = 'eb1@sil.org dglassey@gmail.com'
 
 def revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"

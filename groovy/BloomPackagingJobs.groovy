@@ -6,7 +6,7 @@
 // Variables
 def packagename = 'Bloom'
 def distros_tobuild = 'focal bionic'
-def repo = 'git://github.com/BloomBooks/BloomDesktop.git'
+def repo = 'https://github.com/BloomBooks/BloomDesktop.git'
 def email_recipients = 'stephen_mcconnel@sil.org'
 def packagingAgent = 'packager'
 

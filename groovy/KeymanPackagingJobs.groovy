@@ -11,7 +11,7 @@ final email_recipients = 'eb1@sil.org marc_durdin@sil.org darcy_wong@sil.org'
 final revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"
 final fullBuildNumber="0.0.0+\$BUILD_NUMBER"
 
-final onboard_repo = 'git://github.com/keymanapp/onboard-keyman.git'
+final onboard_repo = 'https://github.com/keymanapp/onboard-keyman.git'
 final branch = 'keymankb'
 
 /*
