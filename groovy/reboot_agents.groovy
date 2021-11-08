@@ -2,7 +2,7 @@
  * DSL script for package builder Jenkins jobs
  */
 
-def agents = "autopackager-1 autopackager-2 autopackager-4"
+def agents = "autopackager-1 || autopackager-2 || autopackager-4"
 
 pipelineJob('reboot-agents') {
 	description '''
