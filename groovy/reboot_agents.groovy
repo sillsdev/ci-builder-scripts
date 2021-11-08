@@ -12,8 +12,14 @@ pipelineJob('reboot-agents') {
 
 	logRotator(365, 100, 10, 10)
 
-	triggers {
-		cron('@daily')
+	properties {
+		pipelineTriggers {
+			triggers {
+				cron {
+					spec('@daily')
+				}
+			}
+		}
 	}
 
 	definition {
