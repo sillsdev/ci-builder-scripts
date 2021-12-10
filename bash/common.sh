@@ -29,6 +29,7 @@ general_init()
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
 	UBUNTU_OLDDISTROS=""
 	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco eoan groovy
+	UBUNTU_64BIT_ONLY="hirsute impish jammy"
 
 	# Debian versions
 	DEBIAN_DISTROS="stretch buster bullseye"

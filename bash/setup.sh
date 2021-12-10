@@ -185,6 +185,13 @@ do
 		doesChrootExist $D $A && [ -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
 		! doesChrootExist $D $A && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
+		if [ "$A" == "i386" ]; then
+			if [[ "$UBUNTU_64BIT_ONLY" == *$D* ]]; then
+				echo "Skipping 32bit chroot for $D"
+				continue
+			fi
+		fi
+
 		log "Processing $D-$A"
 
 		if ! doesChrootExist $D $A; then
