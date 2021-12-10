@@ -206,6 +206,7 @@ do
 		checkOrLinkDebootstrapScript $D
 
 		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
+			DISTRO=ubuntu
 			if [[ "$UBUNTU_LTS_DISTROS" == *$D* ]]; then
 				LTSDIST=$D
 			else
@@ -249,6 +250,7 @@ do
 				fi
 			fi
 		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
+			DISTRO=debian
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
 			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
 			MONO_APT="deb http://download.mono-project.com/repo/debian vs-${D} main"
@@ -280,7 +282,7 @@ do
 			log "Create new chroot for $D-$A"
 
 			# Build chroot - if that fails remove it
-			TRACE $HOME/bin/mk-sbuild $D --arch=$A \
+			TRACE $HOME/bin/mk-sbuild --distro $DISTRO $D --arch=$A \
 				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
 				$OTHEROPTS --type=directory || (sudo rm -rf $SCHROOTDIR/$D-$A; continue)
