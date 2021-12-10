@@ -283,7 +283,7 @@ do
 			TRACE $HOME/bin/mk-sbuild $D --arch=$A \
 				--debootstrap-include="perl,gnupg,debhelper" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
-				$OTHEROPTS --type=directory || sudo rm -rf $SCHROOTDIR/$D-$A
+				$OTHEROPTS --type=directory || (sudo rm -rf $SCHROOTDIR/$D-$A; continue)
 
 			copyInKeyrings
 			addExtraRepositories
