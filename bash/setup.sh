@@ -125,6 +125,7 @@ function addExtraRepositories()
 {
 	TMPFILE="$(mktemp)"
 	createSources "${TMPFILE}"
+	sudo mkdir -p "${SCHROOTDIR}/${D}-${A}/etc/apt/sources.list.d"
 	sudo cp "${TMPFILE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/sources.list.d/extra.list"
 	rm "${TMPFILE}"
 }
@@ -294,6 +295,7 @@ do
 
 			TMPFILE=$(mktemp)
 			enableBackports $TMPFILE $D
+			sudo mkdir -p $SCHROOTDIR/$D-$A/etc/apt/preferences.d
 			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/preferences.d/backports
 			rm $TMPFILE
 
