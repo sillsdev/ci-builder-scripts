@@ -19,16 +19,16 @@ TRACE()
 general_init()
 {
 	# currently supported and future Ubuntu versions
-	UBUNTU_DISTROS="bionic focal groovy hirsute impish"
+	UBUNTU_DISTROS="bionic focal hirsute impish jammy"
 	# currently supported LTS versions
 	UBUNTU_LTS_DISTROS="bionic focal"
 	# last released Ubuntu version - to be used instead of yet unreleased version for some repos
-	UBUNTU_LAST_RELEASE="hirsute"
+	UBUNTU_LAST_RELEASE="impish"
 	# next Ubuntu version, yet unreleased
-	UBUNTU_PRE_RELEASE="impish"
+	UBUNTU_PRE_RELEASE="jammy"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com
 	UBUNTU_OLDDISTROS=""
-	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco eoan
+	# We're no longer building packages for: precise quantal raring saucy trusty utopic vivid wily yakkety zesty artful cosmic disco eoan groovy
 
 	# Debian versions
 	DEBIAN_DISTROS="stretch buster bullseye"

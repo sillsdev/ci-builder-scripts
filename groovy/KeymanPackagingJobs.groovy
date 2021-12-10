@@ -5,7 +5,7 @@
 //#include utilities/Common.groovy
 
 // Variables
-final distros_tobuild = "bionic focal groovy hirsute"
+final distros_tobuild = "bionic focal hirsute impish jammy"
 final email_recipients = 'eb1@sil.org marc_durdin@sil.org darcy_wong@sil.org'
 
 final revision = "\$(echo \${GIT_COMMIT} | cut -b 1-6)"

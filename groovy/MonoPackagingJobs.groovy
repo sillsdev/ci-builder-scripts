@@ -5,7 +5,7 @@
 //#include utilities/Common.groovy
 
 def distros_tobuild = ""
-def distros_tobuild_mono5 = "bionic focal groovy devel"
+def distros_tobuild_mono5 = "bionic focal devel"
 def distros_tobuild_mono3and4 = "bionic"
 def email = "eb1@sil.org"
 
