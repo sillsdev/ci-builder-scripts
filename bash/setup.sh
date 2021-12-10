@@ -113,7 +113,7 @@ function installFileSbuildrc()
 
 function copyInKeyrings()
 {
-	mkdir -p "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	sudo mkdir -p "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGLLSO}" ] && sudo cp "${KEYRINGLLSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGPSO}" ] && sudo cp "${KEYRINGPSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGNODE}" ] && sudo cp "${KEYRINGNODE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
