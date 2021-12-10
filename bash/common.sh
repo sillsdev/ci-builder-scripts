@@ -56,8 +56,8 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# 0.180 is the version included in Hirsute
-	MKSBUILD_VERSION=0.180
+	# 0.187 is the version included in Ubuntu 22.04 Jammy
+	MKSBUILD_VERSION=0.187
 
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
