@@ -96,6 +96,17 @@ function checkAndInstallRequirements()
 		touch $HOME/bin/mk-sbuild.v${MKSBUILD_VERSION}
 	fi
 
+	# We also need a fairly recent version of debootstrap - the version provided in Xenial is
+	# too old
+	if [ ! -f $HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION} ]; then
+		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
+		pushd /tmp
+		TRACE wget http://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb
+		sudo dpkg -i debootstrap_${DEBOOTSTRAP_VERSION}_all.deb
+		popd
+		touch $HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}
+	fi
+
 	installFileSbuildrc
 }
 

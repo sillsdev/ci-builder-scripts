@@ -59,6 +59,10 @@ general_init()
 	# 0.187 is the version included in Ubuntu 22.04 Jammy
 	MKSBUILD_VERSION=0.187
 
+	# The minimum version of debootstrap we use
+	# 1.0.126+nmu1 is the version included in Ubuntu 22.04 Jammy
+	DEBOOTSTRAP_VERSION=1.0.126+nmu1
+
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
 	NC='\033[0m' # No Color
