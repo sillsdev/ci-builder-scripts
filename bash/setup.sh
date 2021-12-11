@@ -243,9 +243,9 @@ do
 			fi
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
 			if [ "$D" == "$UBUNTU_PRE_RELEASE" ]; then
-				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${UBUNTU_LAST_RELEASE_MICROSOFT} -r)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
+				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${UBUNTU_LAST_RELEASE_MICROSOFT} -r | cut -d' ' -f1)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
 			else
-				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${D} -r)/prod ${D} main"
+				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${D} -r | cut -d' ' -f1)/prod ${D} main"
 			fi
 			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${LTSDIST} main"
 
