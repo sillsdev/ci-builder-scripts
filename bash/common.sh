@@ -24,6 +24,9 @@ general_init()
 	UBUNTU_LTS_DISTROS="bionic focal"
 	# last released Ubuntu version - to be used instead of yet unreleased version for some repos
 	UBUNTU_LAST_RELEASE="impish"
+	# last released Ubuntu version that .NET packages are available for
+	# (see https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu)
+	UBUNTU_LAST_RELEASE_MICROSOFT="hirsute"
 	# next Ubuntu version, yet unreleased
 	UBUNTU_PRE_RELEASE="jammy"
 	# no longer supported Ubuntu versions that live in old-releases.ubuntu.com

@@ -130,6 +130,7 @@ function copyInKeyrings()
 	[ -f "${KEYRINGNODE}" ] && sudo cp "${KEYRINGNODE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGMICROSOFT}" ] && sudo cp "${KEYRINGMICROSOFT}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRING_MONO}" ] && sudo cp "${KEYRING_MONO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
+	[ -f "${KEYRING_MICROSOFTPROD}" ] && sudo cp "${KEYRING_MICROSOFTPROD}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 }
 
 function addExtraRepositories()
@@ -150,6 +151,22 @@ function doesChrootExist()
 		sudo schroot --list | grep -q chroot:${dist}-${arch}
 }
 
+function downloadAndExportKey()
+{
+	local keyfile=$1
+	local fingerprint=$2
+	local tmp_keyring
+
+	if [ ! -f ${keyfile} ]; then
+		tmp_keyring="$(mktemp)"
+		gpg --trust-model always --no-default-keyring --keyring "${tmp_keyring}" \
+			--keyserver keyserver.ubuntu.com --recv-keys ${fingerprint}
+		gpg --no-default-keyring --keyring "${tmp_keyring}" --export > "${keyfile}"
+		rm -f "${tmp_keyring}"
+	fi
+}
+
+
 WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
@@ -161,6 +178,7 @@ KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
 KEYRINGNODE="$WORKDIR/nodesource-keyring.gpg"
 KEYRINGMICROSOFT="$WORKDIR/microsoft.asc.gpg"
 KEYRING_MONO="$WORKDIR/mono-project.asc.gpg"
+KEYRING_MICROSOFTPROD="$WORKDIR/microsoft-prod.asc.gpg"
 
 if [ ! -f ${KEYRINGPSO} ]; then
 	wget --output-document=${KEYRINGPSO} https://packages.sil.org/keys/pso-keyring-2016.gpg
@@ -181,15 +199,8 @@ if [ ! -f ${KEYRINGMICROSOFT} ]; then
 	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o ${KEYRINGMICROSOFT}
 fi
 
-if [ ! -f ${KEYRING_MONO} ]; then
-	TMP_KEYRING="$(mktemp)"
-	XAMARIN_KEY_FINGERPRINT="3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
-	gpg --trust-model always --no-default-keyring --keyring "${TMP_KEYRING}" \
-		--keyserver keyserver.ubuntu.com --recv-keys ${XAMARIN_KEY_FINGERPRINT}
-	gpg --no-default-keyring --keyring "${TMP_KEYRING}" --export > "${KEYRING_MONO}"
-	rm -f "${TMP_KEYRING}"
-fi
-
+downloadAndExportKey "${KEYRING_MONO}" "3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+downloadAndExportKey "${KEYRING_MICROSOFTPROD}" "BC528686B50D79E339D3721CEB3E94ADBE1229CF"
 
 for D in ${dists_arg:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
 do
@@ -200,9 +211,15 @@ do
 
 		if [ "$A" == "i386" ]; then
 			if [[ "$UBUNTU_64BIT_ONLY" == *$D* ]]; then
-				echo "Skipping 32bit chroot for $D"
+				log "Skipping 32bit chroot for $D"
 				continue
 			fi
+		fi
+
+		# Building Ubuntu 22.04+ uses zstd compression which isn't available on Xenial
+		if [[ $(lsb_release -s -r) < 18 ]] && [ "$D" == "jammy" ]; then
+			log "Skip building $D on $(lsb_release -s -c) - missing zstdcat command"
+			continue
 		fi
 
 		log "Processing $D-$A"
@@ -226,9 +243,9 @@ do
 			fi
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
 			if [ "$D" == "$UBUNTU_PRE_RELEASE" ]; then
-				MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${UBUNTU_LAST_RELEASE}-prod ${UBUNTU_LAST_RELEASE} main"
+				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${UBUNTU_LAST_RELEASE_MICROSOFT} -r)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
 			else
-				MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-ubuntu-${D}-prod ${D} main"
+				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${D} -r)/prod ${D} main"
 			fi
 			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${LTSDIST} main"
 
@@ -294,7 +311,7 @@ do
 
 			# Build chroot - if that fails remove it
 			TRACE $HOME/bin/mk-sbuild --distro $DISTRO $D --arch=$A \
-				--debootstrap-include="perl,gnupg,debhelper" \
+				--debootstrap-include="perl,gnupg,debhelper,ca-certificates" \
 				${PROXY:+--debootstrap-proxy=}$PROXY \
 				$OTHEROPTS --type=directory || (sudo rm -rf $SCHROOTDIR/$D-$A; continue)
 
@@ -307,7 +324,7 @@ do
 			sudo cp $TMPFILE $SCHROOTDIR/$D-$A/etc/apt/preferences.d/backports
 			rm $TMPFILE
 
-			PKGLIST="apt-utils devscripts lsb-release apt-transport-https ca-certificates tzdata"
+			PKGLIST="apt-utils devscripts lsb-release apt-transport-https tzdata"
 
 			log "Install packages in chroot for $D-$A"
 			if [ "$(lsb_release --codename --short)" == "xenial" ]; then
