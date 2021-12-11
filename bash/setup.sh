@@ -217,7 +217,7 @@ do
 		fi
 
 		# Building Ubuntu 22.04+ uses zstd compression which isn't available on Xenial
-		if [[ $(lsb_release -s -r) < 18 ]] && [ "$D" == "jammy" ]; then
+		if [[ $(lsb_release -s -r) < 18 ]] && [ "$D" == "impish" -o "$D" == "jammy" ]; then
 			log "Skip building $D on $(lsb_release -s -c) - missing zstdcat command"
 			continue
 		fi
