@@ -1,7 +1,7 @@
 # Build docker image with: docker build -t pkgbuild docker/
 # then build the source package in the host directory with the source with:
 # docker run --rm -v $(pwd):/pkgbuild/source -v $(pwd)/..:/pkgbuild/orig pkgbuild
-ARG CODENAME=hirsute
+ARG CODENAME=impish
 
 FROM ubuntu:${CODENAME}
 
