@@ -9,6 +9,25 @@ PROGRAM=$(readlink -f "$0")
 PROGRAM_NAME="$(basename "$0")"
 PROGRAM_DIR="$(realpath $(dirname "$0"))"
 
+function helpScript() {
+	cat << EOF
+
+$PROGRAM_NAME --dists <distros> --arches <arches>
+
+Setup chroot.
+
+Arguments:
+	--dists <distros> - the distributions to create a chroot for
+	--arches <arches> - the architectures to create a chroot for
+
+There are more optional parameters that can be set. See common.sh.
+
+NOTE: This help is incomplete. Please add the description of more options
+that are useful and apply to this script.
+EOF
+	exit 0
+}
+
 . "${PROGRAM_DIR}"/common.sh
 no_package=true
 init "$@"
