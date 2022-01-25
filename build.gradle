@@ -7,7 +7,7 @@
 apply plugin: 'groovy'
 
 ext {
-	jobDslVersion = '1.77'
+	jobDslVersion = '1.78.3'
 	jenkinsVersion = '2.277.1'
 }
 
@@ -212,7 +212,6 @@ dependencies {
 	testPlugins 'org.jenkins-ci.plugins:pipeline-stage-step:2.5'
 	testPlugins 'org.jenkins-ci.plugins:plain-credentials:1.7'
 	testPlugins 'org.jenkins-ci.plugins:plugin-usage-plugin:1.2'
-	testPlugins 'org.jenkins-ci.plugins:publish-over-ssh:1.22'
 	testPlugins 'org.jenkins-ci.plugins:publish-over:0.22'
 	testPlugins 'org.jenkins-ci.plugins:pubsub-light:1.13'
 	testPlugins 'org.jenkins-ci.plugins:role-strategy:3.1.1'
