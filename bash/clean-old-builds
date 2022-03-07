@@ -23,3 +23,5 @@ for oldbuild in $(find */*/build -mindepth 1 -maxdepth 1 -type d -mtime +2); do
 	sudo umount $oldbuild/dev 2>/dev/null || true
 	sudo rm -rf $oldbuild
 done
+
+sudo schroot --all-sessions --end-session
