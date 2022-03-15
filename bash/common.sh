@@ -18,8 +18,8 @@ TRACE()
 
 general_init()
 {
-	# currently supported and future Ubuntu versions
-	UBUNTU_DISTROS="bionic focal hirsute impish jammy"
+	# currently supported and future Ubuntu versions (we hope we can stop supporting xenial soon)
+	UBUNTU_DISTROS="xenial bionic focal hirsute impish jammy"
 	# currently supported LTS versions
 	UBUNTU_LTS_DISTROS="bionic focal"
 	# last released Ubuntu version - to be used instead of yet unreleased version for some repos
