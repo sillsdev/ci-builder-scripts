@@ -48,8 +48,8 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# 0.187 is the version included in Ubuntu 22.04 Jammy
-	MKSBUILD_VERSION=0.187
+	# 0.189 is the version included in Ubuntu 22.04 Jammy
+	MKSBUILD_VERSION=0.189
 
 	# The minimum version of debootstrap we use
 	# 1.0.126+nmu1 is the version included in Ubuntu 22.04 Jammy
