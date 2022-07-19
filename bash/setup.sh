@@ -235,12 +235,6 @@ do
 			fi
 		fi
 
-		# Building Ubuntu 21.10+ uses zstd compression which isn't available on Xenial
-		if [[ $(lsb_release -s -r) < 18 ]] && [ "$D" == "impish" -o "$D" == "jammy" ]; then
-			log "Skip building $D on $(lsb_release -s -c) - missing zstdcat command"
-			continue
-		fi
-
 		log "Processing $D-$A"
 
 		if ! doesChrootExist $D $A; then
