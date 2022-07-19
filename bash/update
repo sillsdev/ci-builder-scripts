@@ -4,6 +4,10 @@ set -e
 
 PROGRAM_NAME="$(basename "$0")"
 
+if [ -z DISTRIBUTIONS_TO_PACKAGE ]; then
+	DISTRIBUTIONS_TO_PACKAGE=$(schroot -l | grep chroot | cut -d':' -f2 | cut -d'-' -f1 | uniq)
+fi
+
 . $(dirname "$0")/common.sh
 init "$@"
 

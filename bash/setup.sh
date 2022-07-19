@@ -32,10 +32,33 @@ EOF
 no_package=true
 init "$@"
 
+function isUnknownDistro()
+{
+	! ubuntu-distro-info --series=$1 >/dev/null 2>&1 && ! debian-distro-info --series=$1 >/dev/null 2>&1
+}
+
+function isUbuntu()
+{
+	ubuntu-distro-info --series=$1 >/dev/null 2>&1
+}
+
+function isDebian()
+{
+	debian-distro-info --series=$1 >/dev/null 2>&1
+}
+
+function isSupported()
+{
+	if [[ "$(ubuntu-distro-info --supported) $(debian-distro-info --supported)" =~ "$1" ]]; then
+		return 0
+	fi
+	return 1
+}
+
 function checkOrLinkDebootstrapScript()
 {
 	if [ ! -f /usr/share/debootstrap/scripts/$1 ]; then
-		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == "*$1*" ]]; then
+		if isUbuntu $1; then
 			basedistro=gutsy
 		else
 			basedistro=sid
@@ -221,15 +244,21 @@ fi
 downloadAndExportKey "${KEYRING_MONO}" "3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
 downloadAndExportKey "${KEYRING_MICROSOFTPROD}" "BC528686B50D79E339D3721CEB3E94ADBE1229CF"
 
-for D in ${dists_arg:-$UBUNTU_DISTROS $UBUNTU_OLDDISTROS $DEBIAN_DISTROS}
+for D in ${dists_arg:-$(ubuntu-distro-info --supported) $(debian-distro-info --testing) $(debian-distro-info --stable) $(debian-distro-info --oldstable)}
 do
 	for A in ${arches_arg:-$ARCHES_TO_PROCESS}
 	do
+		if isUnknownDistro $D; then
+			echo "Unknown distro $D. Maybe you'll have to update /usr/share/distro-info/ubuntu.csv."
+			continue
+		fi
+
 		doesChrootExist $D $A && [ -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
 		! doesChrootExist $D $A && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
 		if [ "$A" == "i386" ]; then
-			if [[ "$UBUNTU_64BIT_ONLY" == *$D* ]]; then
+			# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
+			if (( $(ubuntu-distro-info --series=$D -r|cut -d'.' -f1) >= 21 )); then
 				log "Skipping 32bit chroot for $D"
 				continue
 			fi
@@ -246,23 +275,24 @@ do
 
 		checkOrLinkDebootstrapScript $D
 
-		if [[ "$UBUNTU_DISTROS $UBUNTU_OLDDISTROS" == *$D* ]]; then
+		if isUbuntu $D; then
 			DISTRO=ubuntu
-			if [[ "$UBUNTU_LTS_DISTROS" == *$D* ]]; then
-				LTSDIST=$D
-			else
-				LTSARRAY=(${UBUNTU_LTS_DISTROS})
-				LTSDIST=${LTSARRAY[${#LTSARRAY[@]}-1]}
-			fi
+			LTSDIST=$(ubuntu-distro-info --lts)
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-			if [ "$D" == "$UBUNTU_PRE_RELEASE" ]; then
+			if [ "$D" == "$(ubuntu-distro-info --devel)" ]; then
 				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${UBUNTU_LAST_RELEASE_MICROSOFT} -r | cut -d' ' -f1)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
 			else
 				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series=${D} -r | cut -d' ' -f1)/prod ${D} main"
 			fi
-			MONO_APT="deb http://download.mono-project.com/repo/ubuntu vs-${LTSDIST} main"
+			if (( $(ubuntu-distro-info --series=$D -r|cut -d'.' -f1) >= 20 )); then
+				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-focal main"
+			elif (( $(ubuntu-distro-info --series=$D -r|cut -d'.' -f1) >= 18 )); then
+				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-bionic main"
+			else
+				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-xenial main"
+			fi
 
-			if [[ $UBUNTU_DISTROS == *$D* ]]; then
+			if isSupported $D; then
 				MIRROR="${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}"
 			else
 				MIRROR="${UBUNTU_OLDMIRROR:-http://old-releases.ubuntu.com/ubuntu/}"
@@ -290,7 +320,7 @@ do
 					addmirror "deb https://deb.nodesource.com/node_12.x $D main"
 				fi
 			fi
-		elif [[ $DEBIAN_DISTROS == *$D* ]]; then
+		elif isDebian $D; then
 			DISTRO=debian
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
 			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
