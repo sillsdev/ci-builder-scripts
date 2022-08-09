@@ -18,7 +18,7 @@ class libraryViews {
 				filterExecutors false
 
 				jobs {
-					regex('(icu|icu-dotnet|SIL.BuildTasks)')
+					regex('(icu)')
 				}
 
 				columns {
