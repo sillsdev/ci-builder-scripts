@@ -28,16 +28,16 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * shift branches as new releases are made, with a new job created for betainternal (or beta if we skip
  * that step).
  */
-for (version in ['5.2', '5.3', 'master']) {
+for (version in ['5.3', '5.4', 'master']) {
 	switch (version) {
-		case '5.2':
-			branch = 'Version5.2'
+		case '5.3':
+			branch = 'Version5.3'
 			subdir_name = 'bloom-desktop'
 			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
-		case '5.3':
-			branch = 'Version5.3'
+		case '5.4':
+			branch = 'Version5.4'
 			subdir_name = 'bloom-desktop-beta'
 			kind = 'beta'
 			distros_thisjob = distros_tobuild
