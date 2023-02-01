@@ -29,6 +29,10 @@ EOF
 }
 
 . "${PROGRAM_DIR}"/common.sh
+
+# shellcheck disable=SC2034 # used in common.sh
+no_package=true
+
 init "$@"
 
 function isUnknownDistro()
