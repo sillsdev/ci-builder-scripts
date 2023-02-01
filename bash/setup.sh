@@ -356,10 +356,13 @@ do
 			log "Create new chroot for $D-$A"
 
 			# Build chroot - if that fails remove it
-			TRACE "$HOME/bin/mk-sbuild "--distro $DISTRO "$D" --arch="$A" \
-				--debootstrap-include="perl,gnupg,debhelper,ca-certificates" \
-				${PROXY:+--debootstrap-proxy=}"$PROXY" \
-				"$OTHEROPTS" --type=directory || (sudo rm -rf "$SCHROOTDIR/$D-$A"; continue)
+			if ! TRACE "$HOME/bin/mk-sbuild" --distro $DISTRO "$D" --arch="$A" \
+					--debootstrap-include="perl,gnupg,debhelper,ca-certificates" \
+					${PROXY:+--debootstrap-proxy=}"$PROXY" \
+					"$OTHEROPTS" --type=directory; then
+				sudo rm -rf "$SCHROOTDIR/$D-$A"
+				continue
+			fi
 
 			copyInKeyrings
 			addExtraRepositories
