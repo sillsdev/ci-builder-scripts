@@ -255,8 +255,7 @@ do
 
 		if [ "$A" == "i386" ]; then
 			# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
-			# But Ubuntu 22.04 (Focal) also no longer seems to have 32-bit.
-			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 20 )); then
+			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
 				log "Skipping 32bit chroot for $D"
 				continue
 			fi
