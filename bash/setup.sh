@@ -143,7 +143,7 @@ function checkAndInstallRequirements()
 	if [ ! -f "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}" ]; then
 		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
 		pushd /tmp
-		TRACE wget "http://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
+		TRACE wget "https://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
 		sudo dpkg -i "debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
 		popd
 		touch "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}"
@@ -280,13 +280,14 @@ do
 				else
 					MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${D}" -r | cut -d' ' -f1)/prod ${D} main"
 				fi
+				addmirror "${MICROSOFT_APT}"
 			fi
 			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 20 )); then
-				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-focal main"
+				MONO_APT="deb https://download.mono-project.com/repo/ubuntu stable-focal main"
 			elif (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 18 )); then
-				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-bionic main"
+				MONO_APT="deb https://download.mono-project.com/repo/ubuntu stable-bionic main"
 			else
-				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-xenial main"
+				MONO_APT="deb https://download.mono-project.com/repo/ubuntu stable-xenial main"
 			fi
 
 			if isSupported "$D"; then
@@ -301,13 +302,12 @@ do
 				addmirror "deb $MIRROR $D-$S $COMPONENTS"
 			done
 			LLSO="http://linux.lsdev.sil.org/ubuntu/"
-			PSO="http://packages.sil.org/ubuntu/"
+			PSO="https://packages.sil.org/ubuntu/"
 			for S in "" "-proposed" "-updates" "-experimental"; do
 				addmirror "deb $LLSO $D$S $COMPONENTS"
 				addmirror "deb $PSO $D$S $COMPONENTS"
 			done
 
-			addmirror "${MICROSOFT_APT}"
 			addmirror "${MONO_APT}"
 
 			# Allow to install current nodejs packages
@@ -319,19 +319,21 @@ do
 			fi
 		elif isDebian "$D"; then
 			DISTRO=debian
-			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-			MICROSOFT_APT="deb [arch=amd64] http://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
-			MONO_APT="deb http://download.mono-project.com/repo/debian vs-${D} main"
+			if [ "$A" != "i386" ]; then
+				# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
+				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
+				addmirror "${MICROSOFT_APT}"
+			fi
+			MONO_APT="deb https://download.mono-project.com/repo/debian vs-${D} main"
 
 			MIRROR="${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}"
 			COMPONENTS="main contrib non-free"
 			# KEYRINGMAIN="/usr/share/keyrings/debian-archive-keyring.gpg"
 			PROXY="$http_proxy"
 			LLSO="http://linux.lsdev.sil.org/debian/"
-			PSO="http://packages.sil.org/debian/"
+			PSO="https://packages.sil.org/debian/"
 			addmirror "deb $LLSO $D $COMPONENTS"
 			addmirror "deb $PSO $D $COMPONENTS"
-			addmirror "${MICROSOFT_APT}"
 			addmirror "${MONO_APT}"
 			# Allow to install current nodejs packages
 			if [ -n "$update" ]; then
