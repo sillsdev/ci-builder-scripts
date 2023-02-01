@@ -230,15 +230,12 @@ if [ ! -f "${KEYRINGLLSO}" ]; then
 	wget --output-document="${KEYRINGLLSO}" http://linux.lsdev.sil.org/keys/llso-keyring-2013.gpg
 fi
 
-if [ ! -f ${KEYRINGNODE} ]; then
-	# https://askubuntu.com/a/759993
-	wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key  | sudo apt-key --keyring ${KEYRINGNODE} add -
-	sudo chown $USER ${KEYRINGNODE}
-	sudo rm ${KEYRINGNODE}~
+if [ ! -f "${KEYRINGNODE}" ]; then
+	wget -O- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor -o "${KEYRINGNODE}"
 fi
 
 if [ ! -f "${KEYRINGMICROSOFT}" ]; then
-	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o "${KEYRINGMICROSOFT}"
+	wget -O- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o "${KEYRINGMICROSOFT}"
 fi
 
 downloadAndExportKey "${KEYRING_MONO}" "3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"

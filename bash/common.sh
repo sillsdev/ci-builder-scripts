@@ -48,12 +48,12 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# 0.189 is the version included in Ubuntu 22.04 Jammy
-	MKSBUILD_VERSION=0.189
+	# 0.191 is the version included in Ubuntu 22.10 Kinetic
+	MKSBUILD_VERSION=0.191
 
 	# The minimum version of debootstrap we use
-	# 1.0.126+nmu1 is the version included in Ubuntu 22.04 Jammy
-	DEBOOTSTRAP_VERSION=1.0.126+nmu1
+	# 1.0.128+nmu2ubuntu1 is the version included in Ubuntu 23.04 Lunar (pre-release)
+	DEBOOTSTRAP_VERSION=1.0.128+nmu2ubuntu1
 
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'
