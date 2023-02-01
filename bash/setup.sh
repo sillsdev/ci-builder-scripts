@@ -391,7 +391,8 @@ do
 				fi
 
 				TRACE sudo sbuild-update --update --dist-upgrade --upgrade "$D-$A"
-				TRACE sudo sbuild-apt "$D-$A" apt-get install "$PKGLIST"
+				# shellcheck disable=SC2086 # we want PKGLIST to be split in separate arguments!
+				TRACE sudo sbuild-apt "$D-$A" apt-get install $PKGLIST
 				TRACE sudo sbuild-update --clean --autoclean --autoremove "$D-$A"
 			fi
 		else
