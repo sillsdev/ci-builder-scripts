@@ -243,19 +243,20 @@ downloadAndExportKey "${KEYRING_MICROSOFTPROD}" "BC528686B50D79E339D3721CEB3E94A
 
 for D in ${dists_arg:-$(ubuntu-distro-info --supported) $(debian-distro-info --testing) $(debian-distro-info --stable) $(debian-distro-info --oldstable)}
 do
+	if isUnknownDistro "$D"; then
+		echo "Unknown distro $D. Maybe you'll have to update /usr/share/distro-info/ubuntu.csv."
+		continue
+	fi
+
 	for A in ${arches_arg:-$ARCHES_TO_PROCESS}
 	do
-		if isUnknownDistro "$D"; then
-			echo "Unknown distro $D. Maybe you'll have to update /usr/share/distro-info/ubuntu.csv."
-			continue
-		fi
-
 		doesChrootExist "$D" "$A" && [ -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
 		! doesChrootExist "$D" "$A" && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
 		if [ "$A" == "i386" ]; then
 			# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
-			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
+			# But Ubuntu 22.04 (Focal) also no longer seems to have 32-bit.
+			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 20 )); then
 				log "Skipping 32bit chroot for $D"
 				continue
 			fi
