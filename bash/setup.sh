@@ -253,12 +253,10 @@ do
 		doesChrootExist "$D" "$A" && [ -z "$update" ] && echo "$D-$A already exists - skipping creation" && continue
 		! doesChrootExist "$D" "$A" && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
-		if [ "$A" == "i386" ]; then
-			# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
-			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
-				log "Skipping 32bit chroot for $D"
-				continue
-			fi
+		# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
+		if [ "$A" == "i386" ] && (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
+			log "Skipping 32bit chroot for $D"
+			continue
 		fi
 
 		log "Processing $D-$A"
@@ -276,10 +274,12 @@ do
 			DISTRO=ubuntu
 			# LTSDIST=$(ubuntu-distro-info --lts)
 			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-			if [ "$D" == "$(ubuntu-distro-info --devel)" ]; then
-				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${UBUNTU_LAST_RELEASE_MICROSOFT}" -r | cut -d' ' -f1)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
-			else
-				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${D}" -r | cut -d' ' -f1)/prod ${D} main"
+			if [ "$A" != "i386" ]; then
+				if [ "$D" == "$(ubuntu-distro-info --devel)" ]; then
+					MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${UBUNTU_LAST_RELEASE_MICROSOFT}" -r | cut -d' ' -f1)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
+				else
+					MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${D}" -r | cut -d' ' -f1)/prod ${D} main"
+				fi
 			fi
 			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 20 )); then
 				MONO_APT="deb http://download.mono-project.com/repo/ubuntu stable-focal main"
@@ -295,7 +295,7 @@ do
 				MIRROR="${UBUNTU_OLDMIRROR:-http://old-releases.ubuntu.com/ubuntu/}"
 			fi
 			COMPONENTS="main universe multiverse"
-			KEYRINGMAIN="/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+			# KEYRINGMAIN="/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 			PROXY="$http_proxy"
 			for S in backports ; do
 				addmirror "deb $MIRROR $D-$S $COMPONENTS"
@@ -368,7 +368,7 @@ do
 
 			log "Install packages in chroot for $D-$A"
 			if [ "$(lsb_release --codename --short)" == "xenial" ]; then
-				# Xenial has an older sbuild version that has a buggy sbuild-apt
+				# Running on Xenial which has an older sbuild version that has a buggy sbuild-apt
 				TRACE sudo schroot -c "source:$D-$A" -u root --directory=/ -- sh -c \
 					"apt-get -qq update && \
 					apt-get -qy upgrade && \
@@ -376,6 +376,8 @@ do
 					apt-get clean" < /dev/null
 			else
 				if [ "$D" == "xenial" ]; then
+					# When building a Xenial chroot we have to install some additional
+					# packages in the chroot
 					TRACE sudo sbuild-apt "$D-$A" apt-get install apt-transport-https ca-certificates
 				fi
 
