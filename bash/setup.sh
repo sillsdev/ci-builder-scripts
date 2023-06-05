@@ -52,7 +52,7 @@ function isDebian()
 
 function isSupported()
 {
-	if [[ "$(ubuntu-distro-info --supported) $(debian-distro-info --supported)" =~ $1 ]]; then
+	if [[ "$(ubuntu-distro-info --supported) $(ubuntu-distro-info --supported-esm) $(debian-distro-info --supported)" =~ $1 ]]; then
 		return 0
 	fi
 	return 1
