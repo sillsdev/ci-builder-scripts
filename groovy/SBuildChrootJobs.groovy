@@ -33,7 +33,7 @@ pipelineJob('SBuildChroots_Update-Linux-all') {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
 				runOnAllNodes(label: 'packager',
-					command: '$HOME/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
+					command: 'docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts -v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup /work/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
 			)
 		}
 	}
@@ -87,13 +87,20 @@ pipelineJob('SBuildChroots_Setup-Linux-all') {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
 				runOnAllNodes(label: 'packager',
-					command: \'\'\'cd $HOME/ci-builder-scripts/bash
+					command: \'\'\'
+cd $HOME/ci-builder-scripts/bash
 . ./common.sh
 general_init
 
+echo "Building Docker image..."
+docker build -t sbuildchrootsetup $HOME/ci-builder-scripts/docker/sbuild-chroot-setup
+
 for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
-		$HOME/ci-builder-scripts/bash/setup.sh --dists "$distribution" --arches "$arch"
+		echo "Building chroot for $distribution/$arch"
+		docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts \
+			-v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup \
+			/work/ci-builder-scripts/bash/setup.sh --dists "$distribution" --arches "$arch"
 	done
 done\'\'\')
 '''

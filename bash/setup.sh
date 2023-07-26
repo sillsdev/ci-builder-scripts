@@ -145,12 +145,6 @@ function checkAndInstallRequirements()
 	# We also need a fairly recent version of debootstrap - the version provided in Xenial is
 	# too old
 	if [ ! -f "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}" ]; then
-		if dpkg -l ubuntu-dev-tools > /dev/null 2>&1; then
-			# uninstall ubuntu-dev-tools. Newer versions of debootstrap conflict with the
-			# old available version of ubuntu-dev-tools, and we don't really need it except
-			# mk-sbuild which we install separately
-			sudo apt-get -qy remove ubuntu-dev-tools
-		fi
 		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
 		pushd /tmp
 		TRACE wget "https://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
@@ -218,20 +212,9 @@ function downloadAndExportKey()
 	fi
 }
 
-function updateDistroInfo()
-{
-	# see /usr/share/doc/distro-info-data/README.Debian
-	wget --output-document=/tmp/debian.csv https://debian.pages.debian.net/distro-info-data/debian.csv
-	wget --output-document=/tmp/ubuntu.csv https://debian.pages.debian.net/distro-info-data/ubuntu.csv
-	sudo cp /tmp/debian.csv /usr/share/distro-info
-	sudo cp /tmp/ubuntu.csv /usr/share/distro-info
-}
-
 WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
-
-updateDistroInfo
 
 checkAndInstallRequirements "$PROGRAM" "$@"
 
@@ -274,7 +257,7 @@ do
 		! doesChrootExist "$D" "$A" && [ -n "$update" ] && echo "$D-$A doesn't exist - skipping update" && continue
 
 		# Starting with Ubuntu 21.10 (Impish) there is only 64-bit available
-		if [ "$A" == "i386" ] && (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
+		if [ "$A" == "i386" ] && isUbuntu "$D" && (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 21 )); then
 			log "Skipping 32bit chroot for $D"
 			continue
 		fi
