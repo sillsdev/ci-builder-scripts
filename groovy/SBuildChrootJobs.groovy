@@ -2,7 +2,7 @@
  * DSL script for package builder Jenkins jobs
  */
 
-def distros = "bionic focal jammy kinetic"
+def distros = "bionic focal jammy lunar mantic"
 
 pipelineJob('SBuildChroots_Update-Linux-all') {
 	description '''
