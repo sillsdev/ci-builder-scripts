@@ -32,7 +32,7 @@ pipelineJob('SBuildChroots_Update-Linux-all') {
 	definition {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
-				runOnAllNodes(label: 'packager',
+				runOnAllNodes(label: 'packager && docker',
 					command: 'docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts -v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup /work/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
 			)
 		}
@@ -86,7 +86,7 @@ pipelineJob('SBuildChroots_Setup-Linux-all') {
 	definition {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
-				runOnAllNodes(label: 'packager',
+				runOnAllNodes(label: 'packager && docker',
 					command: \'\'\'
 cd $HOME/ci-builder-scripts/bash
 . ./common.sh
