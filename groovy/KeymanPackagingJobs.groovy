@@ -83,7 +83,7 @@ elif [ "\$PackageBuildKind" = "ReleaseCandidate" ]; then
 fi
 
 log "Building Docker image..."
-docker build -t pkgbuild \$HOME/ci-builder-scripts/docker/
+docker build -t pkgbuild \$HOME/ci-builder-scripts/docker/pkgbuild/
 
 cd onboard-keyman
 onboard_version=`dpkg-parsechangelog -l debian/changelog --show-field=Version | cut -d '-' -f 1`
