@@ -212,10 +212,20 @@ function downloadAndExportKey()
 	fi
 }
 
+function updateDistroInfo()
+{
+	# see /usr/share/doc/distro-info-data/README.Debian
+	wget --output-document=/tmp/debian.csv https://debian.pages.debian.net/distro-info-data/debian.csv
+	wget --output-document=/tmp/ubuntu.csv https://debian.pages.debian.net/distro-info-data/ubuntu.csv
+	sudo cp /tmp/debian.csv /usr/share/distro-info
+	sudo cp /tmp/ubuntu.csv /usr/share/distro-info
+}
 
 WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
+
+updateDistroInfo
 
 checkAndInstallRequirements "$PROGRAM" "$@"
 
