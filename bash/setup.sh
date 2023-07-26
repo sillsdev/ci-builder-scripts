@@ -145,6 +145,12 @@ function checkAndInstallRequirements()
 	# We also need a fairly recent version of debootstrap - the version provided in Xenial is
 	# too old
 	if [ ! -f "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}" ]; then
+		if dpkg -l ubuntu-dev-tools > /dev/null 2>&1; then
+			# uninstall ubuntu-dev-tools. Newer versions of debootstrap conflict with the
+			# old available version of ubuntu-dev-tools, and we don't really need it except
+			# mk-sbuild which we install separately
+			sudo apt-get -qy remove ubuntu-dev-tools
+		fi
 		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
 		pushd /tmp
 		TRACE wget "https://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
