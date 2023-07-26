@@ -113,7 +113,7 @@ function checkAndInstallRequirements()
 
 	GROUP=$(groups | grep sbuild || true)
 	if [ -z "$GROUP" ]; then
-		sudo adduser "$USER" sbuild > /dev/null || true
+		sudo adduser "${USER:-$(whoami)}" sbuild > /dev/null || true
 		local TEMPFILE
 		local ARGS=()
 		TEMPFILE=$(mktemp)
@@ -154,6 +154,8 @@ function checkAndInstallRequirements()
 	fi
 
 	installFileSbuildrc
+
+	[ ! -d "${HOME}/.gnupg" ] && mkdir -p "${HOME}/.gnupg" && chmod 700 "${HOME}/.gnupg"
 }
 
 function installFileSbuildrc()
