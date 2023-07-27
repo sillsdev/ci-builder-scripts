@@ -33,7 +33,7 @@ pipelineJob('SBuildChroots_Update-Linux-all') {
 		cps {
 			script('''@Library('lsdev-pipeline-library') _
 				runOnAllNodes(label: 'dockerpackager',
-					command: 'docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts -v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup /work/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
+					command: 'docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts -v /var/lib/schroot/chroots:/var/lib/schroot/chroots -v /etc/schroot/chroot.d:/etc/schroot/chroot.d sbuildchrootsetup /work/ci-builder-scripts/bash/update --no-package --dists "$Distributions"')'''
 			)
 		}
 	}
@@ -99,7 +99,8 @@ for distribution in $Distributions; do
 	for arch in $ARCHES_TO_PACKAGE; do
 		echo "Building chroot for $distribution/$arch"
 		docker run --privileged --rm -v $HOME/ci-builder-scripts:/work/ci-builder-scripts \
-			-v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup \
+			-v /var/lib/schroot/chroots:/var/lib/schroot/chroots \
+			-v /etc/schroot/chroot.d:/etc/schroot/chroot.d sbuildchrootsetup \
 			/work/ci-builder-scripts/bash/setup.sh --dists "$distribution" --arches "$arch"
 	done
 done\'\'\')

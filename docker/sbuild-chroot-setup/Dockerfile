@@ -3,7 +3,8 @@
 # Build docker image with: docker build -t sbuildchrootsetup docker/sbuild-chroot-setup
 # then setup or update the chroots with:
 # docker run --privileged --rm -v $(pwd):/work/ci-builder-scripts \
-#   -v /var/lib/schroot/chroots:/var/lib/schroot/chroots sbuildchrootsetup
+#   -v /var/lib/schroot/chroots:/var/lib/schroot/chroots \
+#   -v /etc/schroot/chroot.d:/etc/schroot/chroot.d sbuildchrootsetup
 ARG CODENAME=rolling
 
 FROM ubuntu:${CODENAME}
