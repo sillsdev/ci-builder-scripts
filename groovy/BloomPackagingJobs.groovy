@@ -27,19 +27,15 @@ def package_version = '--package-version "\${FULL_BUILD_NUMBER}" '
  * of shifting the previous alpha to beta.  Except for alpha on the master branch, the other jobs all
  * shift branches as new releases are made, with a new job created for betainternal (or beta if we skip
  * that step).
+ * Bloom 5.4 is the final Linux release for Bloom until we get the UI all into a browser view something
+ * like an electron app.  (quite possibly an electron app if nothing better comes along before then)
  */
-for (version in ['5.3', '5.4', 'master']) {
+for (version in ['5.4', 'master']) {
 	switch (version) {
-		case '5.3':
-			branch = 'Version5.3'
-			subdir_name = 'bloom-desktop'
-			kind = 'release'
-			distros_thisjob = distros_tobuild
-			break
 		case '5.4':
 			branch = 'Version5.4'
-			subdir_name = 'bloom-desktop-beta'
-			kind = 'beta'
+			subdir_name = 'bloom-desktop'
+			kind = 'release'
 			distros_thisjob = distros_tobuild
 			break
 		case 'master':
