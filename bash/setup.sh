@@ -20,7 +20,7 @@ Arguments:
 	--dists <distros> - the distributions to create a chroot for
 	--arches <arches> - the architectures to create a chroot for
 
-There are more optional parameters that can be set. See common.sh.
+There are more optional parameters that can be set. See common.inc.sh.
 
 NOTE: This help is incomplete. Please add the description of more options
 that are useful and apply to this script.
@@ -28,9 +28,9 @@ EOF
 	exit 0
 }
 
-. "${PROGRAM_DIR}"/common.sh
+. "${PROGRAM_DIR}"/common.inc.sh
 
-# shellcheck disable=SC2034 # used in common.sh
+# shellcheck disable=SC2034 # used in common.inc.sh
 no_package=true
 
 init "$@"
@@ -95,20 +95,21 @@ EOF
 function checkAndInstallRequirements()
 {
 	local TOINSTALL GROUP
+	TOINSTALL=()
 	if [ ! -x /usr/bin/mk-sbuild ]; then
-		TOINSTALL="$TOINSTALL ubuntu-dev-tools"
+		TOINSTALL+=(ubuntu-dev-tools)
 	fi
 	if [ ! -x /usr/bin/sbuild ]; then
-		TOINSTALL="$TOINSTALL sbuild"
+		TOINSTALL+=(sbuild)
 		touch "$HOME/.sbuildrc"
 	elif [ ! -f "$HOME/.sbuildrc" ]; then
 		touch "$HOME/.sbuildrc"
 	fi
 
-	if [ -n "$TOINSTALL" ]; then
-		log "Installing prerequisites: $TOINSTALL"
+	if (( ${#TOINSTALL[@]} > 0 )); then
+		log "Installing prerequisites: ${TOINSTALL[*]}"
 		sudo apt-get update
-		sudo apt-get -qy install "$TOINSTALL"
+		sudo apt-get -qy install "${TOINSTALL[@]}"
 	fi
 
 	GROUP=$(groups | grep sbuild || true)
@@ -118,11 +119,11 @@ function checkAndInstallRequirements()
 		local ARGS=()
 		TEMPFILE=$(mktemp)
 		while (( $# )); do
-			ARGS+=("\"$1\"")
+			ARGS+=("${1}")
 			shift
 		done
-		echo "${ARGS[@]}" > "$TEMPFILE"
-		chmod +x "$TEMPFILE"
+		echo "${ARGS[@]}" > "${TEMPFILE}"
+		chmod +x "${TEMPFILE}"
 
 		log "Calling $(basename "${ARGS[0]}") recursively"
 		sg sbuild "$TEMPFILE"
@@ -146,6 +147,7 @@ function checkAndInstallRequirements()
 	# too old
 	if [ ! -f "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}" ]; then
 		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
+		rm -f "${HOME}/bin/"debootstrap.v*
 		pushd /tmp
 		TRACE wget "https://old-releases.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
 		sudo dpkg -i "debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
@@ -155,7 +157,10 @@ function checkAndInstallRequirements()
 
 	installFileSbuildrc
 
-	[ ! -d "${HOME}/.gnupg" ] && mkdir -p "${HOME}/.gnupg" && chmod 700 "${HOME}/.gnupg"
+	if [[ ! -d "${HOME}/.gnupg" ]]; then
+		mkdir -p "${HOME}/.gnupg"
+		chmod 700 "${HOME}/.gnupg"
+	fi
 }
 
 function installFileSbuildrc()
@@ -218,7 +223,7 @@ WORKDIR="${WORKSPACE:-${PROGRAM_DIR}}"
 
 cd "${WORKDIR}"
 
-checkAndInstallRequirements "$PROGRAM" "$@"
+checkAndInstallRequirements "${PROGRAM}" "$@"
 
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
@@ -302,8 +307,10 @@ do
 			fi
 			COMPONENTS="main universe multiverse"
 			# KEYRINGMAIN="/usr/share/keyrings/ubuntu-archive-keyring.gpg"
-			PROXY="$http_proxy"
-			for S in backports ; do
+			# shellcheck disable=SC2154
+			PROXY="${http_proxy}"
+			# shellcheck disable=SC2154
+			for S in ${backports} ; do
 				addmirror "deb $MIRROR $D-$S $COMPONENTS"
 			done
 			LLSO="http://linux.lsdev.sil.org/ubuntu/"

@@ -1,13 +1,13 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 stderr()
 {
-	echo -e "${RED}$PROGRAM_NAME: $1${NC}" >&2
+	echo -e "${RED}${PROGRAM_NAME}: ${1}${NC}" >&2
 }
 
 log()
 {
-	echo -e "${GREEN}$PROGRAM_NAME: $1${NC}" >&2
+	echo -e "${GREEN}${PROGRAM_NAME}: ${1}${NC}" >&2
 }
 
 TRACE()
@@ -24,10 +24,10 @@ general_init()
 
 	# last released Ubuntu version that .NET packages are available for
 	# (see https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu)
-	UBUNTU_LAST_RELEASE_MICROSOFT="jammy"
+	UBUNTU_LAST_RELEASE_MICROSOFT="resolute"
 
-	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-bionic focal}"
-	DISTS_TO_PROCESS="${supported_distros_arg:-bionic focal}"
+	DISTRIBUTIONS_TO_PACKAGE="${dists_arg:-noble resolute}"
+	DISTS_TO_PROCESS="${supported_distros_arg:-noble resolute}"
 	DISTRIBUTIONS=${DISTRIBUTIONS:-$(ubuntu-distro-info --supported) $(debian-distro-info --supported)}
 	ARCHES_TO_PACKAGE="${arches_arg:-i386 amd64}"
 	ARCHES_TO_PROCESS="amd64 i386"
@@ -37,7 +37,7 @@ general_init()
 	UBUNTU_MIRROR=${UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu/}
 	UBUNTU_OLDMIRROR=${UBUNTU_OLDMIRROR:-http://old-releases.ubuntu.com/ubuntu/}
 
-	if [ "$suite_name" = "main" ]; then
+	if [ "${suite_name}" = "main" ]; then
 		SUITE_NAME=""
 	else
 		SUITE_NAME="-${suite_name:-experimental}"
@@ -48,12 +48,12 @@ general_init()
 	# The version of mk-sbuild we use. We need a current version of that script because trying
 	# to build newer dists might have different requirements than the system provided version
 	# provides.
-	# The version of package ubuntu-dev-tools included in Ubuntu 23.10 Mantic
-	MKSBUILD_VERSION=0.194
+	# The version of package ubuntu-dev-tools included in Ubuntu 26.04 Resolute
+	MKSBUILD_VERSION=0.210
 
 	# The minimum version of debootstrap we use
-	# The version of debootstrap included in Ubuntu 23.10 Mantic
-	DEBOOTSTRAP_VERSION=1.0.132ubuntu1
+	# The version of debootstrap included in Ubuntu 22.04 Jammy
+	DEBOOTSTRAP_VERSION=1.0.126+nmu1
 
 	RED='\033[0;31m'
 	GREEN='\033[0;32m'

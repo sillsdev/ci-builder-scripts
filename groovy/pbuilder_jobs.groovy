@@ -22,7 +22,7 @@ pipelineJob('PBuilder_Setup-Linux-all') {
 			script('''@Library('lsdev-pipeline-library') _
 				runOnAllNodes(label: 'packager',
 					command: \'\'\'cd $HOME/ci-builder-scripts/bash
-. ./common.sh
+. ./common.inc.sh
 init "$@"
 
 for distribution in $Distributions; do

@@ -2,7 +2,7 @@
 
 BASEDIR=$(pwd)
 
-. common-funcs.sh
+. common-funcs.inc.sh
 
 setUp() {
 	cleanup

@@ -2,7 +2,7 @@
 
 BASEDIR=$(pwd)
 
-. common-funcs.sh
+. common-funcs.inc.sh
 
 setUp() {
 	cleanup
@@ -24,13 +24,13 @@ testBuildPackage_CanBuildInPlace() {
 	# This scenario is used when building locally
 
 	# Execute
-	assertTrue "build-package failed" "../build-package --dists focal --arches amd64 --build-in-place --no-upload"
+	assertTrue "build-package failed" "../build-package --dists noble --arches amd64 --build-in-place --no-upload"
 
 	# Verify
 	assertTrue ".dsc does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.dsc ]"
-	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.deb ]"
-	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.changes ]"
-	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.buildinfo ]"
+	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.deb ]"
+	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.changes ]"
+	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.buildinfo ]"
 	assertTrue "_source.buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
@@ -52,13 +52,13 @@ testBuildPackage_CanBuildInPlaceWithMainPackageName() {
 	cd test-package
 
 	# Execute
-	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --no-upload --main-package-name test-package"
+	assertTrue "build-package failed" "../../build-package --dists noble --arches amd64 --no-upload --main-package-name test-package"
 
 	# Verify
 	assertTrue ".dsc does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1.dsc ]"
-	assertTrue ".deb does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+focal1_amd64.deb ]"
-	assertTrue ".changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+focal1_amd64.changes ]"
-	assertTrue ".buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+focal1_amd64.buildinfo ]"
+	assertTrue ".deb does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+noble1_amd64.deb ]"
+	assertTrue ".changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+noble1_amd64.changes ]"
+	assertTrue ".buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1+noble1_amd64.buildinfo ]"
 	assertTrue "_source.buildinfo does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f $WORKSPACE/results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
@@ -78,13 +78,13 @@ testBuildPackage_WorksWithDscInCurrentDir() {
 	cd test-package
 
 	# Execute
-	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --build-in-place --no-upload"
+	assertTrue "build-package failed" "../../build-package --dists noble --arches amd64 --build-in-place --no-upload"
 
 	# Verify
 	assertTrue ".dsc does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.dsc ]"
-	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.deb ]"
-	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.changes ]"
-	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+focal1_amd64.buildinfo ]"
+	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.deb ]"
+	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.changes ]"
+	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1+noble1_amd64.buildinfo ]"
 	assertTrue "_source.buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
@@ -106,13 +106,13 @@ testBuildPackage_WorksForPrs() {
 	export BUILD_NUMBER=987
 
 	# Execute
-	assertTrue "build-package failed" "../../build-package --dists focal --arches amd64 --build-in-place --no-upload --prerelease-tag ~PR-1234"
+	assertTrue "build-package failed" "../../build-package --dists noble --arches amd64 --build-in-place --no-upload --prerelease-tag ~PR-1234"
 
 	# Verify
 	assertTrue ".dsc does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1.dsc ]"
-	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+focal987_amd64.deb ]"
-	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+focal987_amd64.changes ]"
-	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+focal987_amd64.buildinfo ]"
+	assertTrue ".deb does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+noble987_amd64.deb ]"
+	assertTrue ".changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+noble987_amd64.changes ]"
+	assertTrue ".buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1~PR-1234+noble987_amd64.buildinfo ]"
 	assertTrue "_source.buildinfo does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.buildinfo ]"
 	assertTrue "_source.changes does not exist" "[ -f results/test-package_0.0.1-1.nightly*-1_source.changes ]"
 	assertTrue ".orig.tar.xz does not exist" "[ -f results/test-package_0.0.1-1.nightly*.orig.tar.xz ]"
@@ -126,8 +126,8 @@ testBuildPackage_WorksForPrs() {
 
 echo -e "${GREEN}Running tests in $0...${NC}"
 
-if ! schroot -l | grep -q chroot:focal-amd64 ; then
-	echo -e "${RED}These checks require a focal-amd64 chroot. Ignoring tests.${NC}"
+if ! schroot -l | grep -q chroot:noble-amd64 ; then
+	echo -e "${RED}These checks require a noble-amd64 chroot. Ignoring tests.${NC}"
 	exit
 fi
 

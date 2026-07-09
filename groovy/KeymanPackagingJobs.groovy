@@ -71,7 +71,7 @@ freeStyleJob("Keyman_Packaging-Linux-onboard-keyman-${branch}") {
 
 	steps {
 		shell("""#!/bin/bash -e
-. \$HOME/ci-builder-scripts/bash/common.sh
+. \$HOME/ci-builder-scripts/bash/common.inc.sh
 export FULL_BUILD_NUMBER=${fullBuildNumber}
 
 if [ "\$PackageBuildKind" = "Release" ]; then

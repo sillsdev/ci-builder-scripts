@@ -89,7 +89,7 @@ pipelineJob('SBuildChroots_Setup-Linux-all') {
 				runOnAllNodes(label: 'dockerpackager',
 					command: \'\'\'
 cd $HOME/ci-builder-scripts/bash
-. ./common.sh
+. ./common.inc.sh
 general_init
 
 echo "Building Docker image..."

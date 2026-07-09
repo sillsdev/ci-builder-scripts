@@ -2,7 +2,7 @@
 
 PROGRAM_NAME="$(basename "$0")"
 
-. $(dirname $0)/common.sh
+. $(dirname $0)/common.inc.sh
 general_init
 
 set -e
