@@ -181,9 +181,7 @@ function copyInKeyrings()
 	[ -f "${KEYRINGLLSO}" ] && sudo cp "${KEYRINGLLSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGPSO}" ] && sudo cp "${KEYRINGPSO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRINGNODE}" ] && sudo cp "${KEYRINGNODE}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
-	[ -f "${KEYRINGMICROSOFT}" ] && sudo cp "${KEYRINGMICROSOFT}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 	[ -f "${KEYRING_MONO}" ] && sudo cp "${KEYRING_MONO}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
-	[ -f "${KEYRING_MICROSOFTPROD}" ] && sudo cp "${KEYRING_MICROSOFTPROD}" "${SCHROOTDIR}/${D}-${A}/etc/apt/trusted.gpg.d/"
 }
 
 function addExtraRepositories()
@@ -228,9 +226,7 @@ checkAndInstallRequirements "${PROGRAM}" "$@"
 KEYRINGLLSO="$WORKDIR/llso-keyring-2013.gpg"
 KEYRINGPSO="$WORKDIR/pso-keyring-2016.gpg"
 KEYRINGNODE="$WORKDIR/nodesource-keyring.gpg"
-KEYRINGMICROSOFT="$WORKDIR/microsoft.asc.gpg"
 KEYRING_MONO="$WORKDIR/mono-project.asc.gpg"
-KEYRING_MICROSOFTPROD="$WORKDIR/microsoft-prod.asc.gpg"
 
 if [ ! -f "${KEYRINGPSO}" ]; then
 	wget --output-document="${KEYRINGPSO}" https://packages.sil.org/keys/pso-keyring-2016.gpg
@@ -244,12 +240,7 @@ if [ ! -f "${KEYRINGNODE}" ]; then
 	wget -O- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor -o "${KEYRINGNODE}"
 fi
 
-if [ ! -f "${KEYRINGMICROSOFT}" ]; then
-	wget -O- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o "${KEYRINGMICROSOFT}"
-fi
-
 downloadAndExportKey "${KEYRING_MONO}" "3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
-downloadAndExportKey "${KEYRING_MICROSOFTPROD}" "BC528686B50D79E339D3721CEB3E94ADBE1229CF"
 
 for D in ${dists_arg:-$(ubuntu-distro-info --supported) $(debian-distro-info --testing) $(debian-distro-info --stable) $(debian-distro-info --oldstable)}
 do
@@ -283,15 +274,12 @@ do
 		if isUbuntu "$D"; then
 			DISTRO=ubuntu
 			# LTSDIST=$(ubuntu-distro-info --lts)
-			# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-			if [ "$A" != "i386" ]; then
-				if [ "$D" == "$(ubuntu-distro-info --devel)" ]; then
-					MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${UBUNTU_LAST_RELEASE_MICROSOFT}" -r | cut -d' ' -f1)/prod ${UBUNTU_LAST_RELEASE_MICROSOFT} main"
-				else
-					MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/ubuntu/$(ubuntu-distro-info --series="${D}" -r | cut -d' ' -f1)/prod ${D} main"
-				fi
-				addmirror "${MICROSOFT_APT}"
-			fi
+
+			# Current dotnet versions are included in the default Ubuntu repositories
+			# starting with Ubuntu 24.04. If we want to install .NET 9 or 10
+			# on Ubuntu 22.04 we'd have to enable the .NET backports feed from ppa
+			# - see https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-decision#ubuntu-net-backports-package-repository
+
 			if (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 20 )); then
 				MONO_APT="deb https://download.mono-project.com/repo/ubuntu stable-focal main"
 			elif (( $(ubuntu-distro-info --series="$D" -r|cut -d'.' -f1) >= 18 )); then
@@ -331,11 +319,16 @@ do
 			fi
 		elif isDebian "$D"; then
 			DISTRO=debian
-			if [ "$A" != "i386" ]; then
-				# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
-				MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
-				addmirror "${MICROSOFT_APT}"
-			fi
+
+			# In order to be able to install dotnet on Debian we'd have to enable
+			# something like the lines below. See https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian?tabs=dotnet10
+			# for current instructions.
+
+			# if [ "$A" != "i386" ]; then
+			# 	# packages.microsoft is a 64-bit only repo. 32-bit can be downloaded as a tar.
+			# 	MICROSOFT_APT="deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-${D}-prod ${D} main"
+			# 	addmirror "${MICROSOFT_APT}"
+			# fi
 			MONO_APT="deb https://download.mono-project.com/repo/debian vs-${D} main"
 
 			MIRROR="${DEBIAN_MIRROR:-http://ftp.ca.debian.org/debian/}"
