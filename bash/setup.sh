@@ -147,7 +147,7 @@ function checkAndInstallRequirements()
 	if [ ! -f "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}" ]; then
 		log "Installing version ${DEBOOTSTRAP_VERSION} of debootstrap"
 		pushd /tmp
-		TRACE wget "https://mirrors.kernel.org/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
+		TRACE wget "https://old-releases.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
 		sudo dpkg -i "debootstrap_${DEBOOTSTRAP_VERSION}_all.deb"
 		popd
 		touch "$HOME/bin/debootstrap.v${DEBOOTSTRAP_VERSION}"
